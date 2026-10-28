@@ -16,7 +16,13 @@ export function applyFillPlan(document, plan) {
     const element = document.querySelector(item.selector);
     if (!element) continue;
     changes.push({ selector: item.selector, previousValue: element.value });
-    element.value = String(item.value);
+    if (element.tagName?.toLowerCase() === 'select') {
+      const option = [...(element.options || [])].find((candidate) => candidate.value === String(item.value) || candidate.text === String(item.value));
+      if (!option) continue;
+      element.value = option.value;
+    } else {
+      element.value = String(item.value);
+    }
     element.dispatchEvent(new Event('input', { bubbles: true }));
     element.dispatchEvent(new Event('change', { bubbles: true }));
   }

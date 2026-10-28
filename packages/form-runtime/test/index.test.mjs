@@ -22,3 +22,11 @@ test('skips unmatched or empty-confidence fields', () => {
   assert.deepEqual(changes, []);
   assert.equal(document.input.value, 'old');
 });
+
+test('selects a permitted option by value or visible text', () => {
+  const select = { tagName: 'SELECT', value: 'other', options: [{ value: 'cs', text: 'Computer Science' }, { value: 'math', text: 'Mathematics' }], dispatchEvent() {} };
+  const document = { querySelector(selector) { return selector === '#major' ? select : null; } };
+  const changes = applyFillPlan(document, [{ selector: '#major', value: 'Computer Science', confidence: 1 }]);
+  assert.equal(select.value, 'cs');
+  assert.deepEqual(changes, [{ selector: '#major', previousValue: 'other' }]);
+});
