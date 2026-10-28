@@ -20,6 +20,8 @@ const LABEL_ALIASES = new Map([
   ['学位', 'education[0].degree'],
   ['项目名称', 'projects[0].name'],
   ['项目描述', 'projects[0].bullets[0]'],
+  ['个人优势', 'custom.personalAdvantages'],
+  ['个人评价', 'custom.personalEvaluation'],
 ]);
 
 export function normalizeLabel(label) {
@@ -43,12 +45,32 @@ export function getPathValue(document, path) {
 export function matchField(field, resume, mappings = []) {
   const normalized = normalizeLabel(field.label || field.name || field.placeholder);
   const saved = mappings.find((mapping) => normalizeLabel(mapping.label) === normalized);
-  const path = saved?.resumePath || LABEL_ALIASES.get(normalized);
-  if (!path) return { field, path: null, value: null, confidence: 0, source: 'unmatched' };
-  const value = getPathValue(resume, path);
-  return { field, path, value: value ?? '', confidence: saved ? 1 : 0.9, source: saved ? 'user' : 'rule' };
+  if (saved) {
+    const value = getPathValue(resume, saved.resumePath);
+    return value === undefined ? { field, path: saved.resumePath, value: '', confidence: 0, source: 'missing-path' } : { field, path: saved.resumePath, value, confidence: 1, source: 'user' };
+  }
+  const aliasPath = LABEL_ALIASES.get(normalized);
+  if (aliasPath) {
+    const value = getPathValue(resume, aliasPath);
+    if (value !== undefined) return { field, path: aliasPath, value, confidence: 0.9, source: 'rule' };
+  }
+  const matches = findKeyMatches(resume, normalized);
+  if (matches.length === 1) return { field, path: matches[0].path, value: matches[0].value, confidence: 0.85, source: 'json-key' };
+  if (matches.length > 1) return { field, path: null, value: null, confidence: 0, source: 'ambiguous' };
+  return { field, path: null, value: null, confidence: 0, source: 'unmatched' };
 }
 
 export function createFillPlan(fields, resume, mappings = []) {
   return fields.map((field) => matchField(field, resume, mappings));
+}
+
+function findKeyMatches(value, wantedKey, path = '') {
+  if (value == null || typeof value !== 'object') return [];
+  const matches = [];
+  for (const [key, child] of Object.entries(value)) {
+    const childPath = Array.isArray(value) ? `${path}[${key}]` : path ? `${path}.${key}` : key;
+    if (normalizeLabel(key) === wantedKey && (typeof child !== 'object' || child === null)) matches.push({ path: childPath, value: child });
+    if (child && typeof child === 'object') matches.push(...findKeyMatches(child, wantedKey, childPath));
+  }
+  return matches;
 }
