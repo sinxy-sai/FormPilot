@@ -27,3 +27,17 @@ test('user mappings override the generic rule', () => {
   assert.equal(plan[0].value, 'Example');
   assert.equal(plan[0].source, 'user');
 });
+
+test('matches Chinese labels used by the local fixture', () => {
+  const plan = createFillPlan(
+    [{ label: '姓名' }, { label: '邮箱' }, { label: '专业' }, { label: '学位' }, { label: '项目名称' }],
+    { basics: { name: '示例候选人', email: 'candidate@example.com' }, education: [{ major: '计算机科学', degree: '本科' }], projects: [{ name: 'FormPilot' }] },
+  );
+  assert.deepEqual(plan.map(({ path, value }) => ({ path, value })), [
+    { path: 'basics.name', value: '示例候选人' },
+    { path: 'basics.email', value: 'candidate@example.com' },
+    { path: 'education[0].major', value: '计算机科学' },
+    { path: 'education[0].degree', value: '本科' },
+    { path: 'projects[0].name', value: 'FormPilot' },
+  ]);
+});

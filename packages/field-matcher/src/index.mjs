@@ -11,6 +11,15 @@ const LABEL_ALIASES = new Map([
   ['major', 'education[0].major'],
   ['field of study', 'education[0].major'],
   ['degree', 'education[0].degree'],
+  ['姓名', 'basics.name'],
+  ['邮箱', 'basics.email'],
+  ['电话', 'basics.phone'],
+  ['手机号', 'basics.phone'],
+  ['学校', 'education[0].school'],
+  ['专业', 'education[0].major'],
+  ['学位', 'education[0].degree'],
+  ['项目名称', 'projects[0].name'],
+  ['项目描述', 'projects[0].bullets[0]'],
 ]);
 
 export function normalizeLabel(label) {
