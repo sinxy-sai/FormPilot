@@ -22,6 +22,8 @@ const LABEL_ALIASES = new Map([
   ['项目描述', 'projects[0].bullets[0]'],
   ['个人优势', 'custom.personalAdvantages'],
   ['个人评价', 'custom.personalEvaluation'],
+  ['personal evaluation', 'customFields.personalEvaluation'],
+  ['personal advantages', 'customFields.personalAdvantages'],
 ]);
 
 export function normalizeLabel(label) {

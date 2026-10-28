@@ -76,3 +76,26 @@ test('nonexistent paths do not become confident empty fill values', () => {
   const plan = createFillPlan([{ label: 'School' }], { education: [] });
   assert.equal(plan[0].confidence, 0);
 });
+
+test('matches localized Chinese JSON keys directly', () => {
+  const plan = createFillPlan(
+    [{ label: '姓名' }, { label: '学校' }, { label: '个人评价' }],
+    { 基本信息: { 姓名: '中文候选人' }, 教育经历: [{ 学校: '中文大学' }], 自定义字段: { 个人评价: '善于协作' } },
+  );
+  assert.deepEqual(plan.map(({ path, value, source }) => ({ path, value, source })), [
+    { path: '基本信息.姓名', value: '中文候选人', source: 'json-key' },
+    { path: '教育经历[0].学校', value: '中文大学', source: 'json-key' },
+    { path: '自定义字段.个人评价', value: '善于协作', source: 'json-key' },
+  ]);
+});
+
+test('matches localized English JSON keys directly', () => {
+  const plan = createFillPlan(
+    [{ label: 'Full Name' }, { label: 'Personal Evaluation' }],
+    { basics: { name: 'English Candidate' }, customFields: { personalEvaluation: 'Collaborative learner' } },
+  );
+  assert.deepEqual(plan.map(({ path, value }) => ({ path, value })), [
+    { path: 'basics.name', value: 'English Candidate' },
+    { path: 'customFields.personalEvaluation', value: 'Collaborative learner' },
+  ]);
+});
