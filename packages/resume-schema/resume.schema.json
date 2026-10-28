@@ -1,0 +1,1 @@
+{"$schema":"http://json-schema.org/draft-07/schema#","title":"FormPilot Structured Resume","type":"object","required":["basics","education","experience","projects","skills"],"properties":{"basics":{"type":"object","required":["name","email","phone"]},"education":{"type":"array"},"experience":{"type":"array"},"projects":{"type":"array"},"skills":{"type":"array"}}}

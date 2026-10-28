@@ -1,0 +1,1 @@
+# Architecture`n`nLaTeX/PDF is the presentation source. Structured JSON is the autofill source. Rules and saved user mappings run first; uncertain fields are edited or optionally sent to a semantic matcher.

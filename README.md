@@ -1,0 +1,1 @@
+# FormPilot`n`nOpen-source browser assistant for turning structured resumes into reviewable application form drafts.`n`nWorkflow: resume.tex -> structured resume JSON -> field matching -> browser fill -> user review.
