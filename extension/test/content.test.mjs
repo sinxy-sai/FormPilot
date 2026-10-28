@@ -8,7 +8,7 @@ const source = readFileSync(new URL('../src/content.js', import.meta.url), 'utf8
 function harness(element) {
   let listener;
   runInNewContext(source, {
-    document: { querySelector: (selector) => selector === '#school' ? element : null },
+    document: { querySelector: (selector) => selector === '#school' ? element : null, querySelectorAll: () => [] },
     Event, chrome: { runtime: { onMessage: { addListener(fn) { listener = fn; } } } },
   });
   return (message) => {
@@ -26,6 +26,14 @@ test('fills the actual nested matcher payload and undoes the change', () => {
   assert.equal(element.value, 'Demo University');
   assert.equal(message({ type: 'undo-fill' }).undone, 1);
   assert.equal(element.value, 'Before');
+});
+
+test('reports a hidden editor instead of pretending it filled', () => {
+  const element = { tagName: 'INPUT', offsetParent: null, getClientRects: () => [], value: 'Before', focus() {}, dispatchEvent() {}, closest: () => null };
+  const message = harness(element);
+  const result = message({ type: 'fill-fields', fields: [{ selector: '#school', value: 'Demo', confidence: 1 }] });
+  assert.equal(result.filled, 0);
+  assert.equal(result.skipped[0].reason, 'editor-not-open');
 });
 
 test('reports options that cannot be selected without clearing the current selection', () => {
