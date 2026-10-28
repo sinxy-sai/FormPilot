@@ -1,0 +1,11 @@
+{
+  "name": "formpilot",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "test": "node --test packages/*/test/*.test.mjs",
+    "test:matcher": "node --test packages/field-matcher/test/index.test.mjs",
+    "test:runtime": "node --test packages/form-runtime/test/index.test.mjs"
+  }
+}
