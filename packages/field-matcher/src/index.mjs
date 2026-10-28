@@ -28,9 +28,9 @@ const LABEL_ALIASES = new Map([
 
 export function normalizeLabel(label) {
   return String(label ?? '')
+    .normalize('NFKC')
     .toLowerCase()
-    .replace(/[：:]/g, ' ')
-    .replace(/[_-]+/g, ' ')
+    .replace(/[\p{P}\p{S}]+/gu, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }
@@ -51,14 +51,14 @@ export function matchField(field, resume, mappings = []) {
     const value = getPathValue(resume, saved.resumePath);
     return value === undefined ? { field, path: saved.resumePath, value: '', confidence: 0, source: 'missing-path' } : { field, path: saved.resumePath, value, confidence: 1, source: 'user' };
   }
+  const matches = findKeyMatches(resume, normalized);
+  if (matches.length === 1) return { field, path: matches[0].path, value: matches[0].value, confidence: 0.85, source: 'json-key' };
+  if (matches.length > 1) return { field, path: null, value: null, confidence: 0, source: 'ambiguous' };
   const aliasPath = LABEL_ALIASES.get(normalized);
   if (aliasPath) {
     const value = getPathValue(resume, aliasPath);
     if (value !== undefined) return { field, path: aliasPath, value, confidence: 0.9, source: 'rule' };
   }
-  const matches = findKeyMatches(resume, normalized);
-  if (matches.length === 1) return { field, path: matches[0].path, value: matches[0].value, confidence: 0.85, source: 'json-key' };
-  if (matches.length > 1) return { field, path: null, value: null, confidence: 0, source: 'ambiguous' };
   return { field, path: null, value: null, confidence: 0, source: 'unmatched' };
 }
 

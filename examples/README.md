@@ -26,3 +26,5 @@
 ## 本地文件权限
 
 打开 `edge://extensions`，找到 FormPilot，点击“详细信息”，打开“允许访问文件 URL”，然后刷新测试页。保存的 BOSS 页面不适合作为 fixture，因为它依赖登录 Cookie、接口数据和前端路由。
+
+JSON 不要求固定 schema。你可以自由使用中文、English、日本語或混合键名，例如 姓名、name、氏名、自定义字段、customFields。schema 只验证根对象是 JSON object，不规定字段名称。

@@ -99,3 +99,21 @@ test('matches localized English JSON keys directly', () => {
     { path: 'customFields.personalEvaluation', value: 'Collaborative learner' },
   ]);
 });
+
+test('supports arbitrary Japanese keys and Unicode normalization', () => {
+  const plan = createFillPlan(
+    [{ label: '氏名' }, { label: '自己ＰＲ：' }],
+    { 基本情報: { 氏名: '山田 太郎' }, プロフィール: { 自己PR: '協調性があり、継続的に学習します。' } },
+  );
+  assert.equal(plan[0].path, '基本情報.氏名');
+  assert.equal(plan[0].value, '山田 太郎');
+  assert.equal(plan[1].path, 'プロフィール.自己PR');
+  assert.equal(plan[1].value, '協調性があり、継続的に学習します。');
+});
+
+test('does not force a matching user key through an English schema alias', () => {
+  const plan = createFillPlan([{ label: '姓名' }], { 姓名: '用户自定义姓名', basics: { name: 'Legacy name' } });
+  assert.equal(plan[0].path, '姓名');
+  assert.equal(plan[0].value, '用户自定义姓名');
+  assert.equal(plan[0].source, 'json-key');
+});
