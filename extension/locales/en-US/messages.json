@@ -141,11 +141,11 @@
   },
   "loaded": {
     "message": "Loaded",
-    "description": "Resume data loaded state"
+    "description": "Loaded resume state"
   },
   "fieldCount": {
     "message": "{0} fields",
-    "description": "Number of inspected fields; {0} is the count"
+    "description": "Inspected field count; {0} is the count"
   },
   "unlabeled": {
     "message": "Unnamed field",

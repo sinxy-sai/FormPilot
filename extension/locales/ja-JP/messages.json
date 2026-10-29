@@ -141,11 +141,11 @@
   },
   "loaded": {
     "message": "読込済み",
-    "description": "Resume data loaded state"
+    "description": "履歴書を読み込んだ状態"
   },
   "fieldCount": {
     "message": "{0} 項目",
-    "description": "Number of inspected fields; {0} is the count"
+    "description": "確認した項目数；{0} は件数"
   },
   "unlabeled": {
     "message": "名前のない項目",
@@ -185,10 +185,10 @@
   },
   "readyTitle": {
     "message": "準備完了",
-    "description": "Ready indicator tooltip"
+    "description": "準備完了のツールチップ"
   },
   "actionFailure": {
     "message": "操作を完了できません。ページを更新して再試行してください。",
-    "description": "Fill or undo error message"
+    "description": "入力または取り消しのエラー"
   }
 }

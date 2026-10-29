@@ -141,11 +141,11 @@
   },
   "loaded": {
     "message": "已加载",
-    "description": "Resume data loaded state"
+    "description": "已加载简历状态"
   },
   "fieldCount": {
     "message": "{0} 个字段",
-    "description": "Number of inspected fields; {0} is the count"
+    "description": "已检查字段数量；{0} 为数量"
   },
   "unlabeled": {
     "message": "未命名字段",
@@ -185,10 +185,10 @@
   },
   "readyTitle": {
     "message": "就绪",
-    "description": "Ready indicator tooltip"
+    "description": "就绪状态提示"
   },
   "actionFailure": {
     "message": "无法完成操作，请刷新页面后重试。",
-    "description": "Fill or undo error message"
+    "description": "填充或撤销错误提示"
   }
 }

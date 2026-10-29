@@ -141,11 +141,11 @@
   },
   "loaded": {
     "message": "불러옴",
-    "description": "Resume data loaded state"
+    "description": "이력서를 불러온 상태"
   },
   "fieldCount": {
     "message": "{0}개 필드",
-    "description": "Number of inspected fields; {0} is the count"
+    "description": "검사한 필드 수; {0}은 개수"
   },
   "unlabeled": {
     "message": "이름 없는 필드",
@@ -185,10 +185,10 @@
   },
   "readyTitle": {
     "message": "준비됨",
-    "description": "Ready indicator tooltip"
+    "description": "준비 상태 툴팁"
   },
   "actionFailure": {
     "message": "작업을 완료할 수 없습니다. 페이지를 새로고침하고 다시 시도하세요.",
-    "description": "Fill or undo error message"
+    "description": "입력 또는 실행 취소 오류"
   }
 }
