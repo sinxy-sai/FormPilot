@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Switched the project license from MIT to Apache License 2.0.
 - Added a review-first popup redesign with Chinese, English, Japanese, and Korean UI text.
 - Added light, dark, and system theme settings.
 - Added a language-neutral free-form JSON resume model.

@@ -8,7 +8,7 @@
 
 <p><a href="#installation">🚀 Get Started</a> · <a href="#usage">▶️ Use</a> · <a href="#tests">🧪 Test</a> · <a href="docs/ARCHITECTURE.md">📚 Documentation</a> · <a href="CONTRIBUTING.md">🤝 Contribute</a></p>
 
-<a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-315BEA?style=flat-square" alt="MIT License"></a>
+<a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-315BEA?style=flat-square" alt="Apache-2.0 License"></a>
 <a href="https://developer.chrome.com/docs/extensions/develop/"><img src="https://img.shields.io/badge/Manifest-V3-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Manifest V3"></a>
 <a href="https://developer.mozilla.org/docs/Web/JavaScript/Guide/Modules"><img src="https://img.shields.io/badge/JavaScript-ESM-F7DF1E?style=flat-square&logo=javascript&logoColor=111827" alt="JavaScript ESM"></a>
 <a href="https://pnpm.io/workspaces"><img src="https://img.shields.io/badge/pnpm-workspace-F69220?style=flat-square&logo=pnpm&logoColor=white" alt="pnpm workspace"></a>
@@ -30,7 +30,7 @@ FormPilot is designed for job applications where every recruiting site names and
 
 The browser extension does not submit applications, solve CAPTCHA, bypass authentication, or invent fields and options. It reads the controls provided by the current page, prepares a fill plan, and leaves the final review and submission to you.
 
-<table><tr><td><strong>🧩 Interface</strong></td><td>Chrome and Edge Manifest V3 extension</td></tr><tr><td><strong>🗂 Resume source</strong></td><td>User-defined JSON; LaTeX/PDF remains the presentation source</td></tr><tr><td><strong>🌐 UI languages</strong></td><td>中文、English、日本語、한국어</td></tr><tr><td><strong>🎨 Themes</strong></td><td>Light, dark, and system</td></tr><tr><td><strong>🔒 Privacy</strong></td><td>Resume data stays in browser local storage unless you choose otherwise</td></tr><tr><td><strong>📄 License</strong></td><td><a href="LICENSE">MIT License</a></td></tr></table>
+<table><tr><td><strong>🧩 Interface</strong></td><td>Chrome and Edge Manifest V3 extension</td></tr><tr><td><strong>🗂 Resume source</strong></td><td>User-defined JSON; LaTeX/PDF remains the presentation source</td></tr><tr><td><strong>🌐 UI languages</strong></td><td>中文、English、日本語、한국어</td></tr><tr><td><strong>🎨 Themes</strong></td><td>Light, dark, and system</td></tr><tr><td><strong>🔒 Privacy</strong></td><td>Resume data stays in browser local storage unless you choose otherwise</td></tr><tr><td><strong>📄 License</strong></td><td><a href="LICENSE">Apache-2.0 License</a></td></tr></table>
 
 > ⚠️ FormPilot is an independent learning and automation project. It is not affiliated with, sponsored by, or endorsed by any recruiting platform.
 
@@ -148,7 +148,7 @@ Bug reports, fixture improvements, translations, and site-adapter ideas are welc
 
 ## 📄 License
 
-FormPilot is licensed under the [MIT License](LICENSE).
+FormPilot is licensed under the [Apache License 2.0](LICENSE).
 
 
 <!-- Community files: CODE_OF_CONDUCT.md, GOVERNANCE.md, SUPPORT.md -->

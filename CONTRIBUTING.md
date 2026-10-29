@@ -16,4 +16,4 @@ Thanks for helping improve FormPilot.
 4. Explain any new browser permissions or data transmission.
 5. Run the test and syntax-check commands from the README.
 
-By contributing, you agree that your contribution is provided under the MIT License.
+By contributing, you agree that your contribution is provided under the Apache License 2.0.
