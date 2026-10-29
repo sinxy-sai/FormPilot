@@ -135,3 +135,13 @@ test('matches multilingual section and field keys without requiring one JSON lan
   assert.equal(matchField({ label: 'School', fieldKey: 'school', section: '学歴' }, resume).value, 'Uni');
   assert.equal(matchField({ label: 'Project Name', fieldKey: 'name', collectionKey: 'プロジェクト', repeatIndex: 0 }, resume).value, 'Project');
 });
+
+test('uses repeated collection index for each project field', () => {
+  const resume = { 项目经历: [{ 名称: 'P0', 角色: 'R0' }, { 名称: 'P1', 角色: 'R1' }, { 名称: 'P2', 角色: 'R2' }] };
+  const plan = createFillPlan([
+    { label: '项目名称', fieldKey: 'name', collectionKey: 'project_list', repeatIndex: 0 },
+    { label: '项目名称', fieldKey: 'name', collectionKey: 'project_list', repeatIndex: 1 },
+    { label: '项目名称', fieldKey: 'name', collectionKey: 'project_list', repeatIndex: 2 },
+  ], resume);
+  assert.deepEqual(plan.map((item) => [item.path, item.value]), [['项目经历[0].名称', 'P0'], ['项目经历[1].名称', 'P1'], ['项目经历[2].名称', 'P2']]);
+});

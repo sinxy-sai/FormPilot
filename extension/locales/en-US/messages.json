@@ -171,6 +171,10 @@
     "message": "Compatibility rule",
     "description": "Legacy alias match source"
   },
+  "sourceStructuredRule": {
+    "message": "Structured field rule",
+    "description": "Structured section and field rule match source"
+  },
   "sourceMissingPath": {
     "message": "Path missing",
     "description": "Saved JSON path not found"

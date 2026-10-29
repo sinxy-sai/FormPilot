@@ -171,6 +171,10 @@
     "message": "互換ルール",
     "description": "Legacy alias match source"
   },
+  "sourceStructuredRule": {
+    "message": "構造化フィールド規則",
+    "description": "Structured section and field rule match source"
+  },
   "sourceMissingPath": {
     "message": "パスがありません",
     "description": "Saved JSON path not found"

@@ -90,7 +90,8 @@ function matchStructuredField(field, resume) {
   const kind = targetField(field); if (!kind) return null;
   const collection = field.collectionKey || ''; const index = Number.isInteger(field.repeatIndex) && field.repeatIndex >= 0 ? field.repeatIndex : 0;
   const sectionText = normalizeLabel(field.section || collection);
-  let section = Object.entries(SECTION_KEYS).find(([, candidates]) => candidates.some((candidate) => sectionText === normalizeLabel(candidate) || sectionText.includes(normalizeLabel(candidate))))?.[0] || (collection.includes('project') ? 'projects' : collection.includes('competition') ? 'competitions' : collection.includes('language') ? 'languages' : collection.includes('sns') ? 'sns' : null);
+  const collectionSection = collection.includes('project') ? 'projects' : collection.includes('competition') ? 'competitions' : collection.includes('language') ? 'languages' : collection.includes('sns') ? 'sns' : null;
+  let section = collectionSection || Object.entries(SECTION_KEYS).find(([, candidates]) => candidates.some((candidate) => sectionText === normalizeLabel(candidate) || sectionText.includes(normalizeLabel(candidate))))?.[0];
   if (!section) {
     const candidates = Object.keys(SECTION_KEYS).filter((candidate) => { const source = sectionValue(resume, candidate); const entry = Array.isArray(source) ? source[index] : source; return entry && structuredPath(entry, kind, index)?.value != null; });
     if (candidates.length === 1) section = candidates[0];
