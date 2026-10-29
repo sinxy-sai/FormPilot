@@ -1,0 +1,194 @@
+{
+  "tagline": {
+    "message": "智能简历填充助手",
+    "description": "Short product tagline"
+  },
+  "language": {
+    "message": "语言",
+    "description": "Language setting label"
+  },
+  "theme": {
+    "message": "主题",
+    "description": "Theme setting label"
+  },
+  "themeSystem": {
+    "message": "跟随系统",
+    "description": "System theme option"
+  },
+  "themeLight": {
+    "message": "浅色",
+    "description": "Light theme option"
+  },
+  "themeDark": {
+    "message": "深色",
+    "description": "Dark theme option"
+  },
+  "eyebrow": {
+    "message": "APPLICATION AUTOFILL",
+    "description": "Product category eyebrow"
+  },
+  "title": {
+    "message": "把简历填进网页表单",
+    "description": "Main popup headline"
+  },
+  "subtitle": {
+    "message": "先读取当前页面，再审核每一个匹配结果。",
+    "description": "Main popup supporting text"
+  },
+  "resumeTitle": {
+    "message": "简历数据",
+    "description": "Resume card title"
+  },
+  "resumeHint": {
+    "message": "支持任意语言的 JSON 字段",
+    "description": "Resume card supporting text"
+  },
+  "notLoaded": {
+    "message": "未加载",
+    "description": "Resume not loaded status"
+  },
+  "loadResume": {
+    "message": "加载 JSON",
+    "description": "Load resume button"
+  },
+  "applyJson": {
+    "message": "应用修改并重新匹配",
+    "description": "Apply edited JSON button"
+  },
+  "pageTitle": {
+    "message": "当前网页",
+    "description": "Current page card title"
+  },
+  "pageHint": {
+    "message": "读取网页已有字段和编辑区",
+    "description": "Current page card supporting text"
+  },
+  "waiting": {
+    "message": "等待检查",
+    "description": "Waiting status"
+  },
+  "inspect": {
+    "message": "检查网页表单",
+    "description": "Inspect form button"
+  },
+  "reviewTitle": {
+    "message": "审核匹配",
+    "description": "Review card title"
+  },
+  "reviewHint": {
+    "message": "确认值和路径后再填充",
+    "description": "Review card supporting text"
+  },
+  "undo": {
+    "message": "撤销上次填充",
+    "description": "Undo fill button"
+  },
+  "fill": {
+    "message": "填充审核后的字段",
+    "description": "Fill reviewed fields button"
+  },
+  "ready": {
+    "message": "准备就绪。加载简历后开始。",
+    "description": "Initial status message"
+  },
+  "resumeJsonAria": {
+    "message": "简历 JSON",
+    "description": "Resume JSON editor accessible label"
+  },
+  "jsonPlaceholder": {
+    "message": "在这里粘贴或编辑 JSON",
+    "description": "Resume JSON editor placeholder"
+  },
+  "pageFieldMeta": {
+    "message": "网页字段 · {0} · 置信度 {1}",
+    "description": "Match metadata line"
+  },
+  "loadedFile": {
+    "message": "已加载：{0}",
+    "description": "Loaded resume file status"
+  },
+  "jsonApplied": {
+    "message": "JSON 已应用，请重新检查网页。",
+    "description": "Applied JSON status"
+  },
+  "invalidJson": {
+    "message": "JSON 格式错误，请检查逗号和括号。",
+    "description": "Invalid JSON status"
+  },
+  "inspectSuccess": {
+    "message": "已打开 {0} 个编辑区，发现 {1} 个字段。请审核匹配结果。",
+    "description": "Successful inspect status"
+  },
+  "inspectFailure": {
+    "message": "无法连接当前网页。请重新加载扩展和页面，并允许访问本地文件。",
+    "description": "Inspect failure status"
+  },
+  "fillSuccess": {
+    "message": "已填充 {0} 个字段。{1}",
+    "description": "Fill result status"
+  },
+  "fillSkipped": {
+    "message": "跳过 {0} 个字段。",
+    "description": "Skipped field suffix"
+  },
+  "undoSuccess": {
+    "message": "已撤销 {0} 个字段。",
+    "description": "Undo result status"
+  },
+  "missingResume": {
+    "message": "请先加载简历 JSON。",
+    "description": "Missing resume status"
+  },
+  "loaded": {
+    "message": "已加载",
+    "description": "Resume data loaded state"
+  },
+  "fieldCount": {
+    "message": "{0} 个字段",
+    "description": "Number of inspected fields; {0} is the count"
+  },
+  "unlabeled": {
+    "message": "未命名字段",
+    "description": "Fallback label for unnamed form controls"
+  },
+  "resumePath": {
+    "message": "简历 JSON 路径",
+    "description": "Editable JSON path placeholder and accessible label"
+  },
+  "fieldValue": {
+    "message": "待填入的值",
+    "description": "Editable final field value placeholder and accessible label"
+  },
+  "sourceUser": {
+    "message": "手动映射",
+    "description": "User-specified mapping source"
+  },
+  "sourceJsonKey": {
+    "message": "JSON 字段名",
+    "description": "Exact JSON key match source"
+  },
+  "sourceRule": {
+    "message": "兼容规则",
+    "description": "Legacy alias match source"
+  },
+  "sourceMissingPath": {
+    "message": "路径不存在",
+    "description": "Saved JSON path not found"
+  },
+  "sourceAmbiguous": {
+    "message": "需要审核",
+    "description": "Multiple candidate keys found"
+  },
+  "sourceUnmatched": {
+    "message": "未匹配",
+    "description": "No matching JSON key"
+  },
+  "readyTitle": {
+    "message": "就绪",
+    "description": "Ready indicator tooltip"
+  },
+  "actionFailure": {
+    "message": "无法完成操作，请刷新页面后重试。",
+    "description": "Fill or undo error message"
+  }
+}

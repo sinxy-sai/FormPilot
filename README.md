@@ -2,7 +2,7 @@
 
 # FormPilot
 
-**Language-neutral, review-first autofill for job application forms.**
+**Less repetition. More opportunity.**
 
 <img src="docs/assets/formpilot-icon.svg" alt="FormPilot icon" width="112">
 
@@ -18,9 +18,11 @@
 
 </div>
 
-> One resume JSON in, one reviewable form draft out.
+> Turn one structured resume into a polished starting point for every application.
 
 FormPilot reads the form that is already open in your browser, matches its fields against a local structured resume, lets you correct uncertain mappings, and fills the page only after review. It keeps the resume source independent from the PDF layout produced by your LaTeX workflow.
+
+Built for the repetitive part of applying: bring your resume once, adapt it to the language and shape of each form, and stay in control before anything is written.
 
 ## ✨ Overview
 
@@ -128,6 +130,17 @@ The fixture contains intentionally fake data and models hidden Edit sections, na
 - [Contributing](CONTRIBUTING.md)
 - [Support](SUPPORT.md)
 - [Changelog](CHANGELOG.md)
+
+### Localization assets
+
+Popup copy lives in `extension/locales/<locale>/messages.json`, with English (`en-US`) as the fallback locale. Each message keeps a human-readable `description` beside its translated `message`, following the same contributor-friendly principle used by large localized products such as [VS Code Loc](https://github.com/microsoft/vscode-loc).
+
+To add or update a translation:
+
+1. Copy the key set from `extension/locales/en-US/messages.json`.
+2. Translate only the `message` values; keep placeholders such as `{0}` unchanged.
+3. Run `pnpm validate:locales` before opening a pull request.
+4. Add a note to `CHANGELOG.md` when the translation changes user-visible wording.
 
 ## 🤝 Community
 

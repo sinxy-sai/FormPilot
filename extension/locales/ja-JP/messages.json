@@ -1,0 +1,194 @@
+{
+  "tagline": {
+    "message": "履歴書入力アシスタント",
+    "description": "Short product tagline"
+  },
+  "language": {
+    "message": "言語",
+    "description": "Language setting label"
+  },
+  "theme": {
+    "message": "テーマ",
+    "description": "Theme setting label"
+  },
+  "themeSystem": {
+    "message": "システム",
+    "description": "System theme option"
+  },
+  "themeLight": {
+    "message": "ライト",
+    "description": "Light theme option"
+  },
+  "themeDark": {
+    "message": "ダーク",
+    "description": "Dark theme option"
+  },
+  "eyebrow": {
+    "message": "APPLICATION AUTOFILL",
+    "description": "Product category eyebrow"
+  },
+  "title": {
+    "message": "履歴書をフォームへ入力",
+    "description": "Main popup headline"
+  },
+  "subtitle": {
+    "message": "ページを読み取り、結果を確認してから入力します。",
+    "description": "Main popup supporting text"
+  },
+  "resumeTitle": {
+    "message": "履歴書データ",
+    "description": "Resume card title"
+  },
+  "resumeHint": {
+    "message": "任意の言語の JSON キーに対応",
+    "description": "Resume card supporting text"
+  },
+  "notLoaded": {
+    "message": "未読込",
+    "description": "Resume not loaded status"
+  },
+  "loadResume": {
+    "message": "JSONを読み込む",
+    "description": "Load resume button"
+  },
+  "applyJson": {
+    "message": "適用して再照合",
+    "description": "Apply edited JSON button"
+  },
+  "pageTitle": {
+    "message": "現在のページ",
+    "description": "Current page card title"
+  },
+  "pageHint": {
+    "message": "項目と編集欄を読み取る",
+    "description": "Current page card supporting text"
+  },
+  "waiting": {
+    "message": "待機中",
+    "description": "Waiting status"
+  },
+  "inspect": {
+    "message": "フォームを確認",
+    "description": "Inspect form button"
+  },
+  "reviewTitle": {
+    "message": "照合を確認",
+    "description": "Review card title"
+  },
+  "reviewHint": {
+    "message": "値とパスを確認してから入力",
+    "description": "Review card supporting text"
+  },
+  "undo": {
+    "message": "前回の入力を戻す",
+    "description": "Undo fill button"
+  },
+  "fill": {
+    "message": "確認済み項目を入力",
+    "description": "Fill reviewed fields button"
+  },
+  "ready": {
+    "message": "準備完了。履歴書を読み込んでください。",
+    "description": "Initial status message"
+  },
+  "resumeJsonAria": {
+    "message": "履歴書 JSON",
+    "description": "Resume JSON editor accessible label"
+  },
+  "jsonPlaceholder": {
+    "message": "JSONを貼り付けまたは編集",
+    "description": "Resume JSON editor placeholder"
+  },
+  "pageFieldMeta": {
+    "message": "ページ項目 · {0} · 信頼度 {1}",
+    "description": "Match metadata line"
+  },
+  "loadedFile": {
+    "message": "読み込み済み：{0}",
+    "description": "Loaded resume file status"
+  },
+  "jsonApplied": {
+    "message": "JSONを適用しました。ページを再確認してください。",
+    "description": "Applied JSON status"
+  },
+  "invalidJson": {
+    "message": "JSON形式が正しくありません。記号を確認してください。",
+    "description": "Invalid JSON status"
+  },
+  "inspectSuccess": {
+    "message": "編集欄 {0} 件を開き、{1} 個の項目を検出しました。結果を確認してください。",
+    "description": "Successful inspect status"
+  },
+  "inspectFailure": {
+    "message": "ページに接続できません。拡張機能とページを再読み込みし、ローカルファイルへのアクセスを許可してください。",
+    "description": "Inspect failure status"
+  },
+  "fillSuccess": {
+    "message": "{0} 個の項目を入力しました。{1}",
+    "description": "Fill result status"
+  },
+  "fillSkipped": {
+    "message": "{0} 個をスキップしました。",
+    "description": "Skipped field suffix"
+  },
+  "undoSuccess": {
+    "message": "{0} 個の項目を元に戻しました。",
+    "description": "Undo result status"
+  },
+  "missingResume": {
+    "message": "先に履歴書 JSON を読み込んでください。",
+    "description": "Missing resume status"
+  },
+  "loaded": {
+    "message": "読込済み",
+    "description": "Resume data loaded state"
+  },
+  "fieldCount": {
+    "message": "{0} 項目",
+    "description": "Number of inspected fields; {0} is the count"
+  },
+  "unlabeled": {
+    "message": "名前のない項目",
+    "description": "Fallback label for unnamed form controls"
+  },
+  "resumePath": {
+    "message": "履歴書 JSON パス",
+    "description": "Editable JSON path placeholder and accessible label"
+  },
+  "fieldValue": {
+    "message": "入力する値",
+    "description": "Editable final field value placeholder and accessible label"
+  },
+  "sourceUser": {
+    "message": "手動マッピング",
+    "description": "User-specified mapping source"
+  },
+  "sourceJsonKey": {
+    "message": "JSON キー",
+    "description": "Exact JSON key match source"
+  },
+  "sourceRule": {
+    "message": "互換ルール",
+    "description": "Legacy alias match source"
+  },
+  "sourceMissingPath": {
+    "message": "パスがありません",
+    "description": "Saved JSON path not found"
+  },
+  "sourceAmbiguous": {
+    "message": "確認が必要",
+    "description": "Multiple candidate keys found"
+  },
+  "sourceUnmatched": {
+    "message": "一致なし",
+    "description": "No matching JSON key"
+  },
+  "readyTitle": {
+    "message": "準備完了",
+    "description": "Ready indicator tooltip"
+  },
+  "actionFailure": {
+    "message": "操作を完了できません。ページを更新して再試行してください。",
+    "description": "Fill or undo error message"
+  }
+}

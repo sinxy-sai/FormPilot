@@ -1,0 +1,194 @@
+{
+  "tagline": {
+    "message": "Resume autofill assistant",
+    "description": "Short product tagline"
+  },
+  "language": {
+    "message": "Language",
+    "description": "Language setting label"
+  },
+  "theme": {
+    "message": "Theme",
+    "description": "Theme setting label"
+  },
+  "themeSystem": {
+    "message": "System",
+    "description": "System theme option"
+  },
+  "themeLight": {
+    "message": "Light",
+    "description": "Light theme option"
+  },
+  "themeDark": {
+    "message": "Dark",
+    "description": "Dark theme option"
+  },
+  "eyebrow": {
+    "message": "APPLICATION AUTOFILL",
+    "description": "Product category eyebrow"
+  },
+  "title": {
+    "message": "Put your resume into forms",
+    "description": "Main popup headline"
+  },
+  "subtitle": {
+    "message": "Inspect the page, then review every match.",
+    "description": "Main popup supporting text"
+  },
+  "resumeTitle": {
+    "message": "Resume data",
+    "description": "Resume card title"
+  },
+  "resumeHint": {
+    "message": "Use JSON keys in any language",
+    "description": "Resume card supporting text"
+  },
+  "notLoaded": {
+    "message": "Not loaded",
+    "description": "Resume not loaded status"
+  },
+  "loadResume": {
+    "message": "Load JSON",
+    "description": "Load resume button"
+  },
+  "applyJson": {
+    "message": "Apply and rematch",
+    "description": "Apply edited JSON button"
+  },
+  "pageTitle": {
+    "message": "Current page",
+    "description": "Current page card title"
+  },
+  "pageHint": {
+    "message": "Read fields and edit sections",
+    "description": "Current page card supporting text"
+  },
+  "waiting": {
+    "message": "Waiting",
+    "description": "Waiting status"
+  },
+  "inspect": {
+    "message": "Inspect form",
+    "description": "Inspect form button"
+  },
+  "reviewTitle": {
+    "message": "Review matches",
+    "description": "Review card title"
+  },
+  "reviewHint": {
+    "message": "Confirm values and paths before filling",
+    "description": "Review card supporting text"
+  },
+  "undo": {
+    "message": "Undo last fill",
+    "description": "Undo fill button"
+  },
+  "fill": {
+    "message": "Fill reviewed fields",
+    "description": "Fill reviewed fields button"
+  },
+  "ready": {
+    "message": "Ready. Load a resume to begin.",
+    "description": "Initial status message"
+  },
+  "resumeJsonAria": {
+    "message": "Resume JSON",
+    "description": "Resume JSON editor accessible label"
+  },
+  "jsonPlaceholder": {
+    "message": "Paste or edit JSON here",
+    "description": "Resume JSON editor placeholder"
+  },
+  "pageFieldMeta": {
+    "message": "Page field · {0} · confidence {1}",
+    "description": "Match metadata line"
+  },
+  "loadedFile": {
+    "message": "Loaded: {0}",
+    "description": "Loaded resume file status"
+  },
+  "jsonApplied": {
+    "message": "JSON applied. Inspect the page again.",
+    "description": "Applied JSON status"
+  },
+  "invalidJson": {
+    "message": "Invalid JSON. Check commas and braces.",
+    "description": "Invalid JSON status"
+  },
+  "inspectSuccess": {
+    "message": "Opened {0} editor(s), found {1} fields. Review the matches below.",
+    "description": "Successful inspect status"
+  },
+  "inspectFailure": {
+    "message": "Cannot connect to this page. Reload the extension and page, and allow file URL access.",
+    "description": "Inspect failure status"
+  },
+  "fillSuccess": {
+    "message": "Filled {0} field(s). {1}",
+    "description": "Fill result status"
+  },
+  "fillSkipped": {
+    "message": "Skipped {0}.",
+    "description": "Skipped field suffix"
+  },
+  "undoSuccess": {
+    "message": "Undid {0} field(s).",
+    "description": "Undo result status"
+  },
+  "missingResume": {
+    "message": "Load a resume JSON first.",
+    "description": "Missing resume status"
+  },
+  "loaded": {
+    "message": "Loaded",
+    "description": "Resume data loaded state"
+  },
+  "fieldCount": {
+    "message": "{0} fields",
+    "description": "Number of inspected fields; {0} is the count"
+  },
+  "unlabeled": {
+    "message": "Unnamed field",
+    "description": "Fallback label for unnamed form controls"
+  },
+  "resumePath": {
+    "message": "Resume JSON path",
+    "description": "Editable JSON path placeholder and accessible label"
+  },
+  "fieldValue": {
+    "message": "Value to fill",
+    "description": "Editable final field value placeholder and accessible label"
+  },
+  "sourceUser": {
+    "message": "User mapping",
+    "description": "User-specified mapping source"
+  },
+  "sourceJsonKey": {
+    "message": "JSON key",
+    "description": "Exact JSON key match source"
+  },
+  "sourceRule": {
+    "message": "Compatibility rule",
+    "description": "Legacy alias match source"
+  },
+  "sourceMissingPath": {
+    "message": "Path missing",
+    "description": "Saved JSON path not found"
+  },
+  "sourceAmbiguous": {
+    "message": "Needs review",
+    "description": "Multiple candidate keys found"
+  },
+  "sourceUnmatched": {
+    "message": "No match",
+    "description": "No matching JSON key"
+  },
+  "readyTitle": {
+    "message": "Ready",
+    "description": "Ready indicator tooltip"
+  },
+  "actionFailure": {
+    "message": "Unable to complete this action. Refresh the page and try again.",
+    "description": "Fill or undo error message"
+  }
+}
