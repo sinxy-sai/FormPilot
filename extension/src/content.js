@@ -1,4 +1,6 @@
 (() => {
+  if (globalThis.__formPilotContentLoaded) return;
+  globalThis.__formPilotContentLoaded = true;
   const state = { changes: [], indices: new WeakMap() };
   const text = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
   const attr = (el, name) => text(el?.getAttribute?.(name));

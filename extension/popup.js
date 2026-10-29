@@ -1,6 +1,22 @@
 const state = { resume: null, mappings: [], plan: [], language: 'zh-CN', theme: 'system', locale: {}, fallback: {}, resumeName: '', pageFieldCount: null };
 const $ = (selector) => document.querySelector(selector);
 const activeTab = async () => (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
+const sendToTab = async (tab, message) => {
+  if (!tab?.id) throw new Error('active-tab-unavailable');
+  const send = () => new Promise((resolve, reject) => {
+    chrome.tabs.sendMessage(tab.id, message, (response) => {
+      const error = chrome.runtime.lastError;
+      if (error) reject(new Error(error.message)); else resolve(response);
+    });
+  });
+  try { return await send(); } catch (error) {
+    const pageUrl = new URL(tab.url || '');
+    const injectable = /^https?:$/.test(pageUrl.protocol) || pageUrl.protocol === 'file:';
+    if (!injectable) throw error;
+    try { await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['src/content.js'] }); return send(); }
+    catch (injectionError) { injectionError.cause = error; throw injectionError; }
+  }
+};
 const normalize = (value) => String(value ?? '').normalize('NFKC').toLowerCase().replace(/[\p{P}\p{S}]+/gu, ' ').replace(/\s+/g, ' ').trim();
 const aliases = { 'full name':'basics.name',name:'basics.name',email:'basics.email','email address':'basics.email',phone:'basics.phone','phone number':'basics.phone',姓名:'基本信息.姓名',邮箱:'基本信息.邮箱',电话:'基本信息.电话',求职城市:'基本信息.求职城市',学校:'教育经历[0].学校',专业:'教育经历[0].专业',学位:'教育经历[0].学位',项目名称:'项目经历[0].项目名称',项目描述:'项目经历[0].项目描述','personal evaluation':'customFields.personalEvaluation','personal advantages':'customFields.personalAdvantages' };
 const valueAt = (object, path) => path.split('.').reduce((value, segment) => { const match = segment.match(/^([^[]+)(?:\[(\d+)\])?$/); if (!match || value == null) return undefined; const next = value[match[1]]; return match[2] == null ? next : next?.[Number(match[2])]; }, object);
@@ -17,7 +33,7 @@ $('#theme').addEventListener('change', async (event) => { state.theme = event.ta
 $('#load').addEventListener('click', () => $('#file').click());
 $('#file').addEventListener('change', async () => { const file = $('#file').files[0]; if (!file) return; try { state.resume = JSON.parse(await file.text()); state.resumeName = file.name; $('#resume-json').value = JSON.stringify(state.resume, null, 2); $('#resume-state').textContent = state.resumeName; await chrome.storage.local.set({ resume: state.resume }); setStatus('loadedFile', file.name); } catch { setStatus('invalidJson'); } });
 $('#apply-json').addEventListener('click', async () => { try { state.resume = JSON.parse($('#resume-json').value); await chrome.storage.local.set({ resume: state.resume }); $('#resume-state').textContent = 'Ready'; setStatus('jsonApplied'); } catch { setStatus('invalidJson'); } });
-$('#inspect').addEventListener('click', async () => { if (!state.resume) { setStatus('missingResume'); return; } try { const tab = await activeTab(); const result = await chrome.tabs.sendMessage(tab.id, { type: 'inspect-form' }); state.plan = createPlan(result.fields); state.pageFieldCount = result.fields.length; renderPlan(); $('#page-state').textContent = t('fieldCount', state.pageFieldCount); setStatus('inspectSuccess', result.editorsOpened || 0, result.fields.length); } catch { setStatus('inspectFailure'); } });
-$('#fill').addEventListener('click', async () => { try { const tab = await activeTab(); const result = await chrome.tabs.sendMessage(tab.id, { type: 'fill-fields', fields: state.plan }); state.mappings = state.plan.filter((item) => item.path && item.source === 'user').map((item) => ({ label: item.field.label, resumePath: item.path })); await chrome.storage.local.set({ resume: state.resume, mappings: state.mappings }); setStatus('fillSuccess', result.filled, result.skipped?.length ? t('fillSkipped', result.skipped.length) : ''); } catch { setStatus('actionFailure'); } });
-$('#undo').addEventListener('click', async () => { try { const tab = await activeTab(); const result = await chrome.tabs.sendMessage(tab.id, { type: 'undo-fill' }); setStatus('undoSuccess', result.undone); } catch { setStatus('actionFailure'); } });
+$('#inspect').addEventListener('click', async () => { if (!state.resume) { setStatus('missingResume'); return; } try { const tab = await activeTab(); const result = await sendToTab(tab, { type: 'inspect-form' }); state.plan = createPlan(result.fields); state.pageFieldCount = result.fields.length; renderPlan(); $('#page-state').textContent = t('fieldCount', state.pageFieldCount); setStatus('inspectSuccess', result.editorsOpened || 0, result.fields.length); } catch (error) { console.warn('FormPilot inspect failed', error); setStatus('inspectFailure'); } });
+$('#fill').addEventListener('click', async () => { try { const tab = await activeTab(); const result = await sendToTab(tab, { type: 'fill-fields', fields: state.plan }); state.mappings = state.plan.filter((item) => item.path && item.source === 'user').map((item) => ({ label: item.field.label, resumePath: item.path })); await chrome.storage.local.set({ resume: state.resume, mappings: state.mappings }); setStatus('fillSuccess', result.filled, result.skipped?.length ? t('fillSkipped', result.skipped.length) : ''); } catch (error) { console.warn('FormPilot fill failed', error); setStatus('actionFailure'); } });
+$('#undo').addEventListener('click', async () => { try { const tab = await activeTab(); const result = await sendToTab(tab, { type: 'undo-fill' }); setStatus('undoSuccess', result.undone); } catch (error) { console.warn('FormPilot undo failed', error); setStatus('actionFailure'); } });
 (async () => { const saved = await chrome.storage.local.get(['resume', 'mappings', 'language', 'theme']); Object.assign(state, { resume: saved.resume || null, mappings: saved.mappings || [], language: saved.language || 'zh-CN', theme: saved.theme || 'system' }); state.fallback = await (async () => { const response = await fetch(chrome.runtime.getURL('locales/en-US/messages.json')); return response.json(); })(); if (state.resume) { state.resumeName = '__loaded__'; $('#resume-json').value = JSON.stringify(state.resume, null, 2); } await applyLocale(); applyTheme(); })();
