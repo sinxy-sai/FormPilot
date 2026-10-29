@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { createFillPlan, normalizeLabel } from '../src/index.mjs';
+import { createFillPlan, normalizeLabel, matchField } from '../src/index.mjs';
 
 test('normalizes labels before matching', () => {
   assert.equal(normalizeLabel(' Field-of-Study: '), 'field of study');
@@ -116,4 +116,22 @@ test('does not force a matching user key through an English schema alias', () =>
   assert.equal(plan[0].path, '姓名');
   assert.equal(plan[0].value, '用户自定义姓名');
   assert.equal(plan[0].source, 'json-key');
+});
+
+test('matches the current Chinese resume structure used by the extension', () => {
+  const resume = {
+    基本信息: { 姓名: 'A', 手机号: '100', 邮箱: 'a@example.com', 城市: '深圳' },
+    教育经历: { 学校: 'Demo University', 专业: 'Computer Science', 学历: '本科' },
+    项目经历: [{ 名称: 'Demo Project', 描述: 'Project details' }],
+  };
+  assert.equal(matchField({ label: '手机号码', fieldKey: 'mobile' }, resume).value, '100');
+  assert.equal(matchField({ label: '学校名称', fieldKey: 'school' }, resume).value, 'Demo University');
+  assert.equal(matchField({ label: '项目名称', collectionKey: 'project_list', fieldKey: 'name', repeatIndex: 0 }, resume).value, 'Demo Project');
+});
+
+test('matches multilingual section and field keys without requiring one JSON language', () => {
+  const resume = { 基本情報: { 氏名: 'A' }, 学歴: { 学校名: 'Uni' }, プロジェクト: [{ 名称: 'Project' }] };
+  assert.equal(matchField({ label: 'Full Name', fieldKey: 'name', section: '基本情報' }, resume).value, 'A');
+  assert.equal(matchField({ label: 'School', fieldKey: 'school', section: '学歴' }, resume).value, 'Uni');
+  assert.equal(matchField({ label: 'Project Name', fieldKey: 'name', collectionKey: 'プロジェクト', repeatIndex: 0 }, resume).value, 'Project');
 });

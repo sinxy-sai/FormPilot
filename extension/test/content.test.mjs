@@ -59,10 +59,10 @@ test('uses a native setter and verifies controlled input values', () => {
 test('inspects ByteDance formily controls with a visible field label and repeat index', () => {
   const labelNode = { textContent: '学校名称' };
   const item = {
-    tagName: 'INPUT', type: 'text', value: '北京师范大学', className: 'formily-item-school', textContent: '教育经历 学校名称', querySelector() { return { textContent: '学校名称' }; }, offsetParent: {},
+    tagName: 'INPUT', type: 'text', value: '北京师范大学', className: 'formily-item-school', textContent: '教育经历 学校名称', querySelector() { return { textContent: '学校名称' }; }, querySelectorAll() { return [item]; }, offsetParent: {},
     labels: [labelNode], parentElement: null,
     getAttribute(name) { return name === 'class' ? 'ud__native-input' : ''; },
-    closest(selector) { if (selector.includes('formily')) return { textContent: '教育经历 学校名称', querySelector() { return { textContent: '学校名称' }; }, parentElement: { textContent: '教育经历', parentElement: null } }; return null; },
+    closest(selector) { if (selector.includes('formily')) return { textContent: '教育经历 学校名称', querySelector() { return { textContent: '学校名称' }; }, querySelectorAll() { return [item]; }, parentElement: { textContent: '教育经历', parentElement: null } }; return null; },
   };
   const message = harness(item);
   const result = message({ type: 'inspect-form' });
