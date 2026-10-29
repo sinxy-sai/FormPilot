@@ -8,3 +8,5 @@ coverage/
 # Local captures from authenticated recruiting sites. Never commit these.
 examples/*BOSS*
 examples/*boss*
+examples/*bytedance*
+examples/*ByteDance*

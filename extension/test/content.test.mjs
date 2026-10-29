@@ -8,8 +8,9 @@ const source = readFileSync(new URL('../src/content.js', import.meta.url), 'utf8
 function harness(element) {
   let listener;
   runInNewContext(source, {
-    document: { querySelector: (selector) => selector === '#school' ? element : null, querySelectorAll: () => [] },
-    Event, chrome: { runtime: { onMessage: { addListener(fn) { listener = fn; } } } },
+    document: { querySelector: (selector) => selector === '#school' ? element : null, querySelectorAll: () => [element] },
+    Event, location: { href: 'https://jobs.bytedance.com/campus/resume/edit' },
+    chrome: { runtime: { onMessage: { addListener(fn) { listener = fn; } } } },
   });
   return (message) => {
     let response;
@@ -43,4 +44,29 @@ test('reports options that cannot be selected without clearing the current selec
   assert.equal(result.filled, 0);
   assert.equal(result.skipped[0].reason, 'option-not-found');
   assert.equal(element.value, 'cs');
+});
+
+test('uses a native setter and verifies controlled input values', () => {
+  const element = { tagName: 'INPUT', offsetParent: {}, value: 'Before', focus() {}, dispatchEvent() {}, getAttribute() { return ''; } };
+  const message = harness(element);
+  const result = message({ type: 'fill-fields', fields: [{ selector: '#school', value: 'Demo University', confidence: 1 }] });
+  assert.equal(result.filled, 1);
+  assert.equal(result.verified, 1);
+  assert.equal(element.value, 'Demo University');
+  assert.equal(element.value, 'Demo University');
+});
+
+test('inspects ByteDance formily controls with a visible field label and repeat index', () => {
+  const labelNode = { textContent: '学校名称' };
+  const item = {
+    tagName: 'INPUT', type: 'text', value: '北京师范大学', className: 'formily-item-school', textContent: '教育经历 学校名称', querySelector() { return { textContent: '学校名称' }; }, offsetParent: {},
+    labels: [labelNode], parentElement: null,
+    getAttribute(name) { return name === 'class' ? 'ud__native-input' : ''; },
+    closest(selector) { if (selector.includes('formily')) return { textContent: '教育经历 学校名称', querySelector() { return { textContent: '学校名称' }; }, parentElement: { textContent: '教育经历', parentElement: null } }; return null; },
+  };
+  const message = harness(item);
+  const result = message({ type: 'inspect-form' });
+  assert.equal(result.fields[0].label, '学校名称');
+  assert.equal(result.fields[0].section, '教育经历');
+  assert.equal(result.fields[0].controlType, 'text');
 });

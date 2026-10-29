@@ -1,66 +1,38 @@
 (() => {
-  const state = { changes: [] };
-  const label = (el) => el.labels?.[0]?.textContent?.trim() || el.getAttribute('aria-label') || el.getAttribute('placeholder') || el.name || '';
-  const selector = (el, index) => el.id ? `#${CSS.escape(el.id)}` : el.name ? `${el.tagName.toLowerCase()}[name="${CSS.escape(el.name)}"]` : `${el.tagName.toLowerCase()}:nth-of-type(${index + 1})`;
+  const state = { changes: [], indices: new WeakMap() };
+  const text = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
+  const attr = (el, name) => text(el?.getAttribute?.(name));
   const isVisible = (el) => Boolean(el && (el.offsetParent !== null || el.getClientRects?.().length));
-  const inspect = () => [...document.querySelectorAll('input, textarea, select')].map((el, index) => ({ index, selector: selector(el, index), label: label(el), name: el.name || '', type: el.type || 'text', value: el.value || '', visible: isVisible(el) }));
-  const openEditors = () => {
-    let opened = 0;
-    for (const button of document.querySelectorAll('button, a, [role="button"]')) {
-      if (/编辑|edit/i.test(button.textContent || '') && !isVisible(button)) continue;
-      if (/编辑|edit/i.test(button.textContent || '')) { button.click(); opened += 1; }
-    }
-    return opened;
+  const nativeValueSetter = (el) => {
+    const proto = el?.constructor?.prototype;
+    return Object.getOwnPropertyDescriptor(proto || {}, 'value')?.set
+      || Object.getOwnPropertyDescriptor(globalThis.HTMLInputElement?.prototype || {}, 'value')?.set
+      || Object.getOwnPropertyDescriptor(globalThis.HTMLTextAreaElement?.prototype || {}, 'value')?.set;
   };
-  const activate = (el) => {
-    if (isVisible(el)) return false;
-    const section = el.closest('section, [role="region"], form, .section, li, .item');
-    const button = [...(section?.querySelectorAll('button, a, [role="button"]') || [])].find((candidate) => /编辑|edit/i.test(candidate.textContent || ''));
-    if (button) { button.click(); return true; }
-    return false;
+  const setValue = (el, value) => {
+    const setter = nativeValueSetter(el); const next = String(value ?? '');
+    if (setter) setter.call(el, next); else el.value = next;
+    el.dispatchEvent?.(new Event('input', { bubbles: true })); el.dispatchEvent?.(new Event('change', { bubbles: true }));
   };
-  const fill = (fields) => {
-    state.changes = [];
-    const skipped = [];
-    let editOpened = 0;
-    for (const item of fields || []) {
-      const targetSelector = item.selector || item.field?.selector;
-      if (!targetSelector || item.value == null || item.confidence === 0) continue;
-      let el = document.querySelector(targetSelector);
-      if (!el) { skipped.push({ selector: targetSelector, reason: 'element-not-found' }); continue; }
-      if (activate(el)) { editOpened += 1; el = document.querySelector(targetSelector); }
-      if (!el || !isVisible(el)) { skipped.push({ selector: targetSelector, reason: 'editor-not-open' }); continue; }
-      if (el.tagName?.toLowerCase() === 'select') {
-        const option = [...(el.options || [])].find((candidate) => candidate.value === String(item.value) || candidate.text === String(item.value));
-        if (!option) { skipped.push({ selector: targetSelector, reason: 'option-not-found', value: item.value }); continue; }
-        state.changes.push({ selector: targetSelector, previousValue: el.value });
-        el.value = option.value;
-      } else {
-        state.changes.push({ selector: targetSelector, previousValue: el.value });
-        el.focus(); el.value = String(item.value);
-      }
-      el.dispatchEvent(new Event('input', { bubbles: true }));
-      el.dispatchEvent(new Event('change', { bubbles: true }));
-    }
-    return { filled: state.changes.length, editOpened, skipped };
+  const esc = (value) => globalThis.CSS?.escape ? CSS.escape(value) : String(value).replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+  const selector = (el, index) => {
+    const stableIndex = el.dataset?.formpilotIndex ?? state.indices.get(el);
+    if (stableIndex != null) return el.dataset ? `[data-formpilot-index="${stableIndex}"]` : `:scope > *:nth-child(${Number(stableIndex) + 1})`;
+    if (el.id) return `#${esc(el.id)}`;
+    if (el.name) return `${el.tagName.toLowerCase()}[name="${esc(el.name)}"]`;
+    return `${el.tagName.toLowerCase()}:nth-of-type(${index + 1})`;
   };
-  const undo = () => {
-    for (const item of state.changes) {
-      const el = document.querySelector(item.selector);
-      if (!el) continue;
-      el.value = item.previousValue;
-      el.dispatchEvent(new Event('input', { bubbles: true }));
-      el.dispatchEvent(new Event('change', { bubbles: true }));
-    }
-    const count = state.changes.length;
-    state.changes = [];
-    return { undone: count };
-  };
-  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-    if (message?.type === 'open-editors') sendResponse({ opened: openEditors() });
-    if (message?.type === 'inspect-form') { const opened = openEditors(); sendResponse({ url: location.href, fields: inspect(), editorsOpened: opened }); }
-    if (message?.type === 'fill-fields') sendResponse(fill(message.fields));
-    if (message?.type === 'undo-fill') sendResponse(undo());
-    return true;
-  });
+  const controlType = (el) => el.getAttribute?.('role') === 'combobox' || /select__selector__search__input/.test(attr(el, 'class')) ? 'combobox' : el.tagName?.toLowerCase() === 'select' ? 'select' : el.type || 'text';
+  const label = (el) => { const direct = text(el.labels?.[0]?.textContent); if (direct && !/^\[object HTML/i.test(direct)) return direct; const item = formilyItem(el); const explicit = text(item?.querySelector?.('.ud-formily-item-label, [data-field-label]')?.textContent); if (explicit) return explicit.replace(/[*＊]/g, '').trim(); const raw = text(item?.textContent); const current = text(el.value); const derived = raw.replace(current, '').replace(/[*＊]/g, '').trim(); return attr(el, 'aria-label') || attr(el, 'placeholder') || attr(el, 'name') || derived || ''; };
+  const formilyItem = (el) => { let node = el; while (node) { const token = String(node.className || '').split(/\s+/).find((part) => /^formily-item-[a-zA-Z0-9_-]+$/.test(part)); if (token) return node; node = node.parentElement; } return el.closest?.('[data-field], [role="group"]'); };
+  const section = (el) => { const item = formilyItem(el); const candidate = item?.closest?.('section, [role="region"], form, .resume-section') || item?.parentElement; const heading = candidate?.querySelector?.('h1,h2,h3,h4,[role="heading"]'); const fromAncestor = text(heading?.textContent) || text(candidate?.getAttribute?.('data-section')) || (candidate !== item ? text(candidate?.textContent) : ''); if (fromAncestor) return fromAncestor; const itemText = text(item?.textContent); const fieldLabel = label(el); return itemText && fieldLabel ? text(itemText.replace(fieldLabel, '').split(/[|·•]/)[0]) : ''; };
+  const repeatIndex = (el) => { const item = formilyItem(el); const group = item?.closest?.('[data-array-index], [data-repeat-index], .formily-array-base-item'); const value = group?.getAttribute?.('data-array-index') ?? group?.getAttribute?.('data-repeat-index'); return value == null ? null : Number(value); };
+  const inspect = () => [...document.querySelectorAll('input, textarea, select')].map((el, index) => { if (el.dataset) el.dataset.formpilotIndex = String(index); else state.indices.set(el, index); return { index, selector: selector(el, index), label: label(el), name: el.name || '', type: el.type || 'text', controlType: controlType(el), role: attr(el, 'role'), value: el.value || '', visible: isVisible(el), section: section(el), repeatIndex: repeatIndex(el) }; });
+  const openEditors = () => { let opened = 0; for (const button of document.querySelectorAll('button, a, [role="button"]')) if (/编辑|edit/i.test(text(button.textContent)) && isVisible(button)) { button.click?.(); opened += 1; } return opened; };
+  const activate = (el) => { if (isVisible(el)) return false; const sectionEl = el.closest?.('section, [role="region"], form, .section, li, .item, [class*="formily-item"]'); const button = [...(sectionEl?.querySelectorAll?.('button, a, [role="button"]') || [])].find((candidate) => /编辑|edit/i.test(text(candidate.textContent))); if (button) { button.click?.(); return true; } return false; };
+  const fillCombobox = (el, value) => { const before = el.value || text(el.parentElement?.textContent); el.click?.(); setValue(el, value); const options = [...document.querySelectorAll('[role="option"], li, [data-value]')]; options.find((candidate) => text(candidate.textContent) === String(value) || attr(candidate, 'data-value') === String(value))?.click?.(); return before; };
+  const verify = (el, value) => String(el.value ?? text(el.parentElement?.textContent)) === String(value);
+  const fill = (fields) => { state.changes = []; const skipped = [], verified = []; let editOpened = 0; for (const item of fields || []) { const targetSelector = item.selector || item.field?.selector; if (!targetSelector || item.value == null || item.confidence === 0) continue; let el = document.querySelector(targetSelector); if (!el) { skipped.push({ selector: targetSelector, reason: 'element-not-found' }); continue; } if (activate(el)) { editOpened += 1; el = document.querySelector(targetSelector); } if (!el || !isVisible(el)) { skipped.push({ selector: targetSelector, reason: 'editor-not-open' }); continue; } const previousValue = el.value || text(el.parentElement?.textContent); if (el.tagName?.toLowerCase() === 'select') { const option = [...(el.options || [])].find((candidate) => candidate.value === String(item.value) || text(candidate.text) === String(item.value)); if (!option) { skipped.push({ selector: targetSelector, reason: 'option-not-found', value: item.value }); continue; } state.changes.push({ selector: targetSelector, previousValue }); setValue(el, option.value); } else if (controlType(el) === 'combobox') { state.changes.push({ selector: targetSelector, previousValue }); fillCombobox(el, item.value); } else { state.changes.push({ selector: targetSelector, previousValue }); el.focus?.(); setValue(el, item.value); } if (verify(el, item.value)) verified.push(targetSelector); else skipped.push({ selector: targetSelector, reason: 'verification-failed', expected: item.value, actual: el.value }); } return { filled: state.changes.length, verified: verified.length, editOpened, skipped }; };
+  const undo = () => { for (const item of state.changes) { const el = document.querySelector(item.selector); if (el) setValue(el, item.previousValue); } const count = state.changes.length; state.changes = []; return { undone: count }; };
+  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => { if (message?.type === 'open-editors') sendResponse({ opened: openEditors() }); if (message?.type === 'inspect-form') { const opened = openEditors(); sendResponse({ url: location.href, site: /jobs\.bytedance\.com/.test(location.hostname) ? 'bytedance-campus' : 'generic', fields: inspect(), editorsOpened: opened }); } if (message?.type === 'fill-fields') sendResponse(fill(message.fields)); if (message?.type === 'undo-fill') sendResponse(undo()); return true; });
 })();
