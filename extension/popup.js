@@ -1,4 +1,4 @@
-const FORMPILOT_MATCHER_VERSION = 'matcher-0.2.1';
+const FORMPILOT_MATCHER_VERSION = 'matcher-0.2.2';
 const SECTION_KEYS={basics:['basics','基本信息','基本资料','基本情報','기본 정보'],education:['education','教育经历','教育背景','学歴','교육'],internships:['internships','实习经历','实习','インターン'],projects:['projects','项目经历','项目经验','プロジェクト','프로젝트'],competitions:['competitions','competition','竞赛','コンテスト','대회'],languages:['languages','language','语言能力','語学','언어'],sns:['sns','social','社交账号','ソーシャル','소셜'],custom:['custom','customFields','自定义字段','自我评价','カスタム','사용자 정의']};
 const FIELD_KEYS={name:['name','fullName','姓名','名称','竞赛名称','项目名称','氏名','이름'],mobile:['phone','mobile','phoneNumber','手机号','手机号码','电话','電話','전화번호'],email:['email','emailAddress','邮箱','メール','이메일'],city:['city','location','城市','期望工作地点','勤務地','희망 근무지'],identificationType:['identificationType','证件类型','身份证类型'],identificationNumber:['identificationNumber','证件号','证件号码','身份证号'],educationType:['educationType','学历类型','培养方式'],school:['school','university','institution','学校','学校名称','大学','学校名','학교'],degree:['degree','学历','学位','学歴','학위'],college:['college','学院','院系'],major:['major','fieldOfStudy','field_of_study','专业','専攻','전공'],role:['role','projectRole','角色','项目角色','役割','역할'],link:['link','url','链接','项目链接','URL','URL / ID','账号','リンク','링크'],desc:['desc','description','summary','描述','内容','説明','설명'],language:['language','语言','言語','언어'],proficiency:['proficiency','level','水平','精通程度','レベル','수준'],platform:['platform','snsType','社交平台','平台'],start:['start','startDate','开始时间','開始日','시작일'],end:['end','endDate','结束时间','終了日','끝일'],noInternship:['noInternship','no_internship','没有实习经历','有实习经历'],personalEvaluation:['personalEvaluation','personalSummary','个人评价','自我评价','自己PR','内容','자기소개']};
 const LABEL_ALIASES=new Map([['full name','basics.name'],['name','basics.name'],['email','basics.email'],['email address','basics.email'],['phone','basics.phone'],['phone number','basics.phone'],['姓名','基本信息.姓名'],['邮箱','基本信息.邮箱'],['电话','基本信息.电话'],['手机号','基本信息.手机号'],['学校','教育经历.学校'],['专业','教育经历.专业'],['学位','教育经历.学位'],['个人评价','自我评价.内容'],['项目名称','projects[0].name'],['项目描述','projects[0].bullets[0]'],['personal evaluation','customFields.personalEvaluation']]);
@@ -24,7 +24,7 @@ function createFillPlan(fields,resume,mappings=[]){return fields.map(f=>matchFie
 
 
 
-const state = { runtimeVersion: '0.2.1', resume: null, plan: [], language: 'zh-CN', theme: 'system', locale: {}, fallback: {}, resumeName: '', pageFieldCount: null };
+const state = { runtimeVersion: '0.2.2', resume: null, plan: [], language: 'zh-CN', theme: 'system', locale: {}, fallback: {}, resumeName: '', pageFieldCount: null };
 const $ = (selector) => document.querySelector(selector);
 const activeTab = async () => (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
 const sendToTab = async (tab, message) => {
