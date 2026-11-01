@@ -63,12 +63,12 @@ The browser extension does not submit applications, solve CAPTCHA, bypass authen
 
 ## 🔨 Installation
 
-FormPilot is currently distributed as an unpacked development extension.
+Build the extension, then load the generated directory as an unpacked extension.
 
 1. Open `edge://extensions` or `chrome://extensions`.
 2. Enable **Developer mode**.
-3. Select **Load unpacked**.
-4. Choose the repository's `extension/` directory.
+3. From the repository root, run `pnpm build`.
+4. Select **Load unpacked** and choose the repository's `dist/extension/` directory.
 5. For local `file:///` fixtures, open the extension details and enable **Allow access to file URLs**.
 6. Reload the extension and refresh the test page after source changes.
 
@@ -152,4 +152,5 @@ FormPilot is licensed under the [Apache License 2.0](LICENSE).
 
 
 <!-- Community files: CODE_OF_CONDUCT.md, GOVERNANCE.md, SUPPORT.md -->
+
 

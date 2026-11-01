@@ -72,3 +72,42 @@ test('inspects ByteDance formily controls with a visible field label and repeat 
   assert.equal(result.fields[0].controlType, 'text');
 });
 
+import { inspectControls, executeFieldAction, executeFillPlan, undoLastFill } from '../src/runtime/control-executor.mjs';
+import { convertLegacyFields } from '../src/content-entry.mjs';
+import { readFileSync as readEntry } from 'node:fs';
+test('built content entry retains legacy message aliases', () => {
+  const entry = readEntry(new URL('../src/content-entry.mjs', import.meta.url), 'utf8');
+  for (const type of ['inspect-form', 'fill-fields', 'undo-fill', 'inspect-page', 'execute-plan', 'undo-last-fill']) assert.match(entry, new RegExp(type));
+});
+test('legacy nested matcher payload converts to a verified text action', () => {
+  const plan = convertLegacyFields([{ field: { selector: '#school', controlType: 'text' }, value: 'Demo University', confidence: 0.95 }]);
+  assert.deepEqual(plan, [{ selector: '#school', action: { type: 'text', value: 'Demo University' } }]);
+});
+
+test('generic executor inspects and verifies native controls', async () => {
+  const input = { tagName:'INPUT', type:'text', id:'name', name:'name', value:'', offsetParent:{}, getAttribute(){return null;}, dispatchEvent(){}, focus(){}, blur(){} };
+  const textarea = { tagName:'TEXTAREA', id:'bio', value:'', offsetParent:{}, getAttribute(){return null;}, dispatchEvent(){}, focus(){}, blur(){} };
+  const checkbox = { tagName:'INPUT', type:'checkbox', id:'agree', checked:false, offsetParent:{}, getAttribute(){return null;}, dispatchEvent(){}, focus(){}, blur(){} };
+  const option = (value,text)=>({value,text});
+  const select = { tagName:'SELECT', id:'city', value:'sh', options:[option('sh','Shanghai')], offsetParent:{}, getAttribute(){return null;}, dispatchEvent(){}, focus(){}, blur(){} };
+  const doc = { querySelectorAll(){ return [input,textarea,checkbox,select]; }, querySelector(sel){ return ({'#name':input,'#bio':textarea,'#agree':checkbox,'#city':select})[sel] || null; } };
+  assert.equal(inspectControls(doc).length,4);
+  const result = await executeFillPlan(doc,[
+    {selector:'#name', action:{type:'text',value:'Alice'}},
+    {selector:'#bio', action:{type:'textarea',value:'Hello'}},
+    {selector:'#agree', action:{type:'checkbox',checked:true}},
+    {selector:'#city', action:{type:'native-select',value:'sh'}}
+  ]);
+  assert.equal(result.filled,4); assert.equal(input.value,'Alice'); assert.equal(checkbox.checked,true); assert.equal(select.value,'sh');
+  assert.equal(undoLastFill(doc).undone,4); assert.equal(input.value,''); assert.equal(checkbox.checked,false);
+});
+
+test('executor reports missing custom option and continues', async () => {
+ const input={tagName:'INPUT',type:'text',id:'a',value:'',offsetParent:{},getAttribute(){return null;},dispatchEvent(){}};
+ const combo={tagName:'DIV',id:'combo',getAttribute(n){return n==='role'?'combobox':null;},offsetParent:{},textContent:'',click(){},querySelectorAll(){return []}};
+ const doc={querySelectorAll(){return [input,combo]},querySelector(s){return s==='#a'?input:s==='#combo'?combo:null}};
+ const r=await executeFillPlan(doc,[{selector:'#combo',action:{type:'custom-select',optionText:'Nope'}},{selector:'#a',action:{type:'text',value:'ok'}}]);
+ assert.equal(r.filled,1); assert.equal(r.results[0].reason,'option-not-found'); assert.equal(input.value,'ok');
+});
+
+
