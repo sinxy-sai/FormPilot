@@ -10,9 +10,13 @@
     "test:runtime": "node --test packages/form-runtime/test/index.test.mjs",
     "validate:locales": "node scripts/validate-locales.mjs",
     "build": "node scripts/build-extension.mjs",
-    "check:build": "node scripts/build-extension.mjs"
+    "check:build": "node scripts/build-extension.mjs",
+    "verify:local-model": "node --test extension/test/ai-runtime.test.mjs"
   },
   "devDependencies": {
     "vite": "^6.0.0"
+  },
+  "dependencies": {
+    "@huggingface/transformers": "3.7.2"
   }
 }

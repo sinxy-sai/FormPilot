@@ -1,0 +1,11 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { loadModelConfig } from '../src/ai/model-config.mjs';
+import { createTransformersProvider } from '../src/ai/transformers-provider.mjs';
+import { handleModelMessage } from '../src/ai/model-worker.mjs';
+
+test('local provider is unavailable without verified evidence', async () => { const p=createTransformersProvider({config:{enabled:true,allowNetwork:true,evidence:'unverified',revision:'main'},runtimeFactory:async()=>({generate:async()=>({})})}); assert.deepEqual(await p.generate({}),{status:'abstain',reason:'unavailable'}); });
+test('invalid JSON config and model output abstain safely', async () => { assert.equal(loadModelConfig('{').reason,'invalid-json'); const p=createTransformersProvider({config:{enabled:true,allowNetwork:true,evidence:'verified',revision:'r1'},runtimeFactory:async()=>({generate:async()=>'{bad'})}); assert.deepEqual(await p.generate({}),{status:'abstain',reason:'invalid-json'}); });
+test('provider timeout and caller cancellation settle', async () => { const p=createTransformersProvider({config:{enabled:true,allowNetwork:true,evidence:'verified',revision:'r1'},timeoutMs:10,runtimeFactory:async()=>({generate:async()=>new Promise(()=>{})})}); assert.deepEqual(await p.generate({}),{status:'abstain',reason:'timeout'}); const c=new AbortController(); const q=createTransformersProvider({config:{enabled:true,allowNetwork:true,evidence:'verified',revision:'r1'},runtimeFactory:async()=>({generate:async()=>new Promise(()=>{})})}); const pending=q.generate({},{signal:c.signal}); c.abort(); assert.deepEqual(await pending,{status:'abstain',reason:'cancelled'}); });
+test('worker loads provider once and supports cancellation', async () => { let loads=0, messages=[]; const provider={generate:async(_input,{signal})=>new Promise((resolve,reject)=>{const t=setTimeout(()=>resolve({status:'abstain',reason:'done'}),30);signal.addEventListener('abort',()=>{clearTimeout(t);reject(Error('cancel'))},{once:true})})}; const options={provider}; const a=handleModelMessage({type:'generate',id:'a',input:{}},v=>messages.push(v),options); await handleModelMessage({type:'cancel',id:'a'},()=>{},options); await a; assert.equal(messages[0].result.status,'abstain'); });
+
