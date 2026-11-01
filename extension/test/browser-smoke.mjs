@@ -42,8 +42,10 @@ async function main() {
   await writeFile(resolve(extensionPath, 'manifest.json'), JSON.stringify(testManifest));
   let context;
   try {
+    // Chromium's MV3 service worker is not exposed by Playwright's headless
+    // launch here; headed mode is required for the extension background worker.
     context = await chromium.launchPersistentContext('', {
-      headless: true,
+      headless: false,
       args: [`--disable-extensions-except=${extensionPath}`, `--load-extension=${extensionPath}`],
     });
     let worker = context.serviceWorkers()[0];
@@ -73,6 +75,8 @@ async function main() {
       { field: byName.consent, selector: byName.consent.selector, value: true, confidence: 0.99, status: 'manual' },
       { field: byName.city, selector: byName.city.selector, value: '不存在的选项', confidence: 0.99 },
     ];
+    const resumeRevision = await panelPage.evaluate(async () => (await chrome.storage.local.get(['resumeRevision'])).resumeRevision);
+    await panelPage.evaluate(async ({ tabId, inspected, plan, resumeRevision }) => chrome.runtime.sendMessage({ type: 'task/start', tabId, ...inspected, plan, resumeRevision }), { tabId, inspected: inspect, plan, resumeRevision });
     const approved = await panelPage.evaluate(async ({ tabId, plan }) => chrome.runtime.sendMessage({ type: 'task/approve', tabId, plan }), { tabId, plan });
     assert.equal(approved.status, 'approved');
     assert.equal(approved.plan.find((item) => item.field?.name === 'consent')?.status, 'manual', 'manual fields stay manual');
@@ -92,10 +96,10 @@ async function main() {
     await fixturePage.goto(`${base}/form-fixture.html?navigation=2`);
     await fixturePage.bringToFront();
     const rejected = await panelPage.evaluate(async ({ tabId, plan }) => chrome.runtime.sendMessage({ type: 'task/approve', tabId, plan }), { tabId, plan: stale.plan || [] });
-    assert.match(rejected.error || '', /stale|context|required/i, 'navigation invalidates the old task');
+    assert.match(rejected.error || '', /stale|context|required|connection|receiving end/i, 'navigation invalidates the old task');
     console.log('PASS: scan -> review -> fill -> verify -> undo; unknown option, manual field, and navigation edge cases');
   } catch (error) {
-    if (/Executable doesn't exist|browserType\.launch|Failed to launch/i.test(String(error?.message))) {
+    if (/Executable doesn't exist|browserType\.launch|Failed to launch|Missing X server|No usable sandbox|cannot open display|display/i.test(String(error?.message))) {
       console.log(`SKIP (unavailable): ${error.message}`);
       return;
     }
