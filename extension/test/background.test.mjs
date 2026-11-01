@@ -11,6 +11,7 @@ test('identity mismatch rejects document and fingerprint', async()=>{ await hand
 
 test('built content entry carries identity handshake',()=>{ const source=readFileSync(new URL('../src/content-entry.mjs',import.meta.url),'utf8'); assert.match(source,/documentId/); assert.match(source,/pageFingerprint/); assert.match(source,/frameId/); });
 test('sidepanel inspect queries active tab and sends binding',()=>{ const source=readFileSync(new URL('../src/sidepanel.js',import.meta.url),'utf8'); assert.match(source,/chrome\.tabs\.query/); assert.match(source,/tabId:tab\?\.id/); });
+test('popup fill path delegates to background approval protocol',()=>{ const source=readFileSync(new URL('../popup.js',import.meta.url),'utf8'); assert.match(source,/task\/start/); assert.match(source,/task\/approve/); assert.match(source,/task\/execute/); });
 
 
 test('fresh inspect identity rejects same-url navigation', async()=>{ await handleMessage({type:'task/start',tabId:73,url:'https://a.test',documentId:'d1',frameId:0,pageFingerprint:'p1',plan:[]}); const a=await handleMessage({type:'task/approve',tabId:73,url:'https://a.test',documentId:'d1',frameId:0,pageFingerprint:'p1',plan:[]}); await assert.rejects(()=>handleMessage({type:'task/execute',tabId:73,url:'https://a.test',documentId:'d2',frameId:0,pageFingerprint:'p2',approvalToken:a.approvalToken}),/stale|context/); });

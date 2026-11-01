@@ -7,6 +7,7 @@ for(const dir of ['assets','locales']) await cp(resolve(root,'extension',dir),re
 for(const file of ['popup.html','popup.css','popup.js','sidepanel.html','sidepanel.css']) await cp(resolve(root,'extension',file),resolve(out,file));
 for(const file of ['background.js','sidepanel.js']) await cp(resolve(root,'extension/src',file),resolve(out,'src',file));
 for(const dir of ['core','ai']) await cp(resolve(root,'extension/src',dir),resolve(out,'src',dir),{recursive:true});
+await cp(resolve(root,'extension/src/field-matcher.mjs'),resolve(out,'src/field-matcher.mjs'));
 const manifest=JSON.parse(await readFile(resolve(root,'extension/manifest.json'),'utf8')); manifest.content_scripts=manifest.content_scripts.map(e=>({...e,js:['src/content.js']})); manifest.background.service_worker='src/background.js'; await writeFile(resolve(out,'manifest.json'),JSON.stringify(manifest));
 const declared = new Set(['manifest.json']);
 const walk = async dir => { for (const entry of await readdir(dir,{withFileTypes:true})) { const path=resolve(dir,entry.name); if(entry.isDirectory()) await walk(path); else declared.add(relative(out,path).replaceAll('\\','/')); } }; await walk(out);
