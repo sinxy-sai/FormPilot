@@ -11,9 +11,11 @@
     "validate:locales": "node scripts/validate-locales.mjs",
     "build": "node scripts/build-extension.mjs",
     "check:build": "node scripts/build-extension.mjs",
-    "verify:local-model": "node --test extension/test/ai-runtime.test.mjs"
+    "verify:local-model": "node --test extension/test/ai-runtime.test.mjs",
+    "test:browser": "node extension/test/browser-smoke.mjs"
   },
   "devDependencies": {
+    "playwright": "1.52.0",
     "vite": "^6.0.0"
   },
   "dependencies": {

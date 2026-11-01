@@ -70,7 +70,9 @@ Build the extension, then load the generated directory as an unpacked extension.
 3. From the repository root, run `pnpm build`.
 4. Select **Load unpacked** and choose the repository's `dist/extension/` directory.
 5. For local `file:///` fixtures, open the extension details and enable **Allow access to file URLs**.
-6. Reload the extension and refresh the test page after source changes.
+6. Open the extension's **Side Panel** from the toolbar (or the extension details page) and refresh the test page after source changes.
+
+For local-only development, keep the model setting disabled unless you have explicitly enabled a compatible local model and accepted its storage/download cost. When the local model is unavailable, FormPilot falls back to deterministic matching and marks uncertain fields for manual review.
 
 ## ▶️ Usage
 
@@ -80,7 +82,9 @@ Open a form page, click the FormPilot toolbar icon, then follow the three cards:
 2. **Current page** — choose **Inspect form**. FormPilot reads the page's existing controls and attempts to open nearby Edit sections.
 3. **Review matches** — verify the JSON path and final value. Correct uncertain fields before choosing **Fill reviewed fields**.
 
-The extension never clicks the website's final Submit button. For a custom widget that cannot be filled, the result reports the skipped reason so you can select it manually or add a site adapter.
+The extension never clicks the website's final Submit button. Use the Side Panel to inspect, review, fill, verify, and undo. Text inputs, textareas, checkboxes, and native single-select controls are the reliable first-stage boundary. Unknown select options keep the existing value. Fields marked low confidence or manual are left for you.
+
+Cross-origin iframe controls are only inspected when the page grants the required extension frame access; closed shadow roots and custom widgets are not guaranteed. Complex multi-selects, comboboxes, virtualized lists, and widgets that require site-specific events may be reported as skipped and need manual entry or an adapter.
 
 ## 🧪 Tests
 
@@ -152,5 +156,7 @@ FormPilot is licensed under the [Apache License 2.0](LICENSE).
 
 
 <!-- Community files: CODE_OF_CONDUCT.md, GOVERNANCE.md, SUPPORT.md -->
+
+
 
 
