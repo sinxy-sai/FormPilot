@@ -1,7 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { loadModelConfig } from '../src/ai/model-config.mjs';
+import { loadModelConfig, loadQwenModelConfig } from '../src/ai/model-config.mjs';
 import { createTransformersProvider } from '../src/ai/transformers-provider.mjs';
+import { createQwenProvider } from '../src/ai/qwen-provider.mjs';
+import { createQwenRuntime } from '../src/ai/qwen-runtime.mjs';
 import { handleModelMessage } from '../src/ai/model-worker.mjs';
 import { createTransformersRuntime } from '../src/ai/transformers-runtime.mjs';
 
@@ -10,6 +12,15 @@ test('default BGE candidate is pinned but disabled by default', () => {
   assert.equal(loadModelConfig().modelId, 'Xenova/bge-small-zh-v1.5');
   assert.equal(loadModelConfig().revision, '75c43b069aac4d136ba6bc1122f995fedcfd2781');
   assert.equal(loadModelConfig().evidence, 'verified');
+});
+test('Qwen is disabled without verified revision and consent', async () => {
+  assert.equal(loadQwenModelConfig().status, 'unavailable');
+  const p=createQwenProvider({config:{enabled:true,modelId:'some/qwen',revision:'main',evidence:'verified',allowNetwork:true},runtimeFactory:async()=>({generate:async()=>({candidateId:'c1',confidence:1})})});
+  assert.deepEqual(await p.generate({}),{status:'abstain',reason:'unavailable'});
+});
+test('Qwen runtime parses injected strict JSON output', async () => {
+  const runtime=await createQwenRuntime({modelId:'test/qwen',revision:'r1',dtype:'q4',backend:'wasm',allowNetwork:false},{importTransformers:async()=>({env:{},pipeline:async()=>async()=>[{generated_text:'{"candidateId":"c1","confidence":0.8}'}]})});
+  assert.deepEqual(await runtime.generate({field:{id:'f'},candidates:[{candidateId:'c1'}]}),{candidateId:'c1',confidence:0.8});
 });
 
 test('local provider is unavailable without verified evidence', async () => { const p=createTransformersProvider({config:{enabled:true,allowNetwork:true,evidence:'unverified',revision:'main'},runtimeFactory:async()=>({generate:async()=>({})})}); assert.deepEqual(await p.generate({}),{status:'abstain',reason:'unavailable'}); });

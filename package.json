@@ -12,6 +12,7 @@
     "build": "node scripts/build-extension.mjs",
     "check:build": "node scripts/build-extension.mjs",
     "verify:local-model": "node --test extension/test/ai-runtime.test.mjs",
+    "verify:webgpu": "node extension/test/webgpu-verify.mjs",
     "test:browser": "node extension/test/browser-smoke.mjs"
   },
   "devDependencies": {

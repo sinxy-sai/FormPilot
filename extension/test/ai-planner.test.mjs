@@ -49,6 +49,16 @@ test('ambiguous repeated entries are manual and duplicate sections are scoped', 
   assert.equal(plan[0].status, 'manual');
   assert.equal(plan[0].reason, 'ambiguous');
 });
+test('semantic provider may disambiguate only with explicit consent and returns candidateId', async () => {
+  const profile = { projects:[{name:'P1'},{name:'P2'}] };
+  let calls=0;
+  const provider=createLocalModelProvider({generate:async input=>{calls++; return {candidateId:input.candidates.find(c=>String(c.pathSegments[1])==='1').candidateId,confidence:.82};}});
+  const matcher=async()=>({path:null,value:null,confidence:.2,source:'ambiguous'});
+  const denied=await createEnhancedPlan([{id:'p',label:'项目名称',section:'项目经历'}],profile,{provider,matcher,semanticEnabled:true,semanticConsent:false});
+  assert.equal(denied[0].reason,'ambiguous');
+  const allowed=await createEnhancedPlan([{id:'p',label:'项目名称',section:'项目经历'}],profile,{provider,matcher,semanticEnabled:true,semanticConsent:true});
+  assert.equal(calls,1); assert.equal(allowed[0].value,'P2');
+});
 
 test('rankCandidates handles cosine scores and rejects bad dimensions', async () => {
   const embed = async texts => texts.map(t => t === 'field' ? [1,0] : t === 'a' ? [1,0] : [0,1]);

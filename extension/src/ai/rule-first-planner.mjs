@@ -16,13 +16,13 @@ export async function rankCandidates(field, candidates, embed) {
   return candidates.map((c,i)=>{ const n=norm(vectors[i+1]); if(!Number.isFinite(n)||n===0) throw new TypeError('zero-vector'); const score=vectors[0].reduce((s,x,j)=>s+x*vectors[i+1][j],0)/(n0*n); return {candidateId:c.candidateId ?? c.id, score}; }).sort((a,b)=>b.score-a.score);
 }
 export async function createEnhancedPlan(fields, profile, options = {}) {
-  const provider = options.provider ?? unavailableProvider; const matcher = options.matcher ?? ((f,p)=>matchField(f,p,options.mappings ?? [])); const allCandidates = leafCandidates(profile); const plans=[];
+  const provider = options.provider ?? unavailableProvider; const semanticEnabled = options.semanticConsent === true && options.semanticEnabled === true; const matcher = options.matcher ?? ((f,p)=>matchField(f,p,options.mappings ?? [])); const allCandidates = leafCandidates(profile); const plans=[];
   for (const field of fields || []) {
     const rule = await matcher(field, profile);
     const section = String(field.section ?? field.collectionKey ?? '').toLowerCase();
     const sectionKind = /project|项目|プロジェクト/.test(section) ? 'project' : /education|教育|学歴/.test(section) ? 'education' : /intern|实习/.test(section) ? 'intern' : section;
     const repeatedSection = Object.entries(profile || {}).some(([key, value]) => Array.isArray(value) && value.length > 1 && ((sectionKind === 'project' && /project|项目|プロジェクト/i.test(key)) || (sectionKind === 'education' && /education|教育|学歴/i.test(key)) || (sectionKind === 'intern' && /intern|实习/i.test(key)) || section.includes(String(key).toLowerCase())));
-    if (repeatedSection && !Number.isInteger(field.repeatIndex)) { plans.push({ fieldId:field.id, status:'manual', reason:'ambiguous' }); continue; }
+    if (repeatedSection && !Number.isInteger(field.repeatIndex) && !semanticEnabled) { plans.push({ fieldId:field.id, status:'manual', reason:'ambiguous' }); continue; }
     if ((rule?.path || rule?.pathSegments) && rule.confidence >= 0.9) {
       const pathSegments = Array.isArray(rule.pathSegments) ? rule.pathSegments : pathToSegments(rule.path);
       if (!Array.isArray(rule.pathSegments) && typeof rule.path === 'string' && /[.\[\]]/.test(rule.path) && !pathSegmentsExist(profile, pathSegments)) { plans.push({ fieldId:field.id, status:'manual', reason:'ambiguous-path' }); continue; }
@@ -32,7 +32,7 @@ export async function createEnhancedPlan(fields, profile, options = {}) {
     const scoped = allCandidates.filter(c => !section || c.displayPath.toLowerCase().includes(section)).filter(c => !Number.isInteger(field.repeatIndex) || c.pathSegments.some((s,i)=>typeof s==='number' && s===field.repeatIndex));
     if (Number.isInteger(field.repeatIndex) && scoped.length === 0) { plans.push({ fieldId:field.id, status:'manual', reason:'repeat-index-not-found' }); continue; }
     const candidates = scoped.length ? scoped : allCandidates;
-    if (rule?.source === 'ambiguous' || (!Number.isInteger(field.repeatIndex) && /project|项目|education|教育|intern|实习/i.test(section) && candidates.filter(c=>c.displayPath.toLowerCase().endsWith('.name')||c.displayPath.toLowerCase().endsWith('.school')).length > 1)) { plans.push({ fieldId:field.id, status:'manual', reason:'ambiguous' }); continue; }
+    if ((rule?.source === 'ambiguous' || (!Number.isInteger(field.repeatIndex) && /project|项目|education|教育|intern|实习/i.test(section) && candidates.filter(c=>c.displayPath.toLowerCase().endsWith('.name')||c.displayPath.toLowerCase().endsWith('.school')).length > 1)) && !semanticEnabled) { plans.push({ fieldId:field.id, status:'manual', reason:'ambiguous' }); continue; }
     const inputCandidates = candidates.map((c,i)=>({...c,candidateId:c.candidateId ?? `candidate-${i+1}`}));
     let proposal; try { proposal = await provider.generate(buildModelInput(field,inputCandidates)); } catch { proposal = { status:'abstain' }; }
     const checked = validateModelProposal(proposal, { fieldId:field.id, candidates:inputCandidates, options:field.options ?? [] });
