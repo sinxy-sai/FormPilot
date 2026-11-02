@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Added browser regression coverage for a generic text field, a custom combobox, validation failures, dynamic structure changes, refresh invalidation, undo, and the no-submit guarantee.
+- Expanded the local fixture with repeatable sections, validation errors, and structure-change controls.
+- Documented the local AI boundary, reusable control capabilities, validated strategy cache, and safe fallback path when a local model is unavailable.
 - Added an isolated Playwright browser smoke workflow for the local fixture: scan, review, fill, verify, and undo.
 - Added deterministic unavailable reporting when Playwright or Chromium is not installed.
 - Clarified Side Panel use, local model fallback, confidence/manual states, and iframe, Shadow DOM, and complex multiselect boundaries.
@@ -17,7 +20,3 @@
 - Initial Manifest V3 extension scaffold.
 - Deterministic field matching and saved user mappings.
 - Reversible fill runtime and local test coverage.
-
-
-
-

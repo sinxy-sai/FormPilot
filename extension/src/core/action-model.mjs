@@ -1,8 +1,8 @@
 import { SUPPORTED, createFieldDescriptor } from './field-model.mjs';
+import { normalizePlannedAction, isNormalizedPlannedAction } from '../runtime/action-tools.mjs';
 function manual(reason = 'manual-review-required') { return { type: 'manual', reason }; }
 export function createFieldAction(fieldInput, proposal = {}) {
-  const field = createFieldDescriptor(fieldInput);
-  const value = proposal?.value;
+  const field = createFieldDescriptor(fieldInput); const value = proposal?.value;
   if (proposal?.status !== 'approved') return manual('proposal-not-approved');
   if (!SUPPORTED.has(field.controlType) || field.controlType === 'manual') return manual('unsupported-control');
   if (field.controlType === 'checkbox') return typeof value === 'boolean' ? { type: 'checkbox', checked: value } : manual('checkbox-boolean-required');
@@ -21,5 +21,4 @@ export function validateFieldAction(action, fieldInput) {
   if (action.type === 'custom-select') return field.controlType === 'custom-select' && typeof action.optionText === 'string' && Array.isArray(field.options) && field.options.includes(action.optionText) ? { valid: true } : { valid: false, reason: 'custom-select-action-mismatch' };
   return { valid: false, reason: 'unsupported-action' };
 }
-export { createFieldDescriptor };
-
+export { createFieldDescriptor, normalizePlannedAction, isNormalizedPlannedAction };

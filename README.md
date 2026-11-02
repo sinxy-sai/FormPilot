@@ -59,7 +59,7 @@ The browser extension does not submit applications, solve CAPTCHA, bypass authen
 | Matching | Deterministic key matching, saved mappings, compatibility aliases |
 | DOM runtime | Content script with reversible fill operations |
 | Verification | Node built-in test runner and syntax checks |
-| Future adapter layer | Site-specific interaction adapters for custom dropdowns and dynamic widgets |
+| Runtime extension model | Reusable control capabilities + validated strategy cache + local AI planning loop |
 
 ## 🔨 Installation
 
@@ -84,7 +84,9 @@ Open a form page, click the FormPilot toolbar icon, then follow the three cards:
 
 The extension never clicks the website's final Submit button. Use the Side Panel to inspect, review, fill, verify, and undo. Text inputs, textareas, checkboxes, and native single-select controls are the reliable first-stage boundary. Unknown select options keep the existing value. Fields marked low confidence or manual are left for you.
 
-Cross-origin iframe controls are only inspected when the page grants the required extension frame access; closed shadow roots and custom widgets are not guaranteed. Complex multi-selects, comboboxes, virtualized lists, and widgets that require site-specific events may be reported as skipped and need manual entry or an adapter.
+Cross-origin iframe controls are only inspected when the page grants the required extension frame access; closed shadow roots and browser-restricted widgets remain manual boundaries. Reusable control capabilities cover native selects, custom comboboxes, repeatable sections, and other interaction patterns. A validated strategy cache can provide locating hints without storing sensitive field values; navigation, refresh, or a structure fingerprint change invalidates stale plans.
+
+The optional local AI loop is limited to page understanding, semantic matching, and structured tool planning. No cloud multimodal model is required, and local screenshot analysis is optional. Model output enters only the tool schema and action safety gate. If a local model is unavailable, deterministic matching, capability handlers, and manual review still complete safe fields. Final submission, CAPTCHA, login restrictions, and actions without an observable result never have an automatic path.
 
 ## 🧪 Tests
 
@@ -103,7 +105,7 @@ node --check dist/extension/src/content.js
 
 Open the local fixture for a manual browser check: `examples/form-fixture.html`.
 
-The fixture contains intentionally fake data and models hidden Edit sections, native selects, textareas, and a personal evaluation field. It does not reproduce a logged-in recruiting site.
+The fixture contains intentionally fake data and models hidden Edit sections, native selects, a custom combobox, repeatable sections, validation errors, structure changes, textareas, and a personal evaluation field. It does not reproduce a logged-in recruiting site.
 
 ## 📁 Project structure
 
@@ -148,7 +150,7 @@ To add or update a translation:
 
 ## 🤝 Community
 
-Bug reports, fixture improvements, translations, and site-adapter ideas are welcome. Remove personal resumes, cookies, tokens, and private recruiting data before opening an issue or pull request.
+Bug reports, fixture improvements, translations, and control capability ideas are welcome. Remove personal resumes, cookies, tokens, and private recruiting data before opening an issue or pull request.
 
 ## 📄 License
 
