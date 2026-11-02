@@ -98,7 +98,7 @@ Check JavaScript syntax:
 
 ```powershell
 node --check extension/popup.js
-node --check extension/src/content.js
+node --check dist/extension/src/content.js
 ```
 
 Open the local fixture for a manual browser check: `examples/form-fixture.html`.
@@ -156,7 +156,4 @@ FormPilot is licensed under the [Apache License 2.0](LICENSE).
 
 
 <!-- Community files: CODE_OF_CONDUCT.md, GOVERNANCE.md, SUPPORT.md -->
-
-
-
 
