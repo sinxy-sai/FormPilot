@@ -37,7 +37,7 @@ export function inspectPage(document, { capabilities = null, includeScreenshot =
     let capability = null;
     try { capability = selectCapability({ ...base, element, context: { document, location: document?.location || globalThis.location, element } }, available); } catch (error) { diagnostics.push({ code: 'capability-detection-failed', controlId: base.controlId, message: String(error?.message || error) }); }
     const model = { ...base, ...(capability ? { capability: capability.name, capabilityVersion: capability.version } : {}) };
-    if (capability?.inspect) { try { Object.assign(model, capability.inspect({ document, element, control: model }) || {}); } catch (error) { diagnostics.push({ code: 'capability-inspection-failed', controlId: model.controlId, capability: capability.name, message: String(error?.message || error) }); } }
+    if (capability?.inspect) { try { const inspected = capability.inspect({ document, element, control: model }); if (inspected && typeof inspected === 'object' && !Array.isArray(inspected)) Object.assign(model, inspected); } catch (error) { diagnostics.push({ code: 'capability-inspection-failed', controlId: model.controlId, capability: capability.name, message: String(error?.message || error) }); } }
     controls.push(model);
   });
   if (includeScreenshot) diagnostics.push({ code: 'screenshot-unavailable', message: 'Screenshot capture is not available in the content runtime' });
@@ -51,5 +51,6 @@ export function inspectControls(document, adapter = null) {
   const inspected = inspectPage(document, { capabilities: adapter ? [capabilityFromAdapter(adapter)] : listCapabilities() }).pageModel.controls;
   return inspected.map((control, index) => { const element = [...(document?.querySelectorAll?.('input, textarea, select, [role="combobox"], [contenteditable="true"]') || document?.elements || [])].filter((item) => isVisible(item))[index]; const type = control.controlType; return { index, fieldId: control.controlId.replace(/^control-/, 'field-'), name: element?.name || undefined, id: element?.id || undefined, selector: selectorFor(element, index), selectorToken: control.selectorToken, label: control.label, controlType: type, type: type === 'combobox' ? 'custom-select' : type, value: control.value, options: control.options, visible: control.visible, disabled: control.disabled, readonly: control.readonly, sectionId: control.sectionId, capability: control.capability, capabilityVersion: control.capabilityVersion }; });
 }
+
 
 
