@@ -5,6 +5,13 @@ import { createTransformersProvider } from '../src/ai/transformers-provider.mjs'
 import { handleModelMessage } from '../src/ai/model-worker.mjs';
 import { createTransformersRuntime } from '../src/ai/transformers-runtime.mjs';
 
+test('default BGE candidate is pinned but disabled by default', () => {
+  assert.equal(loadModelConfig().enabled, false);
+  assert.equal(loadModelConfig().modelId, 'Xenova/bge-small-zh-v1.5');
+  assert.equal(loadModelConfig().revision, '75c43b069aac4d136ba6bc1122f995fedcfd2781');
+  assert.equal(loadModelConfig().evidence, 'verified');
+});
+
 test('local provider is unavailable without verified evidence', async () => { const p=createTransformersProvider({config:{enabled:true,allowNetwork:true,evidence:'unverified',revision:'main'},runtimeFactory:async()=>({generate:async()=>({})})}); assert.deepEqual(await p.generate({}),{status:'abstain',reason:'unavailable'}); });
 test('invalid JSON config and model output abstain safely', async () => { assert.equal(loadModelConfig('{').reason,'invalid-json'); const p=createTransformersProvider({config:{enabled:true,allowNetwork:true,evidence:'verified',revision:'r1'},runtimeFactory:async()=>({generate:async()=>'{bad'})}); assert.deepEqual(await p.generate({}),{status:'abstain',reason:'invalid-json'}); });
 test('provider timeout and caller cancellation settle', async () => { const p=createTransformersProvider({config:{enabled:true,allowNetwork:true,evidence:'verified',revision:'r1'},timeoutMs:10,runtimeFactory:async()=>({generate:async()=>new Promise(()=>{})})}); assert.deepEqual(await p.generate({}),{status:'abstain',reason:'timeout'}); const c=new AbortController(); const q=createTransformersProvider({config:{enabled:true,allowNetwork:true,evidence:'verified',revision:'r1'},runtimeFactory:async()=>({generate:async()=>new Promise(()=>{})})}); const pending=q.generate({},{signal:c.signal}); c.abort(); assert.deepEqual(await pending,{status:'abstain',reason:'cancelled'}); });
