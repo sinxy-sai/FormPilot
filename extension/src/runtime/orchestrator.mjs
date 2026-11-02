@@ -21,7 +21,7 @@ function ruleCandidate(context) {
     const item = t.plan.find(x => x && !['verified','completed','skipped'].includes(x.status) && (x.action || x.tool));
     if (item) return item.action || item;
   }
-  const strategy = (context.strategies || []).find(s => Array.isArray(s.steps) && s.steps[context.task.step]);
+  const strategy = (context.strategies || []).find(s => Array.isArray(s.steps) && s.steps[context.task.step] && s.status === 'active' && s.capabilityCompatible !== false && s.verified !== false && s.verification?.verified !== false && (!s.structureFingerprint || !context.pageModel?.fingerprint || s.structureFingerprint === context.pageModel.fingerprint));
   return strategy?.steps?.[context.task.step] || null;
 }
 
@@ -94,4 +94,3 @@ export async function recordRuntimeStrategy(context, action, result) {
   if (!id.origin || !id.route || !p.fingerprint) return null;
   return saveStrategy({ scope:{origin:id.origin,route:id.route}, structureFingerprint:p.fingerprint, capabilityVersions:p.capabilityVersions || {}, steps:[action], successCount:1, lastValidatedAt:new Date().toISOString() });
 }
-

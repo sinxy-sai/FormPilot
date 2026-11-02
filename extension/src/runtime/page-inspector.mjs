@@ -40,6 +40,13 @@ export function inspectPage(document, { capabilities = null, includeScreenshot =
     if (capability?.inspect) { try { const inspected = capability.inspect({ document, element, control: model }); if (inspected && typeof inspected === 'object' && !Array.isArray(inspected)) Object.assign(model, inspected); } catch (error) { diagnostics.push({ code: 'capability-inspection-failed', controlId: model.controlId, capability: capability.name, message: String(error?.message || error) }); } }
     controls.push(model);
   });
+  const legacy = available.find?.((capability) => capability?.legacyAdapter?.inspect);
+  if (legacy) {
+    try {
+      const descriptors = legacy.legacyAdapter.inspect(document);
+      if (Array.isArray(descriptors)) descriptors.forEach((descriptor, index) => { if (controls[index] && descriptor && typeof descriptor === 'object') Object.assign(controls[index], descriptor); });
+    } catch (error) { diagnostics.push({ code: 'legacy-inspection-failed', message: String(error?.message || error) }); }
+  }
   if (includeScreenshot) diagnostics.push({ code: 'screenshot-unavailable', message: 'Screenshot capture is not available in the content runtime' });
   diagnostics.push({ code: 'controls-inspected', count: controls.length });
   const location = document?.location || globalThis.location;

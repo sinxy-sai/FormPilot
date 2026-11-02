@@ -13,9 +13,10 @@ const stableHash = value => {
 export function normalizeControlModel(input = {}) {
   if (!record(input) || typeof input.controlId !== 'string' || !input.controlId) throw new TypeError('controlId is required');
   const options = Array.isArray(input.options) ? input.options.map(String) : undefined;
+  const selectorToken = typeof input.selectorToken === 'string' && /^control-token-[A-Za-z0-9_-]+$/.test(input.selectorToken) ? input.selectorToken : undefined;
   return {
     controlId: input.controlId,
-    selectorToken: typeof input.selectorToken === 'string' ? input.selectorToken : input.selector,
+    selectorToken,
     label: String(input.label ?? input.name ?? input.placeholder ?? ''),
     role: String(input.role ?? ''),
     controlType: String(input.controlType ?? input.type ?? 'unknown'),

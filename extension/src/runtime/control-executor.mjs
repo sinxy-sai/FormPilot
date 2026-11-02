@@ -11,7 +11,7 @@ const actual = readActual;
 function elements(document) { return [...(document?.querySelectorAll?.('input, textarea, select, [role="combobox"], [contenteditable="true"]') || [])].filter(visible); }
 function resolveElement(document, action) {
   if (action?.element) return action.element;
-  if (action?.selector) return document?.querySelector?.(action.selector);
+  if (action?.selector) return null;
   const id = action?.target || action?.controlId;
   if (!id) return null;
   const inspected = inspectPage(document).pageModel.controls || [];
@@ -24,11 +24,18 @@ function fingerprint(document) { try { return inspectPage(document).pageModel.fi
 
 export async function executeTool(document, action = {}, context = {}) {
   const actionId = action.actionId || `action-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  if (action?.selector && context.allowLegacySelector !== true) return { status:'skipped', actionId, actual:undefined, changed:false, reason:'selector-not-allowed' };
+  if (action?.element && context.allowLegacyElement !== true) return { status:'skipped', actionId, actual:undefined, changed:false, reason:'element-not-allowed' };
   if (action.tool === 'wait') { await new Promise(r => setTimeout(r, Number(action.arguments?.ms || 0))); return { status:'verified', actionId, before:undefined, actual:undefined, changed:false, reason:undefined }; }
-  if (action.tool === 'ask_user' || action.tool === 'verify' || action.tool === 'read_value') return { status:'verified', actionId, before:undefined, actual:undefined, changed:false, reason:undefined };
+  if (action.tool === 'ask_user') return { status:'manual', actionId, before:undefined, actual:undefined, changed:false, reason:'user-input-required' };
   if (action.tool === 'undo') { const undone = undoLastFill(document); return { status: undone.undone ? 'verified' : 'skipped', actionId, before:undefined, actual:undefined, changed:Boolean(undone.undone), reason:undone.reason }; }
   const element = resolveElement(document, action);
   if (!element) return { status:'skipped', actionId, before:undefined, actual:undefined, changed:false, reason:'target-disappeared' };
+  if (action.tool === 'read_value') return { status:'verified', actionId, before:actual(element), actual:actual(element), changed:false, reason:undefined };
+  if (action.tool === 'verify') {
+    const verification = await verifyAction(document, action, { element, actual:actual(element), changed:false }, { ...context, element });
+    return { status: verification.verified ? 'verified' : 'skipped', actionId, before:actual(element), actual:verification.actual, changed:false, ...(verification.reason ? { reason: verification.reason } : {}) };
+  }
   const before = actual(element); const pageFingerprint = fingerprint(document); const args = action.arguments || action;
   try {
     if (action.tool === 'focus') element.focus?.();
@@ -57,7 +64,7 @@ export async function executeFieldAction(document, field, action, adapter = null
   if (adapter?.fill) { const adapted = await adapter.fill(element, action?.value ?? action?.checked ?? action?.optionText, action); if (adapted?.applied === true) { const checked = await adapter.verify?.(element, action?.value ?? action?.checked ?? action?.optionText); return { status:checked === true || checked?.verified === true ? 'filled' : 'skipped', reason:checked === true || checked?.verified === true ? undefined : 'verification-failed', actual:actual(element), before:actual(element), selector }; } }
   const tool = action?.type === 'checkbox' ? 'check' : ['native-select','custom-select'].includes(action?.type) ? 'select' : 'type';
   const converted = { tool, selector, arguments: action?.type === 'checkbox' ? { checked:Boolean(action.checked) } : { value: action?.type === 'custom-select' ? action.optionText : action?.value }, element };
-  const result = await executeTool(document, converted, { allowStructureChange:true });
+  const result = await executeTool(document, converted, { allowStructureChange:true, allowLegacySelector:true, allowLegacyElement:true });
   return { status: result.status === 'verified' ? 'filled' : 'skipped', reason: result.reason, actual: result.actual, before: result.before, selector };
 }
 export { inspectPage, inspectControls };
