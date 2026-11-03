@@ -40,7 +40,8 @@ export async function planNextStep(context) {
   if (raw?.status === 'abstain') return { status: 'manual', reason: raw.reason || 'model-abstained' };
   const checked = validateActionProposal(raw, page);
   if (checked.status !== 'proposed') return { status: 'manual', reason: checked.reason || 'invalid-model-action' };
-  const gate = validatePlannedAction(checked, { pageModel: page, resume: context.resume, task: context.task });
+  const { status: _proposalStatus, ...actionForGate } = checked;
+  const gate = validatePlannedAction(actionForGate, { pageModel: page, resume: context.resume, task: context.task });
   if (!gate.allowed) return gate.requiresUser ? { status: 'manual', action: checked, reason: gate.reason } : { status: 'blocked', action: checked, reason: gate.reason };
   return { status: checked.tool === 'ask_user' ? 'manual' : 'action', action: checked, reason: checked.reason || 'model', confidence: checked.confidence };
 }
