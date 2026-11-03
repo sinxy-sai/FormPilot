@@ -1,5 +1,5 @@
 import { createPageModel } from '../core/page-model.mjs';
-import { capabilityFromAdapter, listCapabilities, selectCapability } from '../adapters/capabilities.mjs';
+import { listCapabilities, selectCapability } from '../adapters/capabilities.mjs';
 
 const text = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
 const attr = (element, name) => { const value = element?.getAttribute?.(name); if (value !== null && value !== undefined) return value; const property = element?.[name]; return property === undefined ? null : property; };
@@ -40,24 +40,9 @@ export function inspectPage(document, { capabilities = null, includeScreenshot =
     if (capability?.inspect) { try { const inspected = capability.inspect({ document, element, control: model }); if (inspected && typeof inspected === 'object' && !Array.isArray(inspected)) Object.assign(model, inspected); } catch (error) { diagnostics.push({ code: 'capability-inspection-failed', controlId: model.controlId, capability: capability.name, message: String(error?.message || error) }); } }
     controls.push(model);
   });
-  const legacy = available.find?.((capability) => capability?.legacyAdapter?.inspect);
-  if (legacy) {
-    try {
-      const descriptors = legacy.legacyAdapter.inspect(document);
-      if (Array.isArray(descriptors)) descriptors.forEach((descriptor, index) => { if (controls[index] && descriptor && typeof descriptor === 'object') Object.assign(controls[index], descriptor); });
-    } catch (error) { diagnostics.push({ code: 'legacy-inspection-failed', message: String(error?.message || error) }); }
-  }
   if (includeScreenshot) diagnostics.push({ code: 'screenshot-unavailable', message: 'Screenshot capture is not available in the content runtime' });
   diagnostics.push({ code: 'controls-inspected', count: controls.length });
   const location = document?.location || globalThis.location;
   const pageModel = createPageModel({ pageIdentity: { origin: location?.origin || '', route: `${location?.pathname || ''}${location?.search || ''}`, title: document?.title || '' }, sections, controls, dialogs: [...(document?.querySelectorAll?.('dialog,[role="dialog"]') || [])].map((dialog, index) => ({ id: dialog.id || `dialog-${index}`, label: text(dialog.getAttribute?.('aria-label')) || text(dialog.textContent).slice(0, 120), open: dialog.open !== false && attr(dialog, 'aria-hidden') !== 'true' })) });
   return { pageModel, diagnostics };
 }
-
-export function inspectControls(document, adapter = null) {
-  const inspected = inspectPage(document, { capabilities: adapter ? [capabilityFromAdapter(adapter)] : listCapabilities() }).pageModel.controls;
-  return inspected.map((control, index) => { const element = [...(document?.querySelectorAll?.('input, textarea, select, [role="combobox"], [contenteditable="true"]') || document?.elements || [])].filter((item) => isVisible(item))[index]; const type = control.controlType; return { index, fieldId: control.controlId.replace(/^control-/, 'field-'), name: element?.name || undefined, id: element?.id || undefined, selector: selectorFor(element, index), selectorToken: control.selectorToken, label: control.label, controlType: type, type: type === 'combobox' ? 'custom-select' : type, value: control.value, options: control.options, visible: control.visible, disabled: control.disabled, readonly: control.readonly, sectionId: control.sectionId, capability: control.capability, capabilityVersion: control.capabilityVersion }; });
-}
-
-
-

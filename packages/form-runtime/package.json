@@ -1,6 +1,0 @@
-{
-  "name": "@formpilot/form-runtime",
-  "private": true,
-  "type": "module",
-  "scripts": { "test": "node --test test/index.test.mjs" }
-}

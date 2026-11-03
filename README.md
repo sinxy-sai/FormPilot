@@ -26,7 +26,7 @@ Built for the repetitive part of applying: bring your resume once, adapt it to t
 
 ## ✨ Overview
 
-FormPilot is designed for job applications where every recruiting site names and renders fields differently. The core data model is intentionally language-neutral: JSON keys can be Chinese, English, Japanese, Korean, or any Unicode text. The matcher first looks for keys that actually exist in the loaded JSON, then falls back to compatibility aliases for older resume formats.
+FormPilot is designed for job applications where every recruiting site names and renders fields differently. The core data model is intentionally language-neutral: JSON keys can be Chinese, English, Japanese, Korean, or any Unicode text. The local runtime builds a page model, maps resume candidates, and plans constrained browser actions without site-specific compatibility code.
 
 The browser extension does not submit applications, solve CAPTCHA, bypass authentication, or invent fields and options. It reads the controls provided by the current page, prepares a fill plan, and leaves the final review and submission to you.
 
@@ -56,7 +56,7 @@ The browser extension does not submit applications, solve CAPTCHA, bypass authen
 | Runtime | JavaScript ESM in the extension and Node.js 20+ for tests |
 | Workspace | pnpm workspace |
 | Resume data | Free-form JSON with Unicode keys |
-| Matching | Deterministic key matching, saved mappings, compatibility aliases |
+| Planning | Local page model, constrained AI tools, verified strategy cache |
 | DOM runtime | Content script with reversible fill operations |
 | Verification | Node built-in test runner and syntax checks |
 | Runtime extension model | Reusable control capabilities + validated strategy cache + local AI planning loop |
@@ -93,13 +93,13 @@ The optional local AI loop is limited to page understanding, semantic matching, 
 Run the complete test suite from the repository root:
 
 ```powershell
-node --test packages/*/test/*.test.mjs extension/test/*.test.mjs
+pnpm test
 ```
 
 Check JavaScript syntax:
 
 ```powershell
-node --check extension/popup.js
+node --check extension/src/sidepanel.js
 node --check dist/extension/src/content.js
 ```
 
@@ -111,9 +111,7 @@ The fixture contains intentionally fake data and models hidden Edit sections, na
 
 ```text
 .
-├── extension/                  # Manifest V3 extension and popup
-├── packages/field-matcher/     # Language-neutral JSON key matching
-├── packages/form-runtime/      # Reversible DOM fill operations
+├── extension/                  # Manifest V3 extension with Side Panel and local runtime
 ├── packages/latex-parser/      # LaTeX synchronization boundary
 ├── packages/resume-schema/     # Open JSON schema contract
 ├── examples/                   # Local fixtures and sample resume JSON
@@ -139,7 +137,7 @@ The fixture contains intentionally fake data and models hidden Edit sections, na
 
 ### Localization assets
 
-Popup copy lives in `extension/locales/<locale>/messages.json`, with English (`en-US`) as the fallback locale. Each message keeps a human-readable `description` beside its translated `message`, following the same contributor-friendly principle used by large localized products such as [VS Code Loc](https://github.com/microsoft/vscode-loc).
+Side Panel copy lives in `extension/locales/<locale>/messages.json`, with English (`en-US`) as the fallback locale. Each message keeps a human-readable `description` beside its translated `message`, following the same contributor-friendly principle used by large localized products such as [VS Code Loc](https://github.com/microsoft/vscode-loc).
 
 To add or update a translation:
 

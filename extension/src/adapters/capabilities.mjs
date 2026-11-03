@@ -50,29 +50,6 @@ export function selectCapability(control = {}, available = capabilities) {
   return matching[0] || capabilities.find((capability) => capability.name === 'generic-text') || null;
 }
 
-export function capabilityFromAdapter(adapter) {
-  if (!adapter || typeof adapter !== 'object') return null;
-  return registerCapability({
-    name: adapter.name || 'legacy-site-adapter',
-    version: adapter.version || '1',
-    priority: Number.isFinite(Number(adapter.priority)) ? Number(adapter.priority) : -100,
-    detect: ({ location, document, control } = {}) => {
-      if (control && typeof adapter.inspect === 'function') {
-        // Legacy adapters inspect whole documents; matching remains location based.
-        return typeof adapter.matches === 'function' ? adapter.matches(location || document?.location || globalThis.location) : false;
-      }
-      return typeof adapter.matches === 'function' && adapter.matches(location || document?.location || globalThis.location);
-    },
-    inspect: ({ document } = {}) => typeof adapter.inspect === 'function' ? adapter.inspect(document) : undefined,
-    tools: adapter.tools || [],
-    activate: adapter.activate,
-    fill: adapter.fill,
-    read: adapter.read,
-    verify: adapter.verify,
-    legacyAdapter: adapter,
-  });
-}
-
 const typeIs = (type, ...values) => values.includes(String(type || '').toLowerCase());
 registerCapability({ name: 'generic-text', version: '1', priority: 1, detect: ({ control } = {}) => !control || typeIs(control.controlType, 'text', 'textarea', 'email', 'tel', 'url', 'number', 'password', 'search'), tools: ['fill', 'read', 'verify'] });
 registerCapability({ name: 'native-select', version: '1', priority: 20, detect: ({ control } = {}) => typeIs(control?.controlType, 'native-select'), tools: ['fill', 'read', 'verify'] });
