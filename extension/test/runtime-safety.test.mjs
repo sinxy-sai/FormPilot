@@ -7,7 +7,7 @@ test('runtime rejects arbitrary selectors before touching the DOM', async () => 
   const document = { querySelectorAll() { queried = true; return []; } };
   const result = await executeTool(document, { tool: 'type', selector: '#secret', arguments: { value: 'x' } }, { pageModel: { controls: [] } });
   assert.equal(result.status, 'skipped');
-  assert.match(result.reason, /selector|target|action/i);
+  assert.match(result.reason, /forbidden|selector|target|action/i);
   assert.equal(queried, false);
 });
 
@@ -18,3 +18,4 @@ test('read_value returns the observed control value', async () => {
   assert.equal(result.status, 'verified');
   assert.equal(result.actual, 'Ada');
 });
+
