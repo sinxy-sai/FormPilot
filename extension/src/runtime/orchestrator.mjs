@@ -34,7 +34,7 @@ export async function planNextStep(context) {
     const checked = validateActionProposal(cached, page);
     if (checked.status === 'proposed') return { status: 'action', action: checked, reason: 'strategy-or-rule', confidence: checked.confidence };
   }
-  const input = buildActionModelInput(page, context.task || {});
+  const input = buildActionModelInput(page, context.task || {}, context.resume || {});
   let raw;
   try { raw = await (context.provider || unavailableProvider).generate(input, { signal: context.signal }); } catch { raw = { status: 'abstain', reason: 'provider-error' }; }
   if (raw?.status === 'abstain') return { status: 'manual', reason: raw.reason || 'model-abstained' };

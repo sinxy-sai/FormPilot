@@ -22,6 +22,10 @@ test('Qwen runtime parses injected strict JSON output', async () => {
   const runtime=await createQwenRuntime({modelId:'test/qwen',revision:'r1',dtype:'q4',backend:'wasm',allowNetwork:false},{importTransformers:async()=>({env:{},pipeline:async()=>async()=>[{generated_text:'{"candidateId":"c1","confidence":0.8}'}]})});
   assert.deepEqual(await runtime.generate({field:{id:'f'},candidates:[{candidateId:'c1'}]}),{candidateId:'c1',confidence:0.8});
 });
+test('Qwen runtime parses chat-style generated output', async () => {
+  const runtime=await createQwenRuntime({modelId:'test/qwen',revision:'r1',dtype:'q4',backend:'wasm',allowNetwork:false},{importTransformers:async()=>({env:{},pipeline:async()=>async()=>[{generated_text:[{role:'assistant',content:'{"tool":"ask_user","arguments":{"question":"需要确认"},"confidence":0.4}'}]}]})});
+  assert.deepEqual(await runtime.generate({page:{controls:[]}}),{tool:'ask_user',arguments:{question:'需要确认'},confidence:0.4});
+});
 
 test('local provider is unavailable without verified evidence', async () => { const p=createTransformersProvider({config:{enabled:true,allowNetwork:true,evidence:'unverified',revision:'main'},runtimeFactory:async()=>({generate:async()=>({})})}); assert.deepEqual(await p.generate({}),{status:'abstain',reason:'unavailable'}); });
 test('invalid JSON config and model output abstain safely', async () => { assert.equal(loadModelConfig('{').reason,'invalid-json'); const p=createTransformersProvider({config:{enabled:true,allowNetwork:true,evidence:'verified',revision:'r1'},runtimeFactory:async()=>({generate:async()=>'{bad'})}); assert.deepEqual(await p.generate({}),{status:'abstain',reason:'invalid-json'}); });
