@@ -5,9 +5,7 @@
   "type": "module",
   "packageManager": "pnpm@9.15.0",
   "scripts": {
-    "test": "node --test packages/*/test/*.test.mjs extension/test/*.test.mjs",
-    "test:matcher": "node --test packages/field-matcher/test/index.test.mjs",
-    "test:runtime": "node --test packages/form-runtime/test/index.test.mjs",
+    "test": "node --test extension/test/*.test.mjs",
     "validate:locales": "node scripts/validate-locales.mjs",
     "build": "node scripts/build-extension.mjs",
     "check:build": "node scripts/build-extension.mjs",

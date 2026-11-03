@@ -50,6 +50,7 @@ export function selectCapability(control = {}, available = capabilities) {
   return matching[0] || capabilities.find((capability) => capability.name === 'generic-text') || null;
 }
 
+<<<<<<< HEAD
 export function capabilityFromAdapter(adapter) {
   if (!adapter || typeof adapter !== 'object') return null;
   return registerCapability({
@@ -73,6 +74,8 @@ export function capabilityFromAdapter(adapter) {
   });
 }
 
+=======
+>>>>>>> 2952a65
 const typeIs = (type, ...values) => values.includes(String(type || '').toLowerCase());
 registerCapability({ name: 'generic-text', version: '1', priority: 1, detect: ({ control } = {}) => !control || typeIs(control.controlType, 'text', 'textarea', 'email', 'tel', 'url', 'number', 'password', 'search'), tools: ['fill', 'read', 'verify'] });
 registerCapability({ name: 'native-select', version: '1', priority: 20, detect: ({ control } = {}) => typeIs(control?.controlType, 'native-select'), tools: ['fill', 'read', 'verify'] });

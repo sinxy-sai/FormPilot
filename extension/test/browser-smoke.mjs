@@ -2,11 +2,11 @@ import { strict as assert } from 'node:assert';
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { cp, mkdtemp, rm, readFile as readJsonFile, writeFile } from 'node:fs/promises';
+import { cp, mkdtemp, rm, readFile as readJson, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
-
 const root = resolve(import.meta.dirname, '../..');
 const fixture = await readFile(resolve(root, 'examples/form-fixture.html'), 'utf8');
+<<<<<<< HEAD
 const resume = await readFile(resolve(root, 'examples/resume.json'), 'utf8');
 function serve() { const server = createServer((req, res) => { const path = new URL(req.url, 'http://127.0.0.1').pathname; if (path === '/resume.json') { res.writeHead(200, {'content-type':'application/json'}); res.end(resume); return; } if (path === '/' || path === '/form-fixture.html') { res.writeHead(200, {'content-type':'text/html; charset=utf-8'}); res.end(fixture); return; } res.writeHead(404); res.end('not found'); }); return new Promise((resolveServer, reject) => { server.once('error', reject); server.listen(0, '127.0.0.1', () => resolveServer(server)); }); }
 async function main() {
@@ -26,3 +26,8 @@ async function main() {
 }
 await main();
 
+=======
+function serve() { const server=createServer((req,res)=>{ if(new URL(req.url,'http://127.0.0.1').pathname==='/'){res.writeHead(200,{'content-type':'text/html'});res.end(fixture);}else{res.writeHead(404);res.end();} }); return new Promise((ok,fail)=>{server.once('error',fail);server.listen(0,'127.0.0.1',()=>ok(server));}); }
+async function main(){ let chromium; try{({chromium}=await import('playwright'));}catch(e){console.log(`SKIP (unavailable): ${e.message}`);return;} const server=await serve(); const port=server.address().port; const source=resolve(root,'dist/extension'); const extension=await mkdtemp(resolve(tmpdir(),'formpilot-extension-')); await cp(source,extension,{recursive:true}); let context; try{ const manifest=JSON.parse(await readJson(resolve(extension,'manifest.json'),'utf8')); manifest.host_permissions=['http://127.0.0.1/*']; await writeFile(resolve(extension,'manifest.json'),JSON.stringify(manifest)); context=await chromium.launchPersistentContext('',{headless:true,args:[`--disable-extensions-except=${extension}`,`--load-extension=${extension}`]}); let worker=context.serviceWorkers()[0]; if(!worker){ try { worker=await context.waitForEvent('serviceworker',{timeout:10000}); } catch { console.log('SKIP (unavailable): Chromium did not attach the extension service worker'); return; } } const extensionId=new URL(worker.url()).host; const page=await context.newPage(); await page.goto(`http://127.0.0.1:${port}/`); await page.waitForTimeout(500); const panel=await context.newPage(); await panel.goto(`chrome-extension://${extensionId}/sidepanel.html`); const tabId=await panel.evaluate(async()=>{const tabs=await chrome.tabs.query({active:true,currentWindow:true});return tabs[0]?.id;}); assert.ok(Number.isInteger(tabId)); const resume={profile:{basics:{name:'林知远',email:'linzhiyuan@example.com'}}}; const started=await panel.evaluate(async({tabId,resume})=>chrome.runtime.sendMessage({type:'runtime/start',tabId,resume}),{tabId,resume}); assert.equal(started.status,'running'); const stepped=await panel.evaluate(async({tabId})=>chrome.runtime.sendMessage({type:'runtime/step',tabId}),{tabId}); assert.ok(['pending','manual','completed'].includes(stepped.runtime?.status||stepped.status)); assert.equal(await page.locator('#full-name').inputValue(),'林知远'); assert.equal(await page.evaluate(()=>window.__finalSubmitClicked===true),false); const stopped=await panel.evaluate(async({tabId})=>chrome.runtime.sendMessage({type:'runtime/stop',tabId}),{tabId}); assert.equal(stopped.status,'stopped'); console.log('PASS: Playwright runtime start -> step -> stop; field verified; submit untouched'); } finally { await context?.close(); await new Promise(ok=>server.close(ok)); await rm(extension,{recursive:true,force:true}); } }
+await main();
+>>>>>>> 2952a65

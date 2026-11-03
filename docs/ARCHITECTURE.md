@@ -9,7 +9,11 @@ FormPilot is a local AI universal web runtime. The browser extension keeps the r
 
 ## Extension points
 
+<<<<<<< HEAD
 The primary extension unit is a **control capability**, not a complete site adapter. Capabilities cover reusable interaction patterns such as text fields, native selects, custom comboboxes, repeatable sections, date pickers, and iframe or Shadow DOM access when the browser grants it. A site-specific strategy may contribute stable hints, but it is cached only after successful validation and remains a candidate until the current page fingerprint matches.
+=======
+The primary extension unit is a **control capability**, not a complete site adapter. Capabilities cover reusable interaction patterns such as text fields, native selects, custom comboboxes, repeatable sections, date pickers, and iframe or Shadow DOM access when the browser grants it. A validated strategy cache may contribute stable hints, but hints remain candidates until the current page fingerprint and capability versions match.
+>>>>>>> 2952a65
 
 The strategy cache stores locating and interaction experience, capability versions, provenance, success counts, and invalidation reasons. It never stores sensitive field values. Navigation, refresh, document identity, or a structure fingerprint change invalidates the old task and cached strategy.
 

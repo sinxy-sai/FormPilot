@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { inspectPage, inspectControls, executeFillPlan, executeTool, undoLastFill } from './runtime/control-executor.mjs';
 import { verifyAction } from './runtime/result-verifier.mjs';
 import { adapterFor } from './adapters/index.js';
@@ -18,3 +19,20 @@ if (typeof chrome !== 'undefined' && chrome.runtime && !globalThis.__formPilotCo
  if (message?.type === 'undo-last-fill' || message?.type === 'undo-fill') { sendResponse(undoLastFill(document)); return true; }
  }); }
 export { inspectControls, inspectPage, executeFillPlan, executeTool, verifyAction, undoLastFill };
+=======
+import { inspectPage } from './runtime/page-inspector.mjs';
+import { executeTool } from './runtime/control-executor.mjs';
+import { verifyAction } from './runtime/result-verifier.mjs';
+import { listCapabilities } from './adapters/capabilities.mjs';
+const documentId = globalThis.__formPilotDocumentId || (globalThis.__formPilotDocumentId = `doc-${Date.now()}-${Math.random().toString(16).slice(2)}`);
+if (typeof chrome !== 'undefined' && chrome.runtime && !globalThis.__formPilotContentLoaded) {
+  globalThis.__formPilotContentLoaded = true;
+  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (message?.type === 'inspect-page') { sendResponse({ runtimeVersion: '0.4.0', documentId, ...inspectPage(document, { capabilities: listCapabilities() }) }); return true; }
+    if (message?.type === 'execute-tool') { const inspected = inspectPage(document, { capabilities: listCapabilities() }); executeTool(document, message.action || {}, { pageModel: inspected.pageModel, pageFingerprint: message.pageFingerprint || inspected.pageModel.fingerprint }).then(sendResponse); return true; }
+    if (message?.type === 'verify-action') { verifyAction(document, message.action || {}, message.result || {}, { pageFingerprint: message.pageFingerprint }).then(sendResponse); return true; }
+    return undefined;
+  });
+}
+export { inspectPage, executeTool, verifyAction };
+>>>>>>> 2952a65

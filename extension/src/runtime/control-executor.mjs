@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { inspectPage, inspectControls } from './page-inspector.mjs';
 import { fingerprintPageModel } from '../core/page-model.mjs';
 import { verifyAction, readActual } from './result-verifier.mjs';
@@ -70,3 +71,32 @@ export async function executeFieldAction(document, field, action, adapter = null
 export { inspectPage, inspectControls };
 export async function executeFillPlan(document, plan = [], adapter = null) { const results = []; const changes = []; for (const item of plan) { const result = await executeFieldAction(document, item, item.action || item, adapter); results.push(result); if (result.status === 'filled') changes.push({ selector:result.selector, before:result.before, written:result.actual, pageFingerprint:fingerprint(document) }); } const existing = history.get(document) || []; history.set(document, existing.concat(changes)); return { filled:changes.length, verified:results.filter(r=>r.status==='filled').length, results, skipped:results.filter(r=>r.status!=='filled') }; }
 export function undoLastFill(document) { const changes = history.get(document) || []; if (!changes.length) return { undone:0, reason:'nothing-to-undo' }; const current = fingerprint(document); if (changes.some(c=>c.pageFingerprint && current && c.pageFingerprint !== current)) { history.delete(document); return { undone:0, reason:'page-changed' }; } let undone=0; for (const item of changes.reverse()) { const el=item.element || (item.selector && document?.querySelector?.(item.selector)); if (!el) continue; if (actual(el) !== item.written) continue; if (el.type==='checkbox') { el.checked=Boolean(item.before); el.dispatchEvent?.(new Event('change',{bubbles:true})); } else setValue(el,item.before); undone++; } history.delete(document); return { undone }; }
+=======
+import { inspectPage } from './page-inspector.mjs';
+import { verifyAction } from './result-verifier.mjs';
+import { normalizePlannedAction } from './action-tools.mjs';
+import { validatePlannedAction } from './action-guard.mjs';
+const history = new WeakMap();
+const visible = element => Boolean(element && (!element.getClientRects || element.getClientRects().length));
+const readActual = element => element?.type === 'checkbox' ? Boolean(element.checked) : String(element?.value ?? element?.textContent ?? '');
+function resolveElement(document, action, pageModel) { const control = pageModel?.controls?.find(item => item.controlId === action.target); if (!control?.selectorToken) return null; return [...(document?.querySelectorAll?.('input,textarea,select,[role="combobox"],[contenteditable="true"]') || [])].filter(visible)[Number(control.selectorToken.slice('control-token-'.length))] || null; }
+export async function executeTool(document, rawAction = {}, context = {}) {
+  const action = rawAction?.tool ? rawAction : normalizePlannedAction(rawAction, context.pageModel || inspectPage(document).pageModel); if (action?.rejected) return { status: 'skipped', reason: action.reason, changed: false };
+  const gate = validatePlannedAction(action, { pageModel: context.pageModel || inspectPage(document).pageModel, task: { status: 'pending' } }); if (!gate.allowed) return { status: 'skipped', reason: gate.reason, changed: false };
+  if (action.tool === 'ask_user') return { status: 'manual', reason: 'user-input-required', changed: false };
+  if (action.tool === 'wait') { await new Promise(resolve => setTimeout(resolve, Number(action.arguments?.ms || 0))); return { status: 'verified', changed: false }; }
+  const element = resolveElement(document, action, context.pageModel); if (!element) return { status: 'skipped', reason: 'target-disappeared', changed: false };
+  if (action.tool === 'read_value') return { status: 'verified', actual: readActual(element), changed: false };
+  if (action.tool === 'verify') return verifyAction(document, action, { actual: readActual(element) }, context);
+  const before = readActual(element); const args = action.arguments || {};
+  if (action.tool === 'focus') element.focus?.();
+  else if (action.tool === 'type') { const setter = Object.getOwnPropertyDescriptor(element.constructor?.prototype || {}, 'value')?.set; setter ? setter.call(element, String(args.value ?? '')) : element.value = String(args.value ?? ''); element.dispatchEvent?.(new Event('input', { bubbles: true })); element.dispatchEvent?.(new Event('change', { bubbles: true })); }
+  else if (action.tool === 'check') { element.checked = Boolean(args.checked); element.dispatchEvent?.(new Event('change', { bubbles: true })); }
+  else if (action.tool === 'select') { const option = [...(element.options || [])].find(item => String(item.value) === String(args.value) || String(item.text) === String(args.value)); if (!option) return { status:'skipped', reason:'option-not-found', changed:false }; element.value = option.value; element.dispatchEvent?.(new Event('change', { bubbles: true })); }
+  else return { status:'skipped', reason:'unsupported-tool', changed:false };
+  const actual = readActual(element); const expected = action.tool === 'check' ? Boolean(args.checked) : String(args.value ?? ''); const verified = action.tool === 'focus' || actual === expected; if (!verified) return { status:'skipped', reason:'verification-failed', before, actual, changed:actual !== before };
+  if (actual !== before) { const entries = history.get(document) || []; entries.push({ element, before }); history.set(document, entries); }
+  return { status:'verified', before, actual, changed: actual !== before };
+}
+export function undoLastFill(document) { const entries = history.get(document) || []; let undone = 0; for (const entry of entries.reverse()) { if (entry.element?.isConnected === false) continue; entry.element.value = entry.before; entry.element.dispatchEvent?.(new Event('input', { bubbles:true })); entry.element.dispatchEvent?.(new Event('change', { bubbles:true })); undone += 1; } history.delete(document); return { undone }; }
+>>>>>>> 2952a65

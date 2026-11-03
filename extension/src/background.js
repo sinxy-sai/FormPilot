@@ -1,14 +1,17 @@
 import { createTaskSnapshot } from './core/models.mjs';
 import { createBrowserLocalRuntime } from './ai/local-runtime.mjs';
 import { loadTask, saveTask, invalidateTask } from './core/storage.mjs';
+<<<<<<< HEAD
 import { invalidateStrategy } from './core/strategy-cache.mjs';
 import { createRuntimeContext, planNextStep, runNextStep } from './runtime/orchestrator.mjs';
+=======
+import { createRuntimeContext, runNextStep } from './runtime/orchestrator.mjs';
+>>>>>>> 2952a65
 const runtimes = new Map();
 const memory = new Map();
-async function currentResumeRevision() { try { return (await chrome.storage.local.get('resumeRevision'))?.resumeRevision; } catch { return undefined; } }
-let localRuntime; let localRuntimeKey;
 const read = async tabId => { try { return await loadTask(tabId); } catch { return memory.get(tabId) ?? null; } };
 const write = async task => { memory.set(task.tabId, task); try { await saveTask(task); } catch {} return task; };
+<<<<<<< HEAD
 const digest = value => { let h=2166136261; for (const c of JSON.stringify(value)) { h ^= c.charCodeAt(0); h=Math.imul(h,16777619); } return `approval-${(h>>>0).toString(16)}`; };
 export function bindTabTask(task, context={}) { if (!task || !Number.isInteger(task.tabId)) throw new TypeError('task.tabId is required'); return {...task, frameId:context.frameId ?? task.frameId ?? 0, documentId:context.documentId ?? task.documentId, url:context.url ?? task.url, pageFingerprint:context.pageFingerprint ?? task.pageFingerprint, ...(context.strategyId === undefined ? {} : { strategyId: context.strategyId }), ...(context.strategyVersion === undefined ? {} : { strategyVersion: context.strategyVersion }), ...(context.strategyHit === undefined ? {} : { strategyHit: context.strategyHit })}; }
 export function isTaskCurrent(task,current={}) { if (!task || task.status==='invalidated') return false; if (Number.isInteger(current.tabId)&&task.tabId!==current.tabId) return false; if (current.url !== undefined && task.url !== current.url) return false; if (current.documentId !== undefined && task.documentId !== current.documentId) return false; if (current.frameId !== undefined && task.frameId !== current.frameId) return false; if (current.pageFingerprint !== undefined && task.pageFingerprint !== current.pageFingerprint) return false; return true; }
@@ -37,3 +40,31 @@ if(globalThis.chrome?.runtime?.onInstalled) chrome.runtime.onInstalled.addListen
 
 
 
+=======
+let localRuntime; let localRuntimeKey;
+async function send(tabId, message, frameId) { const options = Number.isInteger(frameId) ? { frameId } : undefined; return options ? chrome.tabs.sendMessage(tabId, message, options) : chrome.tabs.sendMessage(tabId, message); }
+async function startRuntime(message, sender) {
+  const tabId = message.tabId ?? sender?.tab?.id; if (!Number.isInteger(tabId)) throw new Error('tabId required');
+  const task = await write(createTaskSnapshot({ tabId, frameId: message.frameId ?? sender?.frameId ?? 0, documentId: message.documentId, url: message.url ?? sender?.tab?.url ?? '', pageFingerprint: message.pageFingerprint, resumeRevision: message.resumeRevision }));
+  const configKey = JSON.stringify({ config: message.config ?? null, consented: message.consented === true });
+  if (localRuntimeKey !== configKey) { localRuntime?.dispose?.(); localRuntime = createBrowserLocalRuntime({ config: message.config, consented: message.consented === true }); localRuntimeKey = configKey; }
+  const context = createRuntimeContext({ resume: message.resume ?? {}, pageModel: message.pageModel ?? {}, task, provider: { generate: (input, options) => localRuntime.generate(input, options) } });
+  context.inspect = async () => send(tabId, { type: 'inspect-page' }, task.frameId);
+  context.execute = async action => send(tabId, { type: 'execute-tool', action, pageFingerprint: context.pageModel?.fingerprint }, task.frameId);
+  runtimes.set(tabId, context);
+  return write({ ...task, status: 'running' });
+}
+async function stepRuntime(message, sender) { const tabId = message.tabId ?? sender?.tab?.id; const context = runtimes.get(tabId); if (!context) throw new Error('runtime not started'); const result = await runNextStep(context); return write({ ...context.task, runtime: result }); }
+async function stopRuntime(message, sender) { const tabId = message.tabId ?? sender?.tab?.id; const context = runtimes.get(tabId); runtimes.delete(tabId); if (!context) return null; return write({ ...context.task, status: 'stopped' }); }
+export async function handleMessage(message, sender = {}) {
+  switch (message?.type) {
+    case 'runtime/start': return startRuntime(message, sender);
+    case 'runtime/step': return stepRuntime(message, sender);
+    case 'runtime/stop': return stopRuntime(message, sender);
+
+    default: return null;
+  }
+}
+if (globalThis.chrome?.runtime?.onMessage) chrome.runtime.onMessage.addListener((message, sender, respond) => { handleMessage(message, sender).then(respond).catch(error => respond({ error: error.message })); return true; });
+if (globalThis.chrome?.tabs?.onUpdated) chrome.tabs.onUpdated.addListener((tabId, change) => { if (change.url || change.status === 'loading') invalidateTask(tabId, change.url ? 'url-changed' : 'navigation').catch(() => {}); });
+>>>>>>> 2952a65

@@ -1,7 +1,6 @@
-import { reducePanelState, initialPanelState } from './core/panel-state.mjs';
-import { createEnhancedPlan } from './ai/rule-first-planner.mjs';
-import { saveTask, loadTask } from './core/storage.mjs';
+import { initialPanelState, reducePanelState } from './core/panel-state.mjs';
 let state = initialPanelState;
+<<<<<<< HEAD
 const out = document.querySelector('#status');
 const render = () => { out.textContent = JSON.stringify({ status: state.status, page: state.task?.pageModel ? { fingerprint: state.task.pageModel.fingerprint, controls: state.task.pageModel.controls?.length ?? 0 } : undefined, next: state.task?.runtime?.decision ? { status: state.task.runtime.decision.status, reason: state.task.runtime.decision.reason, confidence: state.task.runtime.decision.confidence, action: state.task.runtime.decision.action } : undefined, fields: state.task?.fields?.length ?? 0, plan: state.plan.map(({fieldId,label,path,value,status,reason})=>({fieldId,label,path,value,status,reason})), results: state.results }, null, 2); };
 const dispatch = action => { state = reducePanelState(state, action); render(); };
@@ -17,3 +16,15 @@ render();
 (async () => { try { const saved=await chrome.storage.local.get(['resume']); if (saved.resume) dispatch({type:'resume/load',resume:saved.resume}); const tabs=await chrome.tabs.query({active:true,currentWindow:true}); const task=tabs?.[0]?.id!=null ? await loadTask(tabs[0].id) : null; if (task) dispatch({type:'task/load',task}); } catch {} })();
 
 for (const [id,type] of [['runtime-start','runtime/start'],['runtime-step','runtime/step'],['runtime-stop','runtime/stop']]) document.querySelector('#'+id)?.addEventListener('click', async()=>{ try { const tabs=await chrome.tabs.query({active:true,currentWindow:true}); const tab=tabs?.[0]; const payload={tabId:tab?.id}; const result=await send(type,payload); dispatch({type:'task/load',task:result}); } catch(e){ out.textContent=e.message; }});
+=======
+const status = document.querySelector('#status');
+const render = () => { const runtime = state.task?.runtime; status.textContent = JSON.stringify({ status: state.status, page: state.task?.pageModel?.fingerprint, controls: state.task?.pageModel?.controls?.length ?? 0, step: runtime?.step ?? state.task?.step ?? 0, decision: runtime?.decision ?? null, result: runtime?.lastResult ?? null }, null, 2); };
+const send = async (type, payload = {}) => { const response = await chrome.runtime.sendMessage({ type, ...payload }); if (response?.error) throw new Error(response.error); return response; };
+const dispatch = action => { state = reducePanelState(state, action); render(); };
+const activeTab = async () => (await chrome.tabs.query({ active: true, currentWindow: true }))[0];
+document.querySelector('#resume')?.addEventListener('change', async event => { const file = event.target.files?.[0]; if (!file) return; const resume = JSON.parse(await file.text()); await chrome.storage.local.set({ resume }); dispatch({ type: 'resume/load', resume }); });
+document.querySelector('#runtime-start')?.addEventListener('click', async () => { try { const tab = await activeTab(); const resume = (await chrome.storage.local.get('resume')).resume ?? {}; dispatch({ type: 'task/load', task: await send('runtime/start', { tabId: tab?.id, resume }) }); } catch (error) { status.textContent = error.message; } });
+document.querySelector('#runtime-step')?.addEventListener('click', async () => { try { const tab = await activeTab(); dispatch({ type: 'task/load', task: await send('runtime/step', { tabId: tab?.id }) }); } catch (error) { status.textContent = error.message; } });
+document.querySelector('#runtime-stop')?.addEventListener('click', async () => { try { const tab = await activeTab(); dispatch({ type: 'task/load', task: await send('runtime/stop', { tabId: tab?.id }) }); } catch (error) { status.textContent = error.message; } });
+(async () => { try { const saved = await chrome.storage.local.get('resume'); if (saved.resume) dispatch({ type: 'resume/load', resume: saved.resume }); } catch {} render(); })();
+>>>>>>> 2952a65

@@ -1,5 +1,9 @@
 import { createPageModel } from '../core/page-model.mjs';
+<<<<<<< HEAD
 import { capabilityFromAdapter, listCapabilities, selectCapability } from '../adapters/capabilities.mjs';
+=======
+import { listCapabilities, selectCapability } from '../adapters/capabilities.mjs';
+>>>>>>> 2952a65
 
 const text = (value) => String(value ?? '').replace(/\s+/g, ' ').trim();
 const attr = (element, name) => { const value = element?.getAttribute?.(name); if (value !== null && value !== undefined) return value; const property = element?.[name]; return property === undefined ? null : property; };
@@ -40,6 +44,7 @@ export function inspectPage(document, { capabilities = null, includeScreenshot =
     if (capability?.inspect) { try { const inspected = capability.inspect({ document, element, control: model }); if (inspected && typeof inspected === 'object' && !Array.isArray(inspected)) Object.assign(model, inspected); } catch (error) { diagnostics.push({ code: 'capability-inspection-failed', controlId: model.controlId, capability: capability.name, message: String(error?.message || error) }); } }
     controls.push(model);
   });
+<<<<<<< HEAD
   const legacy = available.find?.((capability) => capability?.legacyAdapter?.inspect);
   if (legacy) {
     try {
@@ -47,12 +52,15 @@ export function inspectPage(document, { capabilities = null, includeScreenshot =
       if (Array.isArray(descriptors)) descriptors.forEach((descriptor, index) => { if (controls[index] && descriptor && typeof descriptor === 'object') Object.assign(controls[index], descriptor); });
     } catch (error) { diagnostics.push({ code: 'legacy-inspection-failed', message: String(error?.message || error) }); }
   }
+=======
+>>>>>>> 2952a65
   if (includeScreenshot) diagnostics.push({ code: 'screenshot-unavailable', message: 'Screenshot capture is not available in the content runtime' });
   diagnostics.push({ code: 'controls-inspected', count: controls.length });
   const location = document?.location || globalThis.location;
   const pageModel = createPageModel({ pageIdentity: { origin: location?.origin || '', route: `${location?.pathname || ''}${location?.search || ''}`, title: document?.title || '' }, sections, controls, dialogs: [...(document?.querySelectorAll?.('dialog,[role="dialog"]') || [])].map((dialog, index) => ({ id: dialog.id || `dialog-${index}`, label: text(dialog.getAttribute?.('aria-label')) || text(dialog.textContent).slice(0, 120), open: dialog.open !== false && attr(dialog, 'aria-hidden') !== 'true' })) });
   return { pageModel, diagnostics };
 }
+<<<<<<< HEAD
 
 export function inspectControls(document, adapter = null) {
   const inspected = inspectPage(document, { capabilities: adapter ? [capabilityFromAdapter(adapter)] : listCapabilities() }).pageModel.controls;
@@ -61,3 +69,5 @@ export function inspectControls(document, adapter = null) {
 
 
 
+=======
+>>>>>>> 2952a65
