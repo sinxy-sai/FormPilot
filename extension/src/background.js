@@ -2,6 +2,8 @@ import { createTaskSnapshot } from './core/models.mjs';
 import { createBrowserLocalRuntime } from './ai/local-runtime.mjs';
 import { loadTask, saveTask, invalidateTask } from './core/storage.mjs';
 import { createRuntimeContext, runNextStep } from './runtime/orchestrator.mjs';
+import { createLogger } from './core/logger.mjs';
+const log = createLogger('background');
 
 const runtimes = new Map();
 const memory = new Map();
@@ -14,6 +16,7 @@ async function send(tabId, message, frameId) { const options = Number.isInteger(
 async function startRuntime(message, sender) {
   const tabId = message.tabId ?? sender?.tab?.id;
   if (!Number.isInteger(tabId)) throw new Error('tabId required');
+  log.info('runtime-start', { tabId, url: message.url ?? sender?.tab?.url, aiEnabled: message.consented === true });
   const task = await write(createTaskSnapshot({ tabId, frameId: message.frameId ?? sender?.frameId ?? 0, documentId: message.documentId, url: message.url ?? sender?.tab?.url ?? '', pageFingerprint: message.pageFingerprint, resumeRevision: message.resumeRevision }));
   const config = message.config ?? null;
   const configKey = JSON.stringify({ config, consented: message.consented === true });
@@ -25,9 +28,9 @@ async function startRuntime(message, sender) {
   return write({ ...task, status: 'running' });
 }
 
-async function stepRuntime(message, sender) { const tabId = message.tabId ?? sender?.tab?.id; const context = runtimes.get(tabId); if (!context) throw new Error('runtime not started'); const result = await runNextStep(context); return write({ ...context.task, runtime: result }); }
+async function stepRuntime(message, sender) { const tabId = message.tabId ?? sender?.tab?.id; const context = runtimes.get(tabId); if (!context) throw new Error('runtime not started'); log.info('runtime-step', { tabId }); const result = await runNextStep(context); log.info('runtime-result', { tabId, status: result.runtime?.status ?? result.status, controls: result.runtime?.pageModel?.controls?.length ?? result.pageModel?.controls?.length ?? 0 }); return write({ ...context.task, runtime: result }); }
 async function runRuntime(message, sender) { const tabId = message.tabId ?? sender?.tab?.id; await startRuntime(message, sender); let result; for (let i = 0; i < (message.maxSteps ?? 20); i += 1) { result = await stepRuntime({ tabId }, sender); const status = result.runtime?.status ?? result.status; if (['completed', 'manual', 'blocked'].includes(status)) break; } return result; }
 async function stopRuntime(message, sender) { const tabId = message.tabId ?? sender?.tab?.id; const context = runtimes.get(tabId); runtimes.delete(tabId); if (!context) return null; return write({ ...context.task, status: 'stopped' }); }
 export async function handleMessage(message, sender = {}) { switch (message?.type) { case 'runtime/start': return startRuntime(message, sender); case 'runtime/run': return runRuntime(message, sender); case 'runtime/step': return stepRuntime(message, sender); case 'runtime/stop': return stopRuntime(message, sender); default: return null; } }
-if (globalThis.chrome?.runtime?.onMessage) chrome.runtime.onMessage.addListener((message, sender, respond) => { handleMessage(message, sender).then(respond).catch(error => respond({ error: error.message })); return true; });
+if (globalThis.chrome?.runtime?.onMessage) chrome.runtime.onMessage.addListener((message, sender, respond) => { handleMessage(message, sender).then(respond).catch(error => { log.error('message-failed', { type: message?.type, error: String(error?.stack || error) }); respond({ error: error.message }); }); return true; });
 if (globalThis.chrome?.tabs?.onUpdated) chrome.tabs.onUpdated.addListener((tabId, change) => { if (change.url || change.status === 'loading') invalidateTask(tabId, change.url ? 'url-changed' : 'navigation').catch(() => {}); });
