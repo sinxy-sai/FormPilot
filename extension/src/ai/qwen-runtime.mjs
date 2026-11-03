@@ -5,7 +5,10 @@ export async function createQwenRuntime(config, { importTransformers = () => imp
   env.allowRemoteModels = config.allowNetwork === true;
   env.allowLocalModels = true;
   let generator;
-  const load = async () => { generator ??= await pipeline('text-generation', config.modelId, { dtype: config.dtype, device: config.backend, revision: config.revision }); return generator; };
+  const bundledUrl = new URL('../../models/qwen2.5-0.5b', import.meta.url);
+  const localPath = bundledUrl.pathname.replace(/^\/([A-Za-z]:)/, '$1');
+  const modelId = config.modelId === 'bundled:qwen2.5-0.5b' ? (globalThis.location?.protocol === 'chrome-extension:' ? bundledUrl.href : localPath) : config.modelId;
+  const load = async () => { generator ??= await pipeline('text-generation', modelId, { dtype: config.dtype, device: config.backend, revision: config.revision, local_files_only: modelId.startsWith('chrome-extension:') }); return generator; };
   const generate = async (input, { signal } = {}) => {
     if (signal?.aborted) throw new Error('cancelled');
     const prompt = `Return one JSON object only. Select a candidateId or abstain.\n${JSON.stringify(input)}`;

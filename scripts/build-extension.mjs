@@ -6,7 +6,9 @@ await build({configFile:false,root,build:{outDir:out,emptyOutDir:true,lib:{entry
 for(const dir of ['assets','locales']) await cp(resolve(root,'extension',dir),resolve(out,dir),{recursive:true});
 for(const file of ['sidepanel.html','sidepanel.css']) await cp(resolve(root,'extension',file),resolve(out,file));
 for(const file of ['background.js','sidepanel.js']) await cp(resolve(root,'extension/src',file),resolve(out,'src',file));
-for(const dir of ['core','ai']) await cp(resolve(root,'extension/src',dir),resolve(out,'src',dir),{recursive:true});
+for(const dir of ['core','ai','runtime','adapters']) await cp(resolve(root,'extension/src',dir),resolve(out,'src',dir),{recursive:true});
+const localModel = resolve(root,'models/hub/models--onnx-community--Qwen2.5-0.5B-Instruct/snapshots/22942cb7d7ba4cc81bb4673549ca4d4614469b5e');
+try { await cp(localModel, resolve(out,'models/qwen2.5-0.5b'), { recursive:true, errorOnExist:false }); } catch (error) { if (error.code !== 'ENOENT') throw error; }
 
 const manifest=JSON.parse(await readFile(resolve(root,'extension/manifest.json'),'utf8')); manifest.content_scripts=manifest.content_scripts.map(e=>({...e,js:['src/content.js']})); manifest.background.service_worker='src/background.js'; await writeFile(resolve(out,'manifest.json'),JSON.stringify(manifest));
 const declared = new Set(['manifest.json']);

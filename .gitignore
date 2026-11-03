@@ -1,5 +1,6 @@
 node_modules/
 .pnpm-store/
+models/
 dist/
 coverage/
 .env

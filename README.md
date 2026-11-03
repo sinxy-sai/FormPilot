@@ -72,7 +72,7 @@ Build the extension, then load the generated directory as an unpacked extension.
 5. For local `file:///` fixtures, open the extension details and enable **Allow access to file URLs**.
 6. Open the extension's **Side Panel** from the toolbar (or the extension details page) and refresh the test page after source changes.
 
-For local-only development, keep the model setting disabled unless you have explicitly enabled a compatible local model and accepted its storage/download cost. When the local model is unavailable, FormPilot falls back to deterministic matching and marks uncertain fields for manual review.
+For local-only development, keep the model setting disabled unless you have explicitly enabled a compatible local model and accepted its storage/download cost. This repository does not ship model weights, and the default configuration does not download them. When the local model is unavailable, FormPilot falls back to constrained rules and manual review; the primary planning path is the local AI runtime.
 
 ## ▶️ Usage
 
