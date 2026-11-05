@@ -172,6 +172,26 @@ async function main() {
     assert.equal(afterUndo.submits, 0, '撤销也不能点保存');
     assert.equal(afterUndo.modules['基本信息'].name, initial.modules['基本信息'].name, '撤销后姓名应恢复原值');
 
+    // ---------- 3.5 指纹稳定性：规划之后打开一个自定义下拉，页面指纹必须保持不变 ----------
+    // 自定义下拉只有点开时才渲染 options；早期把 options 算进页面指纹，
+    // 结果「打开过一次下拉 → 后面每一步都 page-changed」，真机上表现为
+    // 「页面已变化，请重新检查」。这里用真实点击 + 真实 content script 复现并锁死该行为。
+    const inspectBeforeDropdown = await send({ type: 'page/inspect', tabId });
+    const fingerprintBeforeDropdown = inspectBeforeDropdown?.pageModel?.fingerprint;
+    assert.ok(fingerprintBeforeDropdown, 'page/inspect 应返回页面指纹');
+
+    await page.bringToFront();
+    await page.click('[data-form-field-name="degree"] [class*="ud__select__selector"]');
+    await page.waitForTimeout(300);
+    const optionsAfterClick = await page.evaluate(() => document.querySelectorAll('.ud__select__list__item').length);
+    assert.ok(optionsAfterClick > 0, '真实点击后下拉应渲染选项（这是指纹里曾经的易变部分）');
+
+    const inspectAfterDropdown = await send({ type: 'page/inspect', tabId });
+    assert.equal(inspectAfterDropdown?.pageModel?.fingerprint, fingerprintBeforeDropdown,
+      '打开下拉不得改变页面指纹，否则后续步骤会被误判为「页面已变化」');
+    await page.keyboard.press('Escape');
+    await page.waitForTimeout(200);
+
     // ---------- 4. 侧边栏 UI：渲染 + 用 UI 自己的按钮完成一次填写 ----------
     // 这一步覆盖「面板 → background → content」的真实消息链路，以及
     // resume/analyze（MV3 service worker 禁止动态 import，必须用静态 import）。
