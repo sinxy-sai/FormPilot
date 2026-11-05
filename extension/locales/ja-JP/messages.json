@@ -194,5 +194,629 @@
   "actionFailure": {
     "message": "操作を完了できません。ページを更新して再試行してください。",
     "description": "入力または取り消しのエラー"
+  },
+  "chooseFile": {
+    "message": "JSON ファイルを選択",
+    "description": "Choose JSON file"
+  },
+  "clearResume": {
+    "message": "クリア",
+    "description": "Clear"
+  },
+  "safetyNote": {
+    "message": "保存・送信ボタンは押しません。入力前に自動バックアップし、競合は上書きしません。",
+    "description": "Never clicks save/submit; backs up before filling; conflicts are not overwritten."
+  },
+  "pageFingerprint": {
+    "message": "ページ指紋",
+    "description": "Page fingerprint"
+  },
+  "controlsCount": {
+    "message": "コントロール数",
+    "description": "Controls"
+  },
+  "pageNotInspected": {
+    "message": "ページ未検査",
+    "description": "Page not inspected"
+  },
+  "pageStale": {
+    "message": "ページが変わりました。再検査してください",
+    "description": "Page changed, inspect again"
+  },
+  "inspected": {
+    "message": "検査済み",
+    "description": "Inspected"
+  },
+  "backupCreate": {
+    "message": "現在のページをバックアップ",
+    "description": "Back up current page"
+  },
+  "backupRestore": {
+    "message": "前回のバックアップを復元",
+    "description": "Restore last backup"
+  },
+  "backupNone": {
+    "message": "バックアップなし",
+    "description": "No backup yet"
+  },
+  "backupLastMsg": {
+    "message": "最新バックアップ：{0}（計 {1} 件、{2} コントロール）",
+    "description": "Last backup: {0} ({1} total, {2} controls)"
+  },
+  "invalidatedNote": {
+    "message": "ページが切り替わったか再読み込みされました。入力前に再検査してください。",
+    "description": "The page changed or reloaded. Inspect it again before filling."
+  },
+  "modeLabel": {
+    "message": "空欄のみ入力（推奨）",
+    "description": "Fill blanks only (recommended)"
+  },
+  "modeHint": {
+    "message": "既存の値が異なる場合は競合として扱い、上書きしません。",
+    "description": "Existing values that differ are marked as conflicts and never overwritten."
+  },
+  "overwriteHint": {
+    "message": "上書きモードは既存の値を書き換えます。慎重に使用してください。",
+    "description": "Overwrite mode rewrites existing values. Use with care."
+  },
+  "fillStart": {
+    "message": "入力を開始",
+    "description": "Start filling"
+  },
+  "fillUndo": {
+    "message": "今回の入力を取り消す",
+    "description": "Undo this run"
+  },
+  "inspectRunning": {
+    "message": "ページを検査中…",
+    "description": "Inspecting page…"
+  },
+  "fillRunning": {
+    "message": "入力中…",
+    "description": "Filling…"
+  },
+  "restoring": {
+    "message": "復元中…",
+    "description": "Restoring…"
+  },
+  "working": {
+    "message": "処理中…",
+    "description": "Working…"
+  },
+  "noMatches": {
+    "message": "履歴書を読み込み、ページを検査すると照合結果を表示します",
+    "description": "Load a resume and inspect the page to see matches"
+  },
+  "tableField": {
+    "message": "項目",
+    "description": "Field"
+  },
+  "tablePageLabel": {
+    "message": "ページラベル",
+    "description": "Page label"
+  },
+  "tableSource": {
+    "message": "参照パス",
+    "description": "Source path"
+  },
+  "tableCurrent": {
+    "message": "現在の値",
+    "description": "Current value"
+  },
+  "tableTarget": {
+    "message": "入力値",
+    "description": "Target value"
+  },
+  "tableStatus": {
+    "message": "状態",
+    "description": "Status"
+  },
+  "tableConfidence": {
+    "message": "信頼度",
+    "description": "Confidence"
+  },
+  "summaryOk": {
+    "message": "成功 {0}",
+    "description": "OK {0}"
+  },
+  "summaryConflict": {
+    "message": "競合 {0}",
+    "description": "Conflicts {0}"
+  },
+  "summaryFailed": {
+    "message": "失敗 {0}",
+    "description": "Failed {0}"
+  },
+  "summarySkipped": {
+    "message": "スキップ {0}",
+    "description": "Skipped {0}"
+  },
+  "summaryManual": {
+    "message": "手動 {0}",
+    "description": "Manual {0}"
+  },
+  "summaryReady": {
+    "message": "入力可能 {0}",
+    "description": "Ready {0}"
+  },
+  "summaryAddItems": {
+    "message": "項目追加 {0}",
+    "description": "Add item {0}"
+  },
+  "conflictHint": {
+    "message": "競合した項目は入力しません。手動で確認してください。",
+    "description": "Conflicting fields are not written; please review them manually."
+  },
+  "addItem": {
+    "message": "項目を追加",
+    "description": "Add item"
+  },
+  "badgeReady": {
+    "message": "入力待ち {0}",
+    "description": "To fill {0}"
+  },
+  "badgeResult": {
+    "message": "成功 {0}/{1}",
+    "description": "OK {0}/{1}"
+  },
+  "reasonLabel": {
+    "message": "理由：{0}",
+    "description": "Reason: {0}"
+  },
+  "reasonResumeMissing": {
+    "message": "先に履歴書 JSON を読み込んでください",
+    "description": "Load a resume JSON first"
+  },
+  "reasonPageMissing": {
+    "message": "先に現在のページを検査してください",
+    "description": "Inspect the current page first"
+  },
+  "reasonPageInvalidated": {
+    "message": "ページが切り替わりました。再検査してください",
+    "description": "The page changed; inspect it again"
+  },
+  "reasonNothingToFill": {
+    "message": "入力できる項目がありません（既に一致している可能性）",
+    "description": "Nothing to fill (the page may already match)"
+  },
+  "reasonBusy": {
+    "message": "処理中です。お待ちください",
+    "description": "Busy, please wait"
+  },
+  "reasonAlreadyCorrect": {
+    "message": "既に一致しています",
+    "description": "Page already matches"
+  },
+  "reasonConflict": {
+    "message": "既存の値が異なるためスキップ（上書き回避）",
+    "description": "Existing value kept"
+  },
+  "reasonPageChanged": {
+    "message": "ページが変わりました。再検査してください",
+    "description": "Page changed; inspect again"
+  },
+  "reasonTargetMissing": {
+    "message": "対象のコントロールが見つかりません",
+    "description": "Target control disappeared"
+  },
+  "reasonVerificationFailed": {
+    "message": "読み戻し検証に失敗しました",
+    "description": "Read-back verification failed"
+  },
+  "reasonOptionNotFound": {
+    "message": "一致する選択肢がありません",
+    "description": "Option not found"
+  },
+  "reasonForbidden": {
+    "message": "ブロック：保存・送信系のボタンは操作しません",
+    "description": "Blocked: save/submit controls are never touched"
+  },
+  "reasonAddItemFailed": {
+    "message": "項目の追加に失敗しました",
+    "description": "Failed to add item"
+  },
+  "reasonManualDate": {
+    "message": "日付は手動で入力してください",
+    "description": "Fill this date manually"
+  },
+  "reasonUnsupported": {
+    "message": "未対応のコントロールです",
+    "description": "Unsupported control"
+  },
+  "reasonLowConfidence": {
+    "message": "照合の信頼度が低すぎます",
+    "description": "Match confidence too low"
+  },
+  "yes": {
+    "message": "はい",
+    "description": "Yes"
+  },
+  "no": {
+    "message": "いいえ",
+    "description": "No"
+  },
+  "resumeStatsEmpty": {
+    "message": "履歴書 JSON が未読み込みです",
+    "description": "No resume loaded yet"
+  },
+  "resumeIndexFailed": {
+    "message": "履歴書の構造を認識できません。JSON を確認してください",
+    "description": "Could not read the resume structure; check the JSON"
+  },
+  "resumeSectionEmpty": {
+    "message": "セクション・項目を検出できません",
+    "description": "No sections or items detected"
+  },
+  "entriesTotal": {
+    "message": "計 {0} 件の項目を認識",
+    "description": "{0} entries in total"
+  },
+  "missingFieldsTitle": {
+    "message": "よくある必須項目の不足",
+    "description": "Common required fields missing"
+  },
+  "missingFieldsNone": {
+    "message": "よくある必須項目は揃っています",
+    "description": "All common required fields present"
+  },
+  "unknownFieldsTitle": {
+    "message": "未認識の項目（無視）",
+    "description": "Unrecognized fields (ignored)"
+  },
+  "itemCount": {
+    "message": "{0} 件",
+    "description": "{0}"
+  },
+  "pageSectionsEmpty": {
+    "message": "セクションを検出できません",
+    "description": "No sections detected"
+  },
+  "sectionItems": {
+    "message": "{0} 件・{1} コントロール",
+    "description": "{0} items · {1} controls"
+  },
+  "controlsVisible": {
+    "message": "表示 {0} / 全 {1}",
+    "description": "visible {0} / total {1}"
+  },
+  "restoreConfirm": {
+    "message": "現在のページの値をバックアップ値に戻します。続行しますか？",
+    "description": "Restore the current page controls to the backup values?"
+  },
+  "resumeLoadedMsg": {
+    "message": "履歴書を読み込みました：{0}",
+    "description": "Resume loaded: {0}"
+  },
+  "resumeInvalidMsg": {
+    "message": "履歴書 JSON の解析に失敗：{0}",
+    "description": "Resume JSON is invalid: {0}"
+  },
+  "resumeClearedMsg": {
+    "message": "履歴書をクリアしました",
+    "description": "Resume cleared"
+  },
+  "inspectOkMsg": {
+    "message": "入力可能なコントロール {0} 件",
+    "description": "Found {0} fillable controls"
+  },
+  "inspectFailedMsg": {
+    "message": "ページを読み取れません：{0}",
+    "description": "Cannot read the page: {0}"
+  },
+  "inspectStaleMsg": {
+    "message": "ページが変わった可能性があります。再検査してください",
+    "description": "The page may have changed; inspect again"
+  },
+  "pageInvalidatedMsg": {
+    "message": "ページが切り替わりました（{0}）。再検査してください",
+    "description": "Page changed or reloaded ({0}); inspect again"
+  },
+  "backupSavedMsg": {
+    "message": "コントロール {0} 件をバックアップしました",
+    "description": "Backed up {0} controls"
+  },
+  "backupFailedMsg": {
+    "message": "バックアップに失敗したため入力を中止しました：{0}",
+    "description": "Backup failed; filling was blocked: {0}"
+  },
+  "restoreDoneMsg": {
+    "message": "コントロール {0} 件を復元しました",
+    "description": "Restored {0} controls"
+  },
+  "restorePartialMsg": {
+    "message": "{0} 件復元、{1} 件失敗",
+    "description": "Restored {0} controls, {1} failed"
+  },
+  "restoreFailedMsg": {
+    "message": "復元に失敗しました：{0}",
+    "description": "Restore failed: {0}"
+  },
+  "restoreNothingMsg": {
+    "message": "利用できるバックアップがありません",
+    "description": "No backup available"
+  },
+  "planReadyMsg": {
+    "message": "入力可 {0} 件、競合 {1} 件、スキップ {2} 件",
+    "description": "{0} ready, {1} conflicts, {2} skipped"
+  },
+  "planEmptyMsg": {
+    "message": "入力できる項目がありません",
+    "description": "Nothing to fill"
+  },
+  "planFailedMsg": {
+    "message": "入力計画を作成できません：{0}",
+    "description": "Could not build a fill plan: {0}"
+  },
+  "fillDoneMsg": {
+    "message": "入力完了：成功 {0}、競合 {1}、スキップ {2}、手動 {3}",
+    "description": "Fill complete: OK {0}, conflicts {1}, skipped {2}, manual {3}"
+  },
+  "fillPartialMsg": {
+    "message": "入力終了：成功 {0}、競合 {1}、失敗 {2}",
+    "description": "Fill finished: OK {0}, conflicts {1}, failed {2}"
+  },
+  "fillFailedMsg": {
+    "message": "入力に失敗しました：{0}",
+    "description": "Fill failed: {0}"
+  },
+  "undoDoneMsg": {
+    "message": "コントロール {0} 件を取り消しました",
+    "description": "Undid {0} controls"
+  },
+  "undoNothingMsg": {
+    "message": "取り消せる入力がありません",
+    "description": "Nothing to undo"
+  },
+  "undoFailedMsg": {
+    "message": "取り消しに失敗しました：{0}",
+    "description": "Undo failed: {0}"
+  },
+  "actionFailedMsg": {
+    "message": "操作を完了できません：{0}",
+    "description": "Unable to complete this action: {0}"
+  },
+  "inspectUnsupportedMsg": {
+    "message": "このページは検査できません（ブラウザー内部ページ）",
+    "description": "This page cannot be inspected (browser page)"
+  },
+  "notReadyMsg": {
+    "message": "まだ入力できません：{0}",
+    "description": "Not ready to fill: {0}"
+  },
+  "status_ready": {
+    "message": "入力待ち",
+    "description": "Ready"
+  },
+  "status_conflict": {
+    "message": "競合",
+    "description": "Conflict"
+  },
+  "status_skipped": {
+    "message": "スキップ",
+    "description": "Skipped"
+  },
+  "status_unsupported": {
+    "message": "未対応",
+    "description": "Unsupported"
+  },
+  "status_done": {
+    "message": "成功",
+    "description": "Done"
+  },
+  "status_failed": {
+    "message": "失敗",
+    "description": "Failed"
+  },
+  "status_manual": {
+    "message": "手動",
+    "description": "Manual"
+  },
+  "section_basic": {
+    "message": "基本情報",
+    "description": "Basic info"
+  },
+  "section_intention": {
+    "message": "希望条件",
+    "description": "Job intention"
+  },
+  "section_work": {
+    "message": "職歴",
+    "description": "Work experience"
+  },
+  "section_internship": {
+    "message": "インターン",
+    "description": "Internship"
+  },
+  "section_education": {
+    "message": "学歴",
+    "description": "Education"
+  },
+  "section_project": {
+    "message": "プロジェクト",
+    "description": "Projects"
+  },
+  "section_award": {
+    "message": "受賞歴",
+    "description": "Awards"
+  },
+  "section_language": {
+    "message": "語学",
+    "description": "Languages"
+  },
+  "section_summary": {
+    "message": "自己PR",
+    "description": "Summary"
+  },
+  "section_sns": {
+    "message": "SNS",
+    "description": "Social links"
+  },
+  "field_name": {
+    "message": "氏名",
+    "description": "Name"
+  },
+  "field_mobile": {
+    "message": "携帯番号",
+    "description": "Mobile"
+  },
+  "field_areaCode": {
+    "message": "国番号",
+    "description": "Area code"
+  },
+  "field_email": {
+    "message": "メール",
+    "description": "Email"
+  },
+  "field_idType": {
+    "message": "証明書種別",
+    "description": "ID type"
+  },
+  "field_idNumber": {
+    "message": "証明書番号",
+    "description": "ID number"
+  },
+  "field_city": {
+    "message": "都市",
+    "description": "City"
+  },
+  "field_gender": {
+    "message": "性別",
+    "description": "Gender"
+  },
+  "field_birthday": {
+    "message": "生年月日",
+    "description": "Birthday"
+  },
+  "field_workStartDate": {
+    "message": "就業開始日",
+    "description": "Work start date"
+  },
+  "field_position": {
+    "message": "希望職種",
+    "description": "Position"
+  },
+  "field_jobType": {
+    "message": "雇用形態",
+    "description": "Job type"
+  },
+  "field_arrivalTime": {
+    "message": "入社可能時期",
+    "description": "Availability"
+  },
+  "field_company": {
+    "message": "会社",
+    "description": "Company"
+  },
+  "field_title": {
+    "message": "役職",
+    "description": "Title"
+  },
+  "field_department": {
+    "message": "部署",
+    "description": "Department"
+  },
+  "field_start": {
+    "message": "開始",
+    "description": "Start"
+  },
+  "field_end": {
+    "message": "終了",
+    "description": "End"
+  },
+  "field_ongoing": {
+    "message": "現在",
+    "description": "Ongoing"
+  },
+  "field_desc": {
+    "message": "内容",
+    "description": "Description"
+  },
+  "field_school": {
+    "message": "学校",
+    "description": "School"
+  },
+  "field_degree": {
+    "message": "学位",
+    "description": "Degree"
+  },
+  "field_major": {
+    "message": "専攻",
+    "description": "Major"
+  },
+  "field_college": {
+    "message": "学部",
+    "description": "College"
+  },
+  "field_trainingType": {
+    "message": "課程",
+    "description": "Study mode"
+  },
+  "field_gpa": {
+    "message": "GPA",
+    "description": "GPA"
+  },
+  "field_role": {
+    "message": "役割",
+    "description": "Role"
+  },
+  "field_link": {
+    "message": "リンク",
+    "description": "Link"
+  },
+  "field_date": {
+    "message": "日付",
+    "description": "Date"
+  },
+  "field_language": {
+    "message": "言語",
+    "description": "Language"
+  },
+  "field_proficiency": {
+    "message": "レベル",
+    "description": "Proficiency"
+  },
+  "field_platform": {
+    "message": "プラットフォーム",
+    "description": "Platform"
+  },
+  "field_account": {
+    "message": "アカウント",
+    "description": "Account"
+  },
+  "field_content": {
+    "message": "内容",
+    "description": "Content"
+  },
+  "saveReminder": {
+    "message": "入力後はご自身で確認し、ページ右下の「保存」をクリックしてください。",
+    "description": "After filling, review the page yourself and click Save at the bottom-right of the page."
+  },
+  "pageStatsMsg": {
+    "message": "{0} 個のセクション、{1} 個のコントロールを検出",
+    "description": "Detected {0} sections, {1} controls"
+  },
+  "summaryUnsupported": {
+    "message": "未対応 {0}",
+    "description": "Unsupported {0}"
+  },
+  "pageUnsupportedHint": {
+    "message": "このタブは Web ページではありません（拡張機能ページや新しいタブの可能性）。履歴書ページに切り替えて再試行してください。",
+    "description": "Shown when the active tab cannot host a content script"
+  },
+  "pageScriptMissingHint": {
+    "message": "ページスクリプトが未準備です。履歴書ページを再読み込み（F5）してから再試行してください。拡張機能を再読み込みした場合は必ずページも再読み込みしてください。",
+    "description": "Shown when the page script is missing or stale"
+  },
+  "pageNoActiveTabHint": {
+    "message": "操作可能なタブが見つかりません。先に履歴書ページを開いてください。",
+    "description": "Shown when no active tab is available"
+  },
+  "reasonMultiSelectManual": {
+    "message": "複数選択（希望勤務地）は手動で選択してください",
+    "description": "Reason: multi-select widget cannot be opened by a content script"
+  },
+  "reasonItemIdentityConflict": {
+    "message": "この項目は履歴書のレコードと一致しないため、混在を避けてスキップしました",
+    "description": "Reason: repeatable item identity does not match the resume"
   }
 }

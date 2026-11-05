@@ -194,5 +194,629 @@
   "actionFailure": {
     "message": "작업을 완료할 수 없습니다. 페이지를 새로고침하고 다시 시도하세요.",
     "description": "입력 또는 실행 취소 오류"
+  },
+  "chooseFile": {
+    "message": "JSON 파일 선택",
+    "description": "Choose JSON file"
+  },
+  "clearResume": {
+    "message": "지우기",
+    "description": "Clear"
+  },
+  "safetyNote": {
+    "message": "저장·제출 버튼을 누르지 않으며, 입력 전 자동 백업하고 충돌은 덮어쓰지 않습니다.",
+    "description": "Never clicks save/submit; backs up before filling; conflicts are not overwritten."
+  },
+  "pageFingerprint": {
+    "message": "페이지 지문",
+    "description": "Page fingerprint"
+  },
+  "controlsCount": {
+    "message": "컨트롤 수",
+    "description": "Controls"
+  },
+  "pageNotInspected": {
+    "message": "페이지 미검사",
+    "description": "Page not inspected"
+  },
+  "pageStale": {
+    "message": "페이지가 변경되었습니다. 다시 검사하세요",
+    "description": "Page changed, inspect again"
+  },
+  "inspected": {
+    "message": "검사됨",
+    "description": "Inspected"
+  },
+  "backupCreate": {
+    "message": "현재 페이지 백업",
+    "description": "Back up current page"
+  },
+  "backupRestore": {
+    "message": "마지막 백업 복원",
+    "description": "Restore last backup"
+  },
+  "backupNone": {
+    "message": "백업 없음",
+    "description": "No backup yet"
+  },
+  "backupLastMsg": {
+    "message": "최근 백업: {0} (총 {1}개, {2}개 컨트롤)",
+    "description": "Last backup: {0} ({1} total, {2} controls)"
+  },
+  "invalidatedNote": {
+    "message": "페이지가 전환되거나 새로고침되었습니다. 입력 전에 다시 검사하세요.",
+    "description": "The page changed or reloaded. Inspect it again before filling."
+  },
+  "modeLabel": {
+    "message": "빈 칸만 채우기 (권장)",
+    "description": "Fill blanks only (recommended)"
+  },
+  "modeHint": {
+    "message": "기존 값이 다르면 충돌로 표시하고 덮어쓰지 않습니다.",
+    "description": "Existing values that differ are marked as conflicts and never overwritten."
+  },
+  "overwriteHint": {
+    "message": "덮어쓰기 모드는 기존 값을 변경합니다. 주의해서 사용하세요.",
+    "description": "Overwrite mode rewrites existing values. Use with care."
+  },
+  "fillStart": {
+    "message": "입력 시작",
+    "description": "Start filling"
+  },
+  "fillUndo": {
+    "message": "이번 입력 취소",
+    "description": "Undo this run"
+  },
+  "inspectRunning": {
+    "message": "페이지 검사 중…",
+    "description": "Inspecting page…"
+  },
+  "fillRunning": {
+    "message": "입력 중…",
+    "description": "Filling…"
+  },
+  "restoring": {
+    "message": "복원 중…",
+    "description": "Restoring…"
+  },
+  "working": {
+    "message": "처리 중…",
+    "description": "Working…"
+  },
+  "noMatches": {
+    "message": "이력서를 불러오고 페이지를 검사하면 매칭 결과가 표시됩니다",
+    "description": "Load a resume and inspect the page to see matches"
+  },
+  "tableField": {
+    "message": "필드",
+    "description": "Field"
+  },
+  "tablePageLabel": {
+    "message": "페이지 라벨",
+    "description": "Page label"
+  },
+  "tableSource": {
+    "message": "원본 경로",
+    "description": "Source path"
+  },
+  "tableCurrent": {
+    "message": "현재 값",
+    "description": "Current value"
+  },
+  "tableTarget": {
+    "message": "대상 값",
+    "description": "Target value"
+  },
+  "tableStatus": {
+    "message": "상태",
+    "description": "Status"
+  },
+  "tableConfidence": {
+    "message": "신뢰도",
+    "description": "Confidence"
+  },
+  "summaryOk": {
+    "message": "성공 {0}",
+    "description": "OK {0}"
+  },
+  "summaryConflict": {
+    "message": "충돌 {0}",
+    "description": "Conflicts {0}"
+  },
+  "summaryFailed": {
+    "message": "실패 {0}",
+    "description": "Failed {0}"
+  },
+  "summarySkipped": {
+    "message": "건너뜀 {0}",
+    "description": "Skipped {0}"
+  },
+  "summaryManual": {
+    "message": "수동 {0}",
+    "description": "Manual {0}"
+  },
+  "summaryReady": {
+    "message": "입력 가능 {0}",
+    "description": "Ready {0}"
+  },
+  "summaryAddItems": {
+    "message": "항목 추가 {0}",
+    "description": "Add item {0}"
+  },
+  "conflictHint": {
+    "message": "충돌 항목은 입력하지 않습니다. 직접 확인하세요.",
+    "description": "Conflicting fields are not written; please review them manually."
+  },
+  "addItem": {
+    "message": "항목 추가",
+    "description": "Add item"
+  },
+  "badgeReady": {
+    "message": "입력 대기 {0}",
+    "description": "To fill {0}"
+  },
+  "badgeResult": {
+    "message": "성공 {0}/{1}",
+    "description": "OK {0}/{1}"
+  },
+  "reasonLabel": {
+    "message": "이유: {0}",
+    "description": "Reason: {0}"
+  },
+  "reasonResumeMissing": {
+    "message": "먼저 이력서 JSON을 불러오세요",
+    "description": "Load a resume JSON first"
+  },
+  "reasonPageMissing": {
+    "message": "먼저 현재 페이지를 검사하세요",
+    "description": "Inspect the current page first"
+  },
+  "reasonPageInvalidated": {
+    "message": "페이지가 전환되었습니다. 다시 검사하세요",
+    "description": "The page changed; inspect it again"
+  },
+  "reasonNothingToFill": {
+    "message": "입력할 항목이 없습니다 (이미 일치할 수 있음)",
+    "description": "Nothing to fill (the page may already match)"
+  },
+  "reasonBusy": {
+    "message": "처리 중입니다. 잠시 기다려 주세요",
+    "description": "Busy, please wait"
+  },
+  "reasonAlreadyCorrect": {
+    "message": "이미 일치함",
+    "description": "Page already matches"
+  },
+  "reasonConflict": {
+    "message": "기존 값이 달라 건너뜀 (덮어쓰기 방지)",
+    "description": "Existing value kept"
+  },
+  "reasonPageChanged": {
+    "message": "페이지가 변경되었습니다. 다시 검사하세요",
+    "description": "Page changed; inspect again"
+  },
+  "reasonTargetMissing": {
+    "message": "대상 컨트롤이 사라졌습니다",
+    "description": "Target control disappeared"
+  },
+  "reasonVerificationFailed": {
+    "message": "읽기 검증 실패",
+    "description": "Read-back verification failed"
+  },
+  "reasonOptionNotFound": {
+    "message": "일치하는 옵션이 없습니다",
+    "description": "Option not found"
+  },
+  "reasonForbidden": {
+    "message": "차단됨: 저장/제출 버튼은 조작하지 않습니다",
+    "description": "Blocked: save/submit controls are never touched"
+  },
+  "reasonAddItemFailed": {
+    "message": "항목 추가 실패",
+    "description": "Failed to add item"
+  },
+  "reasonManualDate": {
+    "message": "날짜는 직접 입력하세요",
+    "description": "Fill this date manually"
+  },
+  "reasonUnsupported": {
+    "message": "지원하지 않는 컨트롤",
+    "description": "Unsupported control"
+  },
+  "reasonLowConfidence": {
+    "message": "매칭 신뢰도가 너무 낮습니다",
+    "description": "Match confidence too low"
+  },
+  "yes": {
+    "message": "예",
+    "description": "Yes"
+  },
+  "no": {
+    "message": "아니요",
+    "description": "No"
+  },
+  "resumeStatsEmpty": {
+    "message": "이력서 JSON이 없습니다",
+    "description": "No resume loaded yet"
+  },
+  "resumeIndexFailed": {
+    "message": "이력서 구조를 인식할 수 없습니다. JSON을 확인하세요",
+    "description": "Could not read the resume structure; check the JSON"
+  },
+  "resumeSectionEmpty": {
+    "message": "섹션과 항목을 찾지 못했습니다",
+    "description": "No sections or items detected"
+  },
+  "entriesTotal": {
+    "message": "총 {0}개 항목 인식",
+    "description": "{0} entries in total"
+  },
+  "missingFieldsTitle": {
+    "message": "자주 필요한 필수 항목 누락",
+    "description": "Common required fields missing"
+  },
+  "missingFieldsNone": {
+    "message": "필수 항목이 모두 있습니다",
+    "description": "All common required fields present"
+  },
+  "unknownFieldsTitle": {
+    "message": "인식되지 않은 항목 (무시됨)",
+    "description": "Unrecognized fields (ignored)"
+  },
+  "itemCount": {
+    "message": "{0}개",
+    "description": "{0}"
+  },
+  "pageSectionsEmpty": {
+    "message": "섹션을 찾지 못했습니다",
+    "description": "No sections detected"
+  },
+  "sectionItems": {
+    "message": "{0}개 · 컨트롤 {1}개",
+    "description": "{0} items · {1} controls"
+  },
+  "controlsVisible": {
+    "message": "표시 {0} / 전체 {1}",
+    "description": "visible {0} / total {1}"
+  },
+  "restoreConfirm": {
+    "message": "현재 페이지 값을 백업 값으로 복원할까요?",
+    "description": "Restore the current page controls to the backup values?"
+  },
+  "resumeLoadedMsg": {
+    "message": "이력서 로드됨: {0}",
+    "description": "Resume loaded: {0}"
+  },
+  "resumeInvalidMsg": {
+    "message": "이력서 JSON 파싱 실패: {0}",
+    "description": "Resume JSON is invalid: {0}"
+  },
+  "resumeClearedMsg": {
+    "message": "이력서를 지웠습니다",
+    "description": "Resume cleared"
+  },
+  "inspectOkMsg": {
+    "message": "입력 가능한 컨트롤 {0}개",
+    "description": "Found {0} fillable controls"
+  },
+  "inspectFailedMsg": {
+    "message": "페이지를 읽을 수 없습니다: {0}",
+    "description": "Cannot read the page: {0}"
+  },
+  "inspectStaleMsg": {
+    "message": "페이지가 변경되었을 수 있습니다. 다시 검사하세요",
+    "description": "The page may have changed; inspect again"
+  },
+  "pageInvalidatedMsg": {
+    "message": "페이지가 전환/새로고침됨 ({0}). 다시 검사하세요",
+    "description": "Page changed or reloaded ({0}); inspect again"
+  },
+  "backupSavedMsg": {
+    "message": "컨트롤 {0}개를 백업했습니다",
+    "description": "Backed up {0} controls"
+  },
+  "backupFailedMsg": {
+    "message": "백업 실패로 입력을 차단했습니다: {0}",
+    "description": "Backup failed; filling was blocked: {0}"
+  },
+  "restoreDoneMsg": {
+    "message": "컨트롤 {0}개를 복원했습니다",
+    "description": "Restored {0} controls"
+  },
+  "restorePartialMsg": {
+    "message": "{0}개 복원, {1}개 실패",
+    "description": "Restored {0} controls, {1} failed"
+  },
+  "restoreFailedMsg": {
+    "message": "복원 실패: {0}",
+    "description": "Restore failed: {0}"
+  },
+  "restoreNothingMsg": {
+    "message": "사용 가능한 백업이 없습니다",
+    "description": "No backup available"
+  },
+  "planReadyMsg": {
+    "message": "입력 가능 {0}개, 충돌 {1}개, 건너뜀 {2}개",
+    "description": "{0} ready, {1} conflicts, {2} skipped"
+  },
+  "planEmptyMsg": {
+    "message": "입력할 항목이 없습니다",
+    "description": "Nothing to fill"
+  },
+  "planFailedMsg": {
+    "message": "입력 계획을 만들 수 없습니다: {0}",
+    "description": "Could not build a fill plan: {0}"
+  },
+  "fillDoneMsg": {
+    "message": "입력 완료: 성공 {0}, 충돌 {1}, 건너뜀 {2}, 수동 {3}",
+    "description": "Fill complete: OK {0}, conflicts {1}, skipped {2}, manual {3}"
+  },
+  "fillPartialMsg": {
+    "message": "입력 종료: 성공 {0}, 충돌 {1}, 실패 {2}",
+    "description": "Fill finished: OK {0}, conflicts {1}, failed {2}"
+  },
+  "fillFailedMsg": {
+    "message": "입력 실패: {0}",
+    "description": "Fill failed: {0}"
+  },
+  "undoDoneMsg": {
+    "message": "컨트롤 {0}개를 되돌렸습니다",
+    "description": "Undid {0} controls"
+  },
+  "undoNothingMsg": {
+    "message": "되돌릴 입력이 없습니다",
+    "description": "Nothing to undo"
+  },
+  "undoFailedMsg": {
+    "message": "되돌리기 실패: {0}",
+    "description": "Undo failed: {0}"
+  },
+  "actionFailedMsg": {
+    "message": "작업을 완료할 수 없습니다: {0}",
+    "description": "Unable to complete this action: {0}"
+  },
+  "inspectUnsupportedMsg": {
+    "message": "이 페이지는 검사할 수 없습니다 (브라우저 페이지)",
+    "description": "This page cannot be inspected (browser page)"
+  },
+  "notReadyMsg": {
+    "message": "아직 입력할 수 없습니다: {0}",
+    "description": "Not ready to fill: {0}"
+  },
+  "status_ready": {
+    "message": "입력 대기",
+    "description": "Ready"
+  },
+  "status_conflict": {
+    "message": "충돌",
+    "description": "Conflict"
+  },
+  "status_skipped": {
+    "message": "건너뜀",
+    "description": "Skipped"
+  },
+  "status_unsupported": {
+    "message": "지원 안 함",
+    "description": "Unsupported"
+  },
+  "status_done": {
+    "message": "성공",
+    "description": "Done"
+  },
+  "status_failed": {
+    "message": "실패",
+    "description": "Failed"
+  },
+  "status_manual": {
+    "message": "수동",
+    "description": "Manual"
+  },
+  "section_basic": {
+    "message": "기본 정보",
+    "description": "Basic info"
+  },
+  "section_intention": {
+    "message": "지원 의향",
+    "description": "Job intention"
+  },
+  "section_work": {
+    "message": "경력",
+    "description": "Work experience"
+  },
+  "section_internship": {
+    "message": "인턴십",
+    "description": "Internship"
+  },
+  "section_education": {
+    "message": "학력",
+    "description": "Education"
+  },
+  "section_project": {
+    "message": "프로젝트",
+    "description": "Projects"
+  },
+  "section_award": {
+    "message": "수상",
+    "description": "Awards"
+  },
+  "section_language": {
+    "message": "어학",
+    "description": "Languages"
+  },
+  "section_summary": {
+    "message": "자기소개",
+    "description": "Summary"
+  },
+  "section_sns": {
+    "message": "SNS",
+    "description": "Social links"
+  },
+  "field_name": {
+    "message": "이름",
+    "description": "Name"
+  },
+  "field_mobile": {
+    "message": "휴대폰",
+    "description": "Mobile"
+  },
+  "field_areaCode": {
+    "message": "국가번호",
+    "description": "Area code"
+  },
+  "field_email": {
+    "message": "이메일",
+    "description": "Email"
+  },
+  "field_idType": {
+    "message": "증명서 종류",
+    "description": "ID type"
+  },
+  "field_idNumber": {
+    "message": "증명서 번호",
+    "description": "ID number"
+  },
+  "field_city": {
+    "message": "도시",
+    "description": "City"
+  },
+  "field_gender": {
+    "message": "성별",
+    "description": "Gender"
+  },
+  "field_birthday": {
+    "message": "생년월일",
+    "description": "Birthday"
+  },
+  "field_workStartDate": {
+    "message": "입사 시작일",
+    "description": "Work start date"
+  },
+  "field_position": {
+    "message": "직무",
+    "description": "Position"
+  },
+  "field_jobType": {
+    "message": "고용 형태",
+    "description": "Job type"
+  },
+  "field_arrivalTime": {
+    "message": "입사 가능 시기",
+    "description": "Availability"
+  },
+  "field_company": {
+    "message": "회사",
+    "description": "Company"
+  },
+  "field_title": {
+    "message": "직책",
+    "description": "Title"
+  },
+  "field_department": {
+    "message": "부서",
+    "description": "Department"
+  },
+  "field_start": {
+    "message": "시작",
+    "description": "Start"
+  },
+  "field_end": {
+    "message": "종료",
+    "description": "End"
+  },
+  "field_ongoing": {
+    "message": "현재",
+    "description": "Ongoing"
+  },
+  "field_desc": {
+    "message": "설명",
+    "description": "Description"
+  },
+  "field_school": {
+    "message": "학교",
+    "description": "School"
+  },
+  "field_degree": {
+    "message": "학위",
+    "description": "Degree"
+  },
+  "field_major": {
+    "message": "전공",
+    "description": "Major"
+  },
+  "field_college": {
+    "message": "단과대학",
+    "description": "College"
+  },
+  "field_trainingType": {
+    "message": "과정",
+    "description": "Study mode"
+  },
+  "field_gpa": {
+    "message": "GPA",
+    "description": "GPA"
+  },
+  "field_role": {
+    "message": "역할",
+    "description": "Role"
+  },
+  "field_link": {
+    "message": "링크",
+    "description": "Link"
+  },
+  "field_date": {
+    "message": "날짜",
+    "description": "Date"
+  },
+  "field_language": {
+    "message": "언어",
+    "description": "Language"
+  },
+  "field_proficiency": {
+    "message": "숙련도",
+    "description": "Proficiency"
+  },
+  "field_platform": {
+    "message": "플랫폼",
+    "description": "Platform"
+  },
+  "field_account": {
+    "message": "계정",
+    "description": "Account"
+  },
+  "field_content": {
+    "message": "내용",
+    "description": "Content"
+  },
+  "saveReminder": {
+    "message": "입력 후 직접 확인하고 페이지 오른쪽 아래의 \"저장\"을 클릭하세요.",
+    "description": "After filling, review the page yourself and click Save at the bottom-right of the page."
+  },
+  "pageStatsMsg": {
+    "message": "섹션 {0}개, 컨트롤 {1}개 감지",
+    "description": "Detected {0} sections, {1} controls"
+  },
+  "summaryUnsupported": {
+    "message": "미지원 {0}",
+    "description": "Unsupported {0}"
+  },
+  "pageUnsupportedHint": {
+    "message": "이 탭은 웹 페이지가 아닙니다(확장 프로그램 페이지 또는 새 탭일 수 있음). 이력서 페이지로 전환한 후 다시 시도하세요.",
+    "description": "Shown when the active tab cannot host a content script"
+  },
+  "pageScriptMissingHint": {
+    "message": "페이지 스크립트가 준비되지 않았습니다. 이력서 페이지를 새로고침(F5)한 후 다시 시도하세요. 확장 프로그램을 다시 로드한 경우 페이지도 반드시 새로고침해야 합니다.",
+    "description": "Shown when the page script is missing or stale"
+  },
+  "pageNoActiveTabHint": {
+    "message": "조작할 수 있는 탭을 찾지 못했습니다. 먼저 이력서 페이지를 여세요.",
+    "description": "Shown when no active tab is available"
+  },
+  "reasonMultiSelectManual": {
+    "message": "다중 선택(희망 근무지)은 직접 선택해야 합니다",
+    "description": "Reason: multi-select widget cannot be opened by a content script"
+  },
+  "reasonItemIdentityConflict": {
+    "message": "이 항목은 이력서 레코드와 일치하지 않아 데이터 혼합을 피하기 위해 건너뛰었습니다",
+    "description": "Reason: repeatable item identity does not match the resume"
   }
 }

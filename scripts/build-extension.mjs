@@ -16,4 +16,20 @@ const walk = async dir => { for (const entry of await readdir(dir,{withFileTypes
 for(const [kind,path] of [['side_panel.default_path',manifest.side_panel?.default_path],['background.service_worker',manifest.background?.service_worker]]) if(path && !declared.has(path)) throw new Error(`missing ${kind}: ${path}`);
 for(const entry of manifest.content_scripts ?? []) for(const path of [...(entry.js??[]),...(entry.css??[])]) if(!declared.has(path)) throw new Error(`missing content resource: ${path}`);
 for(const file of ['local-runtime.mjs','model-worker.mjs','transformers-provider.mjs','transformers-runtime.mjs','qwen-provider.mjs','qwen-runtime.mjs','model-config.mjs','provider.mjs']) { const source=await readFile(resolve(out,'src/ai',file),'utf8'); if(file==='model-worker.mjs' && !source.includes('./transformers-provider.mjs')) throw new Error('worker dependency missing'); if(file==='local-runtime.mjs' && !source.includes('./model-config.mjs')) throw new Error('runtime dependency missing'); }
-const bundle=await readFile(resolve(out,'src/content.js'),'utf8'); if(/^\s*import\s/m.test(bundle)) throw new Error('content bundle contains top-level import'); console.log(`Built and checked extension at ${out}`);
+const bundle=await readFile(resolve(out,'src/content.js'),'utf8'); if(/^\s*import\s/m.test(bundle)) throw new Error('content bundle contains top-level import');
+
+// MV3 service worker 里 `import()` 被 HTML 规范禁止（"import() is disallowed on
+// ServiceWorkerGlobalScope"），动态导入会静默失败。这里在构建期直接拦住，避免回归；
+// 同时校验 background/sidepanel 的每个相对 import 都已打包进 dist。
+const { dirname } = await import('node:path');
+const stripComments = source => source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|[^:'"`])\/\/[^\n]*/g, '$1');
+for (const file of ['src/background.js', 'src/sidepanel.js']) {
+  const source = await readFile(resolve(out, file), 'utf8');
+  if (/\bimport\s*\(/.test(stripComments(source))) throw new Error(`${file} uses dynamic import(), which MV3 service workers forbid`);
+  for (const match of source.matchAll(/from\s+['"](\.[^'"]+)['"]/g)) {
+    const target = resolve(dirname(resolve(out, file)), match[1]);
+    const key = relative(out, target).replaceAll('\\', '/');
+    if (!declared.has(key)) throw new Error(`${file} imports a file that was not packaged: ${match[1]} (expected ${key})`);
+  }
+}
+console.log(`Built and checked extension at ${out}`);

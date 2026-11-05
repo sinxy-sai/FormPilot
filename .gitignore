@@ -12,3 +12,6 @@ examples/*BOSS*
 examples/*boss*
 examples/*bytedance*
 examples/*ByteDance*
+
+# Hand-written, fully offline DOM fixture (no capture data): commit this one.
+!examples/bytedance-fixture.html

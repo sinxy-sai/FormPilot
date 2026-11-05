@@ -1,1 +1,115 @@
-<!doctype html><html><head><meta charset="utf-8"><title>FormPilot</title><link rel="stylesheet" href="sidepanel.css"></head><body><main><h1>FormPilot</h1><label><input id="local-ai" type="checkbox"> 启用本地 AI（首次运行加载约 483 MB 模型）</label><input id="resume" type="file" accept="application/json"><button id="inspect">检查页面</button><button id="approve">审核并批准</button><button id="execute">执行填写</button><button id="undo">撤销本轮</button><button id="runtime-start">开始运行</button><button id="runtime-step">下一步</button><button id="runtime-stop">停止</button><pre id="status">就绪</pre></main><script type="module" src="src/sidepanel.js"></script></body></html>
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FormPilot</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <img class="brand-icon" src="assets/icon32.png" alt="" width="28" height="28">
+      <div class="brand-text">
+        <h1>FormPilot<span class="tagline" data-i18n="tagline">智能简历填充助手</span></h1>
+        <p class="subtitle" data-i18n="subtitle">先读取当前页面，再审核每一个匹配结果。</p>
+      </div>
+    </div>
+    <p id="global-status" class="status-line" role="status" aria-live="polite">准备就绪。加载简历后开始。</p>
+    <p class="safety-note" data-i18n="safetyNote">不会点击保存/提交按钮；填写前自动备份，冲突字段不覆盖。</p>
+  </header>
+
+  <main class="cards">
+    <section class="card" id="resume-card" aria-labelledby="resume-title">
+      <div class="card-head">
+        <div>
+          <h2 id="resume-title" data-i18n="resumeTitle">简历数据</h2>
+          <p class="hint" data-i18n="resumeHint">支持任意语言的 JSON 字段</p>
+        </div>
+        <span class="badge" id="resume-badge" data-i18n="notLoaded">未加载</span>
+      </div>
+      <div class="row">
+        <label class="button file-button" for="resume-file" data-i18n="chooseFile">选择 JSON 文件</label>
+        <input id="resume-file" class="visually-hidden" type="file" accept="application/json,.json">
+        <span class="muted" id="resume-file-name"></span>
+      </div>
+      <label class="field-label" for="resume-json" data-i18n="resumeJsonAria">简历 JSON</label>
+      <textarea id="resume-json" rows="6" spellcheck="false" autocomplete="off" placeholder="在这里粘贴或编辑 JSON" data-i18n-placeholder="jsonPlaceholder"></textarea>
+      <div class="row">
+        <button id="resume-apply" class="primary" type="button" data-i18n="applyJson">应用修改并重新匹配</button>
+        <button id="resume-clear" class="ghost" type="button" data-i18n="clearResume">清空</button>
+      </div>
+      <div class="stats" id="resume-stats" aria-live="polite"></div>
+      <div class="missing" id="resume-missing" hidden></div>
+      <div class="unknown" id="resume-unknown" hidden></div>
+    </section>
+
+    <section class="card" id="page-card" aria-labelledby="page-title">
+      <div class="card-head">
+        <div>
+          <h2 id="page-title" data-i18n="pageTitle">当前页面</h2>
+          <p class="hint" data-i18n="pageHint">读取网页已有字段和编辑区</p>
+        </div>
+        <span class="badge" id="page-badge" data-i18n="pageNotInspected">尚未检查页面</span>
+      </div>
+      <button id="page-inspect" class="primary" type="button" data-i18n="inspect">检查页面</button>
+      <dl class="meta">
+        <div class="meta-row"><dt data-i18n="pageFingerprint">页面指纹</dt><dd id="page-fingerprint">—</dd></div>
+        <div class="meta-row"><dt data-i18n="controlsCount">控件数</dt><dd id="page-controls">—</dd></div>
+      </dl>
+      <p class="muted" id="page-stats"></p>
+      <div class="section-list" id="page-sections" aria-live="polite"></div>
+      <div class="row backup-row">
+        <button id="backup-create" type="button" data-i18n="backupCreate">备份当前简历</button>
+        <button id="backup-restore" type="button" data-i18n="backupRestore">恢复上一次备份</button>
+      </div>
+      <p class="muted" id="backup-status">暂无备份</p>
+      <p class="warning" id="page-invalidated" hidden></p>
+    </section>
+
+    <section class="card" id="review-card" aria-labelledby="review-title">
+      <div class="card-head">
+        <div>
+          <h2 id="review-title" data-i18n="reviewTitle">匹配结果</h2>
+          <p class="hint" data-i18n="reviewHint">确认值和来源路径后再填写</p>
+        </div>
+        <span class="badge" id="review-badge">—</span>
+      </div>
+      <div class="mode-row">
+        <label class="switch">
+          <input id="fill-empty" type="checkbox" checked>
+          <span data-i18n="modeLabel">只填空白（推荐）</span>
+        </label>
+        <p class="hint" id="mode-hint" data-i18n="modeHint">页面已有内容且与简历不同时会标记为冲突，不会覆盖。</p>
+      </div>
+      <div class="row action-row">
+        <button id="fill-start" class="primary" type="button" data-i18n="fillStart">开始填写</button>
+        <button id="fill-undo" class="ghost" type="button" data-i18n="fillUndo">撤销本轮</button>
+      </div>
+      <p class="progress" id="fill-progress" hidden></p>
+      <div class="summary" id="summary" hidden></div>
+      <p class="conflict-hint" id="conflict-hint" hidden data-i18n="conflictHint">冲突字段不会写入，请手动确认。</p>
+      <p class="save-reminder" data-i18n="saveReminder">填写完成后请自己检查，并点击页面右下角「保存」。</p>
+      <div class="table-wrap">
+        <table class="match-table" id="match-table">
+          <thead>
+            <tr>
+              <th scope="col" data-i18n="tableField">字段</th>
+              <th scope="col" data-i18n="tablePageLabel">页面标签</th>
+              <th scope="col" data-i18n="tableSource">来源路径</th>
+              <th scope="col" data-i18n="tableCurrent">当前值</th>
+              <th scope="col" data-i18n="tableTarget">目标值</th>
+              <th scope="col" data-i18n="tableStatus">状态</th>
+              <th scope="col" data-i18n="tableConfidence">置信度</th>
+            </tr>
+          </thead>
+          <tbody id="match-rows">
+            <tr><td colspan="7" class="empty" data-i18n="noMatches">加载简历并检查页面后显示匹配结果</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="src/sidepanel.js"></script>
+</body>
+</html>

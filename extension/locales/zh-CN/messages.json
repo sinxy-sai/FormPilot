@@ -194,5 +194,629 @@
   "actionFailure": {
     "message": "无法完成操作，请刷新页面后重试。",
     "description": "填充或撤销错误提示"
+  },
+  "chooseFile": {
+    "message": "选择 JSON 文件",
+    "description": "Choose JSON file"
+  },
+  "clearResume": {
+    "message": "清空",
+    "description": "Clear"
+  },
+  "safetyNote": {
+    "message": "不会点击保存/提交按钮；填写前自动备份，冲突字段不覆盖。",
+    "description": "Never clicks save/submit; backs up before filling; conflicts are not overwritten."
+  },
+  "pageFingerprint": {
+    "message": "页面指纹",
+    "description": "Page fingerprint"
+  },
+  "controlsCount": {
+    "message": "控件数",
+    "description": "Controls"
+  },
+  "pageNotInspected": {
+    "message": "尚未检查页面",
+    "description": "Page not inspected"
+  },
+  "pageStale": {
+    "message": "页面已变化，请重新检查",
+    "description": "Page changed, inspect again"
+  },
+  "inspected": {
+    "message": "已检查",
+    "description": "Inspected"
+  },
+  "backupCreate": {
+    "message": "备份当前简历",
+    "description": "Back up current page"
+  },
+  "backupRestore": {
+    "message": "恢复上一次备份",
+    "description": "Restore last backup"
+  },
+  "backupNone": {
+    "message": "暂无备份",
+    "description": "No backup yet"
+  },
+  "backupLastMsg": {
+    "message": "最近备份：{0}（共 {1} 份，{2} 个控件）",
+    "description": "Last backup: {0} ({1} total, {2} controls)"
+  },
+  "invalidatedNote": {
+    "message": "页面已切换或刷新，请重新检查页面后再填写。",
+    "description": "The page changed or reloaded. Inspect it again before filling."
+  },
+  "modeLabel": {
+    "message": "只填空白（推荐）",
+    "description": "Fill blanks only (recommended)"
+  },
+  "modeHint": {
+    "message": "页面已有内容且与简历不同时会标记为冲突，不会覆盖。",
+    "description": "Existing values that differ are marked as conflicts and never overwritten."
+  },
+  "overwriteHint": {
+    "message": "覆盖模式会改写页面已有内容，请谨慎使用。",
+    "description": "Overwrite mode rewrites existing values. Use with care."
+  },
+  "fillStart": {
+    "message": "开始填写",
+    "description": "Start filling"
+  },
+  "fillUndo": {
+    "message": "撤销本轮",
+    "description": "Undo this run"
+  },
+  "inspectRunning": {
+    "message": "正在检查页面…",
+    "description": "Inspecting page…"
+  },
+  "fillRunning": {
+    "message": "正在填写…",
+    "description": "Filling…"
+  },
+  "restoring": {
+    "message": "正在恢复…",
+    "description": "Restoring…"
+  },
+  "working": {
+    "message": "处理中…",
+    "description": "Working…"
+  },
+  "noMatches": {
+    "message": "加载简历并检查页面后显示匹配结果",
+    "description": "Load a resume and inspect the page to see matches"
+  },
+  "tableField": {
+    "message": "字段",
+    "description": "Field"
+  },
+  "tablePageLabel": {
+    "message": "页面标签",
+    "description": "Page label"
+  },
+  "tableSource": {
+    "message": "来源路径",
+    "description": "Source path"
+  },
+  "tableCurrent": {
+    "message": "当前值",
+    "description": "Current value"
+  },
+  "tableTarget": {
+    "message": "目标值",
+    "description": "Target value"
+  },
+  "tableStatus": {
+    "message": "状态",
+    "description": "Status"
+  },
+  "tableConfidence": {
+    "message": "置信度",
+    "description": "Confidence"
+  },
+  "summaryOk": {
+    "message": "成功 {0}",
+    "description": "OK {0}"
+  },
+  "summaryConflict": {
+    "message": "冲突 {0}",
+    "description": "Conflicts {0}"
+  },
+  "summaryFailed": {
+    "message": "失败 {0}",
+    "description": "Failed {0}"
+  },
+  "summarySkipped": {
+    "message": "跳过 {0}",
+    "description": "Skipped {0}"
+  },
+  "summaryManual": {
+    "message": "需手动 {0}",
+    "description": "Manual {0}"
+  },
+  "summaryReady": {
+    "message": "可填 {0}",
+    "description": "Ready {0}"
+  },
+  "summaryAddItems": {
+    "message": "新增条目 {0}",
+    "description": "Add item {0}"
+  },
+  "conflictHint": {
+    "message": "冲突字段不会写入，请手动确认。",
+    "description": "Conflicting fields are not written; please review them manually."
+  },
+  "addItem": {
+    "message": "新增条目",
+    "description": "Add item"
+  },
+  "badgeReady": {
+    "message": "待填 {0}",
+    "description": "To fill {0}"
+  },
+  "badgeResult": {
+    "message": "成功 {0}/{1}",
+    "description": "OK {0}/{1}"
+  },
+  "reasonLabel": {
+    "message": "原因：{0}",
+    "description": "Reason: {0}"
+  },
+  "reasonResumeMissing": {
+    "message": "请先加载简历 JSON",
+    "description": "Load a resume JSON first"
+  },
+  "reasonPageMissing": {
+    "message": "请先检查当前页面",
+    "description": "Inspect the current page first"
+  },
+  "reasonPageInvalidated": {
+    "message": "页面已切换或刷新，请重新检查",
+    "description": "The page changed; inspect it again"
+  },
+  "reasonNothingToFill": {
+    "message": "没有可填写的字段（可能页面已是目标值）",
+    "description": "Nothing to fill (the page may already match)"
+  },
+  "reasonBusy": {
+    "message": "正在处理中，请稍候",
+    "description": "Busy, please wait"
+  },
+  "reasonAlreadyCorrect": {
+    "message": "页面已是目标值",
+    "description": "Page already matches"
+  },
+  "reasonConflict": {
+    "message": "页面已有内容不同，已跳过（避免覆盖）",
+    "description": "Existing value kept"
+  },
+  "reasonPageChanged": {
+    "message": "页面已变化，请重新检查",
+    "description": "Page changed; inspect again"
+  },
+  "reasonTargetMissing": {
+    "message": "目标控件已消失",
+    "description": "Target control disappeared"
+  },
+  "reasonVerificationFailed": {
+    "message": "读回校验失败",
+    "description": "Read-back verification failed"
+  },
+  "reasonOptionNotFound": {
+    "message": "未找到匹配选项",
+    "description": "Option not found"
+  },
+  "reasonForbidden": {
+    "message": "已拦截：不允许操作保存/提交类按钮",
+    "description": "Blocked: save/submit controls are never touched"
+  },
+  "reasonAddItemFailed": {
+    "message": "新增条目失败",
+    "description": "Failed to add item"
+  },
+  "reasonManualDate": {
+    "message": "日期控件需手动填写",
+    "description": "Fill this date manually"
+  },
+  "reasonUnsupported": {
+    "message": "暂不支持该控件",
+    "description": "Unsupported control"
+  },
+  "reasonLowConfidence": {
+    "message": "匹配置信度过低",
+    "description": "Match confidence too low"
+  },
+  "yes": {
+    "message": "是",
+    "description": "Yes"
+  },
+  "no": {
+    "message": "否",
+    "description": "No"
+  },
+  "resumeStatsEmpty": {
+    "message": "尚未加载简历 JSON",
+    "description": "No resume loaded yet"
+  },
+  "resumeIndexFailed": {
+    "message": "无法识别简历结构，请检查 JSON 格式",
+    "description": "Could not read the resume structure; check the JSON"
+  },
+  "resumeSectionEmpty": {
+    "message": "未识别到分区与条目",
+    "description": "No sections or items detected"
+  },
+  "entriesTotal": {
+    "message": "共识别 {0} 条记录",
+    "description": "{0} entries in total"
+  },
+  "missingFieldsTitle": {
+    "message": "缺少的常见必填项",
+    "description": "Common required fields missing"
+  },
+  "missingFieldsNone": {
+    "message": "常见必填项齐全",
+    "description": "All common required fields present"
+  },
+  "unknownFieldsTitle": {
+    "message": "未识别的字段（已忽略）",
+    "description": "Unrecognized fields (ignored)"
+  },
+  "itemCount": {
+    "message": "{0} 条",
+    "description": "{0}"
+  },
+  "pageSectionsEmpty": {
+    "message": "未识别到分区",
+    "description": "No sections detected"
+  },
+  "sectionItems": {
+    "message": "{0} 条 · {1} 个控件",
+    "description": "{0} items · {1} controls"
+  },
+  "controlsVisible": {
+    "message": "可见 {0} / 共 {1}",
+    "description": "visible {0} / total {1}"
+  },
+  "restoreConfirm": {
+    "message": "将把当前页面控件恢复为备份中的值，确定继续？",
+    "description": "Restore the current page controls to the backup values?"
+  },
+  "resumeLoadedMsg": {
+    "message": "已加载简历：{0}",
+    "description": "Resume loaded: {0}"
+  },
+  "resumeInvalidMsg": {
+    "message": "简历 JSON 解析失败：{0}",
+    "description": "Resume JSON is invalid: {0}"
+  },
+  "resumeClearedMsg": {
+    "message": "简历已清空",
+    "description": "Resume cleared"
+  },
+  "inspectOkMsg": {
+    "message": "已读取 {0} 个可填写控件",
+    "description": "Found {0} fillable controls"
+  },
+  "inspectFailedMsg": {
+    "message": "无法读取页面：{0}",
+    "description": "Cannot read the page: {0}"
+  },
+  "inspectStaleMsg": {
+    "message": "页面可能已变化，请重新检查",
+    "description": "The page may have changed; inspect again"
+  },
+  "pageInvalidatedMsg": {
+    "message": "页面已切换或刷新（{0}），请重新检查",
+    "description": "Page changed or reloaded ({0}); inspect again"
+  },
+  "backupSavedMsg": {
+    "message": "已备份 {0} 个控件",
+    "description": "Backed up {0} controls"
+  },
+  "backupFailedMsg": {
+    "message": "备份失败，已阻止填写：{0}",
+    "description": "Backup failed; filling was blocked: {0}"
+  },
+  "restoreDoneMsg": {
+    "message": "已恢复 {0} 个控件",
+    "description": "Restored {0} controls"
+  },
+  "restorePartialMsg": {
+    "message": "已恢复 {0} 个控件，{1} 个失败",
+    "description": "Restored {0} controls, {1} failed"
+  },
+  "restoreFailedMsg": {
+    "message": "恢复失败：{0}",
+    "description": "Restore failed: {0}"
+  },
+  "restoreNothingMsg": {
+    "message": "没有可用的备份",
+    "description": "No backup available"
+  },
+  "planReadyMsg": {
+    "message": "可填 {0} 项，冲突 {1} 项，跳过 {2} 项",
+    "description": "{0} ready, {1} conflicts, {2} skipped"
+  },
+  "planEmptyMsg": {
+    "message": "没有可填写的字段",
+    "description": "Nothing to fill"
+  },
+  "planFailedMsg": {
+    "message": "无法生成匹配计划：{0}",
+    "description": "Could not build a fill plan: {0}"
+  },
+  "fillDoneMsg": {
+    "message": "填写完成：成功 {0}，冲突 {1}，跳过 {2}，需手动 {3}",
+    "description": "Fill complete: OK {0}, conflicts {1}, skipped {2}, manual {3}"
+  },
+  "fillPartialMsg": {
+    "message": "填写结束：成功 {0}，冲突 {1}，失败 {2}",
+    "description": "Fill finished: OK {0}, conflicts {1}, failed {2}"
+  },
+  "fillFailedMsg": {
+    "message": "填写失败：{0}",
+    "description": "Fill failed: {0}"
+  },
+  "undoDoneMsg": {
+    "message": "已撤销 {0} 个控件",
+    "description": "Undid {0} controls"
+  },
+  "undoNothingMsg": {
+    "message": "没有可撤销的填写",
+    "description": "Nothing to undo"
+  },
+  "undoFailedMsg": {
+    "message": "撤销失败：{0}",
+    "description": "Undo failed: {0}"
+  },
+  "actionFailedMsg": {
+    "message": "无法完成操作：{0}",
+    "description": "Unable to complete this action: {0}"
+  },
+  "inspectUnsupportedMsg": {
+    "message": "当前页面不支持检查（浏览器内置页面）",
+    "description": "This page cannot be inspected (browser page)"
+  },
+  "notReadyMsg": {
+    "message": "暂时不能填写：{0}",
+    "description": "Not ready to fill: {0}"
+  },
+  "status_ready": {
+    "message": "待填",
+    "description": "Ready"
+  },
+  "status_conflict": {
+    "message": "冲突",
+    "description": "Conflict"
+  },
+  "status_skipped": {
+    "message": "跳过",
+    "description": "Skipped"
+  },
+  "status_unsupported": {
+    "message": "不支持",
+    "description": "Unsupported"
+  },
+  "status_done": {
+    "message": "成功",
+    "description": "Done"
+  },
+  "status_failed": {
+    "message": "失败",
+    "description": "Failed"
+  },
+  "status_manual": {
+    "message": "需手动",
+    "description": "Manual"
+  },
+  "section_basic": {
+    "message": "基本信息",
+    "description": "Basic info"
+  },
+  "section_intention": {
+    "message": "求职意向",
+    "description": "Job intention"
+  },
+  "section_work": {
+    "message": "工作经历",
+    "description": "Work experience"
+  },
+  "section_internship": {
+    "message": "实习经历",
+    "description": "Internship"
+  },
+  "section_education": {
+    "message": "教育经历",
+    "description": "Education"
+  },
+  "section_project": {
+    "message": "项目经历",
+    "description": "Projects"
+  },
+  "section_award": {
+    "message": "荣誉奖项",
+    "description": "Awards"
+  },
+  "section_language": {
+    "message": "语言能力",
+    "description": "Languages"
+  },
+  "section_summary": {
+    "message": "个人总结",
+    "description": "Summary"
+  },
+  "section_sns": {
+    "message": "社交主页",
+    "description": "Social links"
+  },
+  "field_name": {
+    "message": "姓名",
+    "description": "Name"
+  },
+  "field_mobile": {
+    "message": "手机号",
+    "description": "Mobile"
+  },
+  "field_areaCode": {
+    "message": "国际区号",
+    "description": "Area code"
+  },
+  "field_email": {
+    "message": "邮箱",
+    "description": "Email"
+  },
+  "field_idType": {
+    "message": "证件类型",
+    "description": "ID type"
+  },
+  "field_idNumber": {
+    "message": "证件号码",
+    "description": "ID number"
+  },
+  "field_city": {
+    "message": "城市",
+    "description": "City"
+  },
+  "field_gender": {
+    "message": "性别",
+    "description": "Gender"
+  },
+  "field_birthday": {
+    "message": "生日",
+    "description": "Birthday"
+  },
+  "field_workStartDate": {
+    "message": "参加工作日期",
+    "description": "Work start date"
+  },
+  "field_position": {
+    "message": "职位",
+    "description": "Position"
+  },
+  "field_jobType": {
+    "message": "工作类型",
+    "description": "Job type"
+  },
+  "field_arrivalTime": {
+    "message": "到岗时间",
+    "description": "Availability"
+  },
+  "field_company": {
+    "message": "公司",
+    "description": "Company"
+  },
+  "field_title": {
+    "message": "职位",
+    "description": "Title"
+  },
+  "field_department": {
+    "message": "部门",
+    "description": "Department"
+  },
+  "field_start": {
+    "message": "开始时间",
+    "description": "Start"
+  },
+  "field_end": {
+    "message": "结束时间",
+    "description": "End"
+  },
+  "field_ongoing": {
+    "message": "至今",
+    "description": "Ongoing"
+  },
+  "field_desc": {
+    "message": "描述",
+    "description": "Description"
+  },
+  "field_school": {
+    "message": "学校",
+    "description": "School"
+  },
+  "field_degree": {
+    "message": "学历",
+    "description": "Degree"
+  },
+  "field_major": {
+    "message": "专业",
+    "description": "Major"
+  },
+  "field_college": {
+    "message": "学院",
+    "description": "College"
+  },
+  "field_trainingType": {
+    "message": "培养方式",
+    "description": "Study mode"
+  },
+  "field_gpa": {
+    "message": "GPA",
+    "description": "GPA"
+  },
+  "field_role": {
+    "message": "角色",
+    "description": "Role"
+  },
+  "field_link": {
+    "message": "链接",
+    "description": "Link"
+  },
+  "field_date": {
+    "message": "日期",
+    "description": "Date"
+  },
+  "field_language": {
+    "message": "语言",
+    "description": "Language"
+  },
+  "field_proficiency": {
+    "message": "熟练度",
+    "description": "Proficiency"
+  },
+  "field_platform": {
+    "message": "平台",
+    "description": "Platform"
+  },
+  "field_account": {
+    "message": "账号",
+    "description": "Account"
+  },
+  "field_content": {
+    "message": "内容",
+    "description": "Content"
+  },
+  "saveReminder": {
+    "message": "填写完成后请自己检查，并点击页面右下角「保存」。",
+    "description": "After filling, review the page yourself and click Save at the bottom-right of the page."
+  },
+  "pageStatsMsg": {
+    "message": "检测到 {0} 个分区、{1} 个控件",
+    "description": "Detected {0} sections, {1} controls"
+  },
+  "summaryUnsupported": {
+    "message": "未支持 {0}",
+    "description": "Unsupported {0}"
+  },
+  "pageUnsupportedHint": {
+    "message": "当前标签页不是网页（可能是扩展管理页或新标签页），请切换到简历页面后重试",
+    "description": "Shown when the active tab cannot host a content script"
+  },
+  "pageScriptMissingHint": {
+    "message": "页面脚本未就绪：请刷新简历页面（F5）后重试；如果刚重载过扩展，必须刷新页面",
+    "description": "Shown when the page script is missing or stale"
+  },
+  "pageNoActiveTabHint": {
+    "message": "没有找到可操作的标签页，请先打开简历页面",
+    "description": "Shown when no active tab is available"
+  },
+  "reasonMultiSelectManual": {
+    "message": "多选控件（期望工作地点）需手动选择",
+    "description": "Reason: multi-select widget cannot be opened by a content script"
+  },
+  "reasonItemIdentityConflict": {
+    "message": "该条目与简历不是同一条记录，已跳过避免串味",
+    "description": "Reason: repeatable item identity does not match the resume"
   }
 }

@@ -194,5 +194,629 @@
   "actionFailure": {
     "message": "Unable to complete this action. Refresh the page and try again.",
     "description": "Fill or undo error message"
+  },
+  "chooseFile": {
+    "message": "Choose JSON file",
+    "description": "Choose JSON file"
+  },
+  "clearResume": {
+    "message": "Clear",
+    "description": "Clear"
+  },
+  "safetyNote": {
+    "message": "Never clicks save/submit; backs up before filling; conflicts are not overwritten.",
+    "description": "Never clicks save/submit; backs up before filling; conflicts are not overwritten."
+  },
+  "pageFingerprint": {
+    "message": "Page fingerprint",
+    "description": "Page fingerprint"
+  },
+  "controlsCount": {
+    "message": "Controls",
+    "description": "Controls"
+  },
+  "pageNotInspected": {
+    "message": "Page not inspected",
+    "description": "Page not inspected"
+  },
+  "pageStale": {
+    "message": "Page changed, inspect again",
+    "description": "Page changed, inspect again"
+  },
+  "inspected": {
+    "message": "Inspected",
+    "description": "Inspected"
+  },
+  "backupCreate": {
+    "message": "Back up current page",
+    "description": "Back up current page"
+  },
+  "backupRestore": {
+    "message": "Restore last backup",
+    "description": "Restore last backup"
+  },
+  "backupNone": {
+    "message": "No backup yet",
+    "description": "No backup yet"
+  },
+  "backupLastMsg": {
+    "message": "Last backup: {0} ({1} total, {2} controls)",
+    "description": "Last backup: {0} ({1} total, {2} controls)"
+  },
+  "invalidatedNote": {
+    "message": "The page changed or reloaded. Inspect it again before filling.",
+    "description": "The page changed or reloaded. Inspect it again before filling."
+  },
+  "modeLabel": {
+    "message": "Fill blanks only (recommended)",
+    "description": "Fill blanks only (recommended)"
+  },
+  "modeHint": {
+    "message": "Existing values that differ are marked as conflicts and never overwritten.",
+    "description": "Existing values that differ are marked as conflicts and never overwritten."
+  },
+  "overwriteHint": {
+    "message": "Overwrite mode rewrites existing values. Use with care.",
+    "description": "Overwrite mode rewrites existing values. Use with care."
+  },
+  "fillStart": {
+    "message": "Start filling",
+    "description": "Start filling"
+  },
+  "fillUndo": {
+    "message": "Undo this run",
+    "description": "Undo this run"
+  },
+  "inspectRunning": {
+    "message": "Inspecting page…",
+    "description": "Inspecting page…"
+  },
+  "fillRunning": {
+    "message": "Filling…",
+    "description": "Filling…"
+  },
+  "restoring": {
+    "message": "Restoring…",
+    "description": "Restoring…"
+  },
+  "working": {
+    "message": "Working…",
+    "description": "Working…"
+  },
+  "noMatches": {
+    "message": "Load a resume and inspect the page to see matches",
+    "description": "Load a resume and inspect the page to see matches"
+  },
+  "tableField": {
+    "message": "Field",
+    "description": "Field"
+  },
+  "tablePageLabel": {
+    "message": "Page label",
+    "description": "Page label"
+  },
+  "tableSource": {
+    "message": "Source path",
+    "description": "Source path"
+  },
+  "tableCurrent": {
+    "message": "Current value",
+    "description": "Current value"
+  },
+  "tableTarget": {
+    "message": "Target value",
+    "description": "Target value"
+  },
+  "tableStatus": {
+    "message": "Status",
+    "description": "Status"
+  },
+  "tableConfidence": {
+    "message": "Confidence",
+    "description": "Confidence"
+  },
+  "summaryOk": {
+    "message": "OK {0}",
+    "description": "OK {0}"
+  },
+  "summaryConflict": {
+    "message": "Conflicts {0}",
+    "description": "Conflicts {0}"
+  },
+  "summaryFailed": {
+    "message": "Failed {0}",
+    "description": "Failed {0}"
+  },
+  "summarySkipped": {
+    "message": "Skipped {0}",
+    "description": "Skipped {0}"
+  },
+  "summaryManual": {
+    "message": "Manual {0}",
+    "description": "Manual {0}"
+  },
+  "summaryReady": {
+    "message": "Ready {0}",
+    "description": "Ready {0}"
+  },
+  "summaryAddItems": {
+    "message": "Add item {0}",
+    "description": "Add item {0}"
+  },
+  "conflictHint": {
+    "message": "Conflicting fields are not written; please review them manually.",
+    "description": "Conflicting fields are not written; please review them manually."
+  },
+  "addItem": {
+    "message": "Add item",
+    "description": "Add item"
+  },
+  "badgeReady": {
+    "message": "To fill {0}",
+    "description": "To fill {0}"
+  },
+  "badgeResult": {
+    "message": "OK {0}/{1}",
+    "description": "OK {0}/{1}"
+  },
+  "reasonLabel": {
+    "message": "Reason: {0}",
+    "description": "Reason: {0}"
+  },
+  "reasonResumeMissing": {
+    "message": "Load a resume JSON first",
+    "description": "Load a resume JSON first"
+  },
+  "reasonPageMissing": {
+    "message": "Inspect the current page first",
+    "description": "Inspect the current page first"
+  },
+  "reasonPageInvalidated": {
+    "message": "The page changed; inspect it again",
+    "description": "The page changed; inspect it again"
+  },
+  "reasonNothingToFill": {
+    "message": "Nothing to fill (the page may already match)",
+    "description": "Nothing to fill (the page may already match)"
+  },
+  "reasonBusy": {
+    "message": "Busy, please wait",
+    "description": "Busy, please wait"
+  },
+  "reasonAlreadyCorrect": {
+    "message": "Page already matches",
+    "description": "Page already matches"
+  },
+  "reasonConflict": {
+    "message": "Existing value differs; skipped to avoid overwriting",
+    "description": "Existing value kept"
+  },
+  "reasonPageChanged": {
+    "message": "Page changed; inspect again",
+    "description": "Page changed; inspect again"
+  },
+  "reasonTargetMissing": {
+    "message": "Target control disappeared",
+    "description": "Target control disappeared"
+  },
+  "reasonVerificationFailed": {
+    "message": "Read-back verification failed",
+    "description": "Read-back verification failed"
+  },
+  "reasonOptionNotFound": {
+    "message": "Option not found",
+    "description": "Option not found"
+  },
+  "reasonForbidden": {
+    "message": "Blocked: save/submit controls are never touched",
+    "description": "Blocked: save/submit controls are never touched"
+  },
+  "reasonAddItemFailed": {
+    "message": "Failed to add item",
+    "description": "Failed to add item"
+  },
+  "reasonManualDate": {
+    "message": "Fill this date manually",
+    "description": "Fill this date manually"
+  },
+  "reasonUnsupported": {
+    "message": "Unsupported control",
+    "description": "Unsupported control"
+  },
+  "reasonLowConfidence": {
+    "message": "Match confidence too low",
+    "description": "Match confidence too low"
+  },
+  "yes": {
+    "message": "Yes",
+    "description": "Yes"
+  },
+  "no": {
+    "message": "No",
+    "description": "No"
+  },
+  "resumeStatsEmpty": {
+    "message": "No resume loaded yet",
+    "description": "No resume loaded yet"
+  },
+  "resumeIndexFailed": {
+    "message": "Could not read the resume structure; check the JSON",
+    "description": "Could not read the resume structure; check the JSON"
+  },
+  "resumeSectionEmpty": {
+    "message": "No sections or items detected",
+    "description": "No sections or items detected"
+  },
+  "entriesTotal": {
+    "message": "{0} entries in total",
+    "description": "{0} entries in total"
+  },
+  "missingFieldsTitle": {
+    "message": "Common required fields missing",
+    "description": "Common required fields missing"
+  },
+  "missingFieldsNone": {
+    "message": "All common required fields present",
+    "description": "All common required fields present"
+  },
+  "unknownFieldsTitle": {
+    "message": "Unrecognized fields (ignored)",
+    "description": "Unrecognized fields (ignored)"
+  },
+  "itemCount": {
+    "message": "{0}",
+    "description": "{0}"
+  },
+  "pageSectionsEmpty": {
+    "message": "No sections detected",
+    "description": "No sections detected"
+  },
+  "sectionItems": {
+    "message": "{0} items · {1} controls",
+    "description": "{0} items · {1} controls"
+  },
+  "controlsVisible": {
+    "message": "visible {0} / total {1}",
+    "description": "visible {0} / total {1}"
+  },
+  "restoreConfirm": {
+    "message": "Restore the current page controls to the backup values?",
+    "description": "Restore the current page controls to the backup values?"
+  },
+  "resumeLoadedMsg": {
+    "message": "Resume loaded: {0}",
+    "description": "Resume loaded: {0}"
+  },
+  "resumeInvalidMsg": {
+    "message": "Resume JSON is invalid: {0}",
+    "description": "Resume JSON is invalid: {0}"
+  },
+  "resumeClearedMsg": {
+    "message": "Resume cleared",
+    "description": "Resume cleared"
+  },
+  "inspectOkMsg": {
+    "message": "Found {0} fillable controls",
+    "description": "Found {0} fillable controls"
+  },
+  "inspectFailedMsg": {
+    "message": "Cannot read the page: {0}",
+    "description": "Cannot read the page: {0}"
+  },
+  "inspectStaleMsg": {
+    "message": "The page may have changed; inspect again",
+    "description": "The page may have changed; inspect again"
+  },
+  "pageInvalidatedMsg": {
+    "message": "Page changed or reloaded ({0}); inspect again",
+    "description": "Page changed or reloaded ({0}); inspect again"
+  },
+  "backupSavedMsg": {
+    "message": "Backed up {0} controls",
+    "description": "Backed up {0} controls"
+  },
+  "backupFailedMsg": {
+    "message": "Backup failed; filling was blocked: {0}",
+    "description": "Backup failed; filling was blocked: {0}"
+  },
+  "restoreDoneMsg": {
+    "message": "Restored {0} controls",
+    "description": "Restored {0} controls"
+  },
+  "restorePartialMsg": {
+    "message": "Restored {0} controls, {1} failed",
+    "description": "Restored {0} controls, {1} failed"
+  },
+  "restoreFailedMsg": {
+    "message": "Restore failed: {0}",
+    "description": "Restore failed: {0}"
+  },
+  "restoreNothingMsg": {
+    "message": "No backup available",
+    "description": "No backup available"
+  },
+  "planReadyMsg": {
+    "message": "{0} ready, {1} conflicts, {2} skipped",
+    "description": "{0} ready, {1} conflicts, {2} skipped"
+  },
+  "planEmptyMsg": {
+    "message": "Nothing to fill",
+    "description": "Nothing to fill"
+  },
+  "planFailedMsg": {
+    "message": "Could not build a fill plan: {0}",
+    "description": "Could not build a fill plan: {0}"
+  },
+  "fillDoneMsg": {
+    "message": "Fill complete: OK {0}, conflicts {1}, skipped {2}, manual {3}",
+    "description": "Fill complete: OK {0}, conflicts {1}, skipped {2}, manual {3}"
+  },
+  "fillPartialMsg": {
+    "message": "Fill finished: OK {0}, conflicts {1}, failed {2}",
+    "description": "Fill finished: OK {0}, conflicts {1}, failed {2}"
+  },
+  "fillFailedMsg": {
+    "message": "Fill failed: {0}",
+    "description": "Fill failed: {0}"
+  },
+  "undoDoneMsg": {
+    "message": "Undid {0} controls",
+    "description": "Undid {0} controls"
+  },
+  "undoNothingMsg": {
+    "message": "Nothing to undo",
+    "description": "Nothing to undo"
+  },
+  "undoFailedMsg": {
+    "message": "Undo failed: {0}",
+    "description": "Undo failed: {0}"
+  },
+  "actionFailedMsg": {
+    "message": "Unable to complete this action: {0}",
+    "description": "Unable to complete this action: {0}"
+  },
+  "inspectUnsupportedMsg": {
+    "message": "This page cannot be inspected (browser page)",
+    "description": "This page cannot be inspected (browser page)"
+  },
+  "notReadyMsg": {
+    "message": "Not ready to fill: {0}",
+    "description": "Not ready to fill: {0}"
+  },
+  "status_ready": {
+    "message": "Ready",
+    "description": "Ready"
+  },
+  "status_conflict": {
+    "message": "Conflict",
+    "description": "Conflict"
+  },
+  "status_skipped": {
+    "message": "Skipped",
+    "description": "Skipped"
+  },
+  "status_unsupported": {
+    "message": "Unsupported",
+    "description": "Unsupported"
+  },
+  "status_done": {
+    "message": "Done",
+    "description": "Done"
+  },
+  "status_failed": {
+    "message": "Failed",
+    "description": "Failed"
+  },
+  "status_manual": {
+    "message": "Manual",
+    "description": "Manual"
+  },
+  "section_basic": {
+    "message": "Basic info",
+    "description": "Basic info"
+  },
+  "section_intention": {
+    "message": "Job intention",
+    "description": "Job intention"
+  },
+  "section_work": {
+    "message": "Work experience",
+    "description": "Work experience"
+  },
+  "section_internship": {
+    "message": "Internship",
+    "description": "Internship"
+  },
+  "section_education": {
+    "message": "Education",
+    "description": "Education"
+  },
+  "section_project": {
+    "message": "Projects",
+    "description": "Projects"
+  },
+  "section_award": {
+    "message": "Awards",
+    "description": "Awards"
+  },
+  "section_language": {
+    "message": "Languages",
+    "description": "Languages"
+  },
+  "section_summary": {
+    "message": "Summary",
+    "description": "Summary"
+  },
+  "section_sns": {
+    "message": "Social links",
+    "description": "Social links"
+  },
+  "field_name": {
+    "message": "Name",
+    "description": "Name"
+  },
+  "field_mobile": {
+    "message": "Mobile",
+    "description": "Mobile"
+  },
+  "field_areaCode": {
+    "message": "Area code",
+    "description": "Area code"
+  },
+  "field_email": {
+    "message": "Email",
+    "description": "Email"
+  },
+  "field_idType": {
+    "message": "ID type",
+    "description": "ID type"
+  },
+  "field_idNumber": {
+    "message": "ID number",
+    "description": "ID number"
+  },
+  "field_city": {
+    "message": "City",
+    "description": "City"
+  },
+  "field_gender": {
+    "message": "Gender",
+    "description": "Gender"
+  },
+  "field_birthday": {
+    "message": "Birthday",
+    "description": "Birthday"
+  },
+  "field_workStartDate": {
+    "message": "Work start date",
+    "description": "Work start date"
+  },
+  "field_position": {
+    "message": "Position",
+    "description": "Position"
+  },
+  "field_jobType": {
+    "message": "Job type",
+    "description": "Job type"
+  },
+  "field_arrivalTime": {
+    "message": "Availability",
+    "description": "Availability"
+  },
+  "field_company": {
+    "message": "Company",
+    "description": "Company"
+  },
+  "field_title": {
+    "message": "Title",
+    "description": "Title"
+  },
+  "field_department": {
+    "message": "Department",
+    "description": "Department"
+  },
+  "field_start": {
+    "message": "Start",
+    "description": "Start"
+  },
+  "field_end": {
+    "message": "End",
+    "description": "End"
+  },
+  "field_ongoing": {
+    "message": "Ongoing",
+    "description": "Ongoing"
+  },
+  "field_desc": {
+    "message": "Description",
+    "description": "Description"
+  },
+  "field_school": {
+    "message": "School",
+    "description": "School"
+  },
+  "field_degree": {
+    "message": "Degree",
+    "description": "Degree"
+  },
+  "field_major": {
+    "message": "Major",
+    "description": "Major"
+  },
+  "field_college": {
+    "message": "College",
+    "description": "College"
+  },
+  "field_trainingType": {
+    "message": "Study mode",
+    "description": "Study mode"
+  },
+  "field_gpa": {
+    "message": "GPA",
+    "description": "GPA"
+  },
+  "field_role": {
+    "message": "Role",
+    "description": "Role"
+  },
+  "field_link": {
+    "message": "Link",
+    "description": "Link"
+  },
+  "field_date": {
+    "message": "Date",
+    "description": "Date"
+  },
+  "field_language": {
+    "message": "Language",
+    "description": "Language"
+  },
+  "field_proficiency": {
+    "message": "Proficiency",
+    "description": "Proficiency"
+  },
+  "field_platform": {
+    "message": "Platform",
+    "description": "Platform"
+  },
+  "field_account": {
+    "message": "Account",
+    "description": "Account"
+  },
+  "field_content": {
+    "message": "Content",
+    "description": "Content"
+  },
+  "saveReminder": {
+    "message": "After filling, review the page yourself and click Save at the bottom-right of the page.",
+    "description": "After filling, review the page yourself and click Save at the bottom-right of the page."
+  },
+  "pageStatsMsg": {
+    "message": "Detected {0} sections, {1} controls",
+    "description": "Detected {0} sections, {1} controls"
+  },
+  "summaryUnsupported": {
+    "message": "Unsupported {0}",
+    "description": "Unsupported {0}"
+  },
+  "pageUnsupportedHint": {
+    "message": "This tab is not a web page (it may be the extensions page or a new tab). Switch to the resume page and try again.",
+    "description": "Shown when the active tab cannot host a content script"
+  },
+  "pageScriptMissingHint": {
+    "message": "The page script is not ready. Refresh the resume page (F5) and retry; after reloading the extension the page must be refreshed.",
+    "description": "Shown when the page script is missing or stale"
+  },
+  "pageNoActiveTabHint": {
+    "message": "No operable tab found. Open the resume page first.",
+    "description": "Shown when no active tab is available"
+  },
+  "reasonMultiSelectManual": {
+    "message": "Multi-select field (preferred cities) needs a manual choice",
+    "description": "Reason: multi-select widget cannot be opened by a content script"
+  },
+  "reasonItemIdentityConflict": {
+    "message": "This entry does not match the resume record; skipped to avoid mixing data",
+    "description": "Reason: repeatable item identity does not match the resume"
   }
 }

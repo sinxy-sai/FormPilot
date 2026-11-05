@@ -6,12 +6,14 @@
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "test": "node --test extension/test/*.test.mjs",
+    "test:unit": "node --test extension/test/*.test.mjs",
+    "test:browser": "node scripts/build-extension.mjs && node extension/test/browser-e2e.mjs",
     "validate:locales": "node scripts/validate-locales.mjs",
     "build": "node scripts/build-extension.mjs",
     "check:build": "node scripts/build-extension.mjs",
+    "serve:fixture": "node scripts/serve.mjs 8123",
     "verify:local-model": "node --test extension/test/ai-runtime.test.mjs",
-    "verify:webgpu": "node extension/test/webgpu-verify.mjs",
-    "test:browser": "node extension/test/browser-smoke.mjs"
+    "verify:webgpu": "node extension/test/webgpu-verify.mjs"
   },
   "devDependencies": {
     "playwright": "1.52.0",

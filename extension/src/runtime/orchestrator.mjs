@@ -1,97 +1,279 @@
-import { inspectPage } from './page-inspector.mjs';
-import { executeTool } from './control-executor.mjs';
-import { validatePlannedAction } from './action-guard.mjs';
-import { normalizePlannedAction } from './action-tools.mjs';
-import { verifyAction } from './result-verifier.mjs';
-import { buildActionModelInput, validateActionProposal } from '../ai/schema.mjs';
-import { unavailableProvider } from '../ai/provider.mjs';
-import { findStrategies, saveStrategy, recordStrategyResult } from '../core/strategy-cache.mjs';
+/**
+ * FormPilot 运行时编排（规划层）。
+ *
+ * 新模型：plan → execute → 重新 inspect → 继续，全部是纯函数编排：
+ *   - createRuntimeContext 组装 resumeIndex / pageModel / task；
+ *   - planNextStep 只用确定性 matcher 产出下一步（本地模型缺省不参与，最多给只读建议）；
+ *   - runNextStep 执行一步并记录 task 状态，下一次调用会先重新 inspect 再重新规划；
+ *   - runFillLoop 是给 background 复用的驱动循环。
+ *
+ * 明确不再使用 `task.step` 当控件下标（旧实现 controls.slice(task.step) 的跨分区串味根因）。
+ * task.step 现在只是「已执行成功步骤数」的计数器。
+ *
+ * execute / inspect / verify 由外部注入（background / content script），本模块不碰 DOM、不发起 IO。
+ */
 
-const clone = value => value && typeof value === 'object' ? structuredClone(value) : value;
-const taskState = (task = {}) => ({ ...task, status: task.status || 'pending', step: Number.isInteger(task.step) ? task.step : 0, failures: Number.isInteger(task.failures) ? task.failures : 0, history: Array.isArray(task.history) ? task.history.slice() : [] });
+import { buildResumeIndex } from '../core/resume-index.mjs';
+import { DEFAULT_LIMIT, planFill } from '../core/matcher.mjs';
+import { validatePlannedStep } from './action-guard.mjs';
+import { buildPlannerModelInput, validatePlannerSuggestion } from '../ai/schema.mjs';
 
-export function createRuntimeContext({ resume = {}, pageModel = {}, task = {}, strategies = [], ...options } = {}) {
-  return { resume: clone(resume) || {}, pageModel: clone(pageModel) || {}, task: taskState(clone(task) || {}), strategies: Array.isArray(strategies) ? strategies.slice() : [], provider: options.provider || unavailableProvider, ...options };
+const record = value => value !== null && typeof value === 'object' && !Array.isArray(value);
+const clone = value => (value && typeof value === 'object' ? structuredClone(value) : value);
+
+export const DEFAULT_MAX_FAILURES = 3;
+export const DEFAULT_MAX_STEPS = 100;
+const TERMINAL_STATUSES = new Set(['complete', 'completed', 'manual', 'blocked', 'stopped', 'cancelled']);
+
+function normalizeTask(task = {}) {
+  const source = record(task) ? task : {};
+  return {
+    ...clone(source),
+    status: typeof source.status === 'string' ? source.status : 'pending',
+    step: Number.isInteger(source.step) ? source.step : 0,
+    passes: Number.isInteger(source.passes) ? source.passes : 0,
+    failures: Number.isInteger(source.failures) ? source.failures : 0,
+    executedStepIds: Array.isArray(source.executedStepIds) ? source.executedStepIds.slice() : [],
+    history: Array.isArray(source.history) ? source.history.slice() : []
+  };
 }
 
-function ruleCandidate(context) {
-  const t = context.task || {};
-  if (t.nextAction) return t.nextAction;
-  if (Array.isArray(t.plan)) {
-    const item = t.plan.find(x => x && !['verified','completed','skipped'].includes(x.status) && (x.action || x.tool));
-    if (item) return item.action || item;
-  }
-  const strategy = (context.strategies || []).find(s => Array.isArray(s.steps) && s.steps[context.task.step] && s.status === 'active' && s.capabilityCompatible !== false && s.verified !== false && s.verification?.verified !== false && (!s.structureFingerprint || !context.pageModel?.fingerprint || s.structureFingerprint === context.pageModel.fingerprint));
-  return strategy?.steps?.[context.task.step] || null;
+/**
+ * 创建运行时上下文。
+ * @param {{ resume?: object, resumeIndex?: object, pageModel?: object, task?: object,
+ *           mode?: 'fill-empty'|'overwrite', limit?: number, provider?: {generate: Function},
+ *           inspect?: Function, execute?: Function, verify?: Function,
+ *           maxFailures?: number, maxSteps?: number }} input
+ */
+export function createRuntimeContext({
+  resume = {},
+  resumeIndex,
+  pageModel = {},
+  task = {},
+  mode = 'fill-empty',
+  limit = DEFAULT_LIMIT,
+  provider,
+  maxFailures = DEFAULT_MAX_FAILURES,
+  maxSteps = DEFAULT_MAX_STEPS,
+  ...options
+} = {}) {
+  if (resume !== undefined && resume !== null && !record(resume)) throw new TypeError('resume must be an object');
+  if (pageModel !== undefined && pageModel !== null && !record(pageModel)) throw new TypeError('pageModel must be an object');
+  const index = record(resumeIndex) ? resumeIndex : buildResumeIndex(record(resume) ? resume : {});
+  return {
+    resume: clone(resume) ?? {},
+    resumeIndex: index,
+    pageModel: clone(pageModel) ?? {},
+    mode,
+    limit,
+    maxFailures,
+    maxSteps,
+    task: normalizeTask(task),
+    provider: provider && typeof provider.generate === 'function' ? provider : null,
+    ...options
+  };
 }
 
-export async function planNextStep(context) {
-  if (!context || typeof context !== 'object') throw new TypeError('context required');
-  const page = context.pageModel || {};
-  if (context.task?.status === 'complete' || context.task?.status === 'completed') return { status: 'complete', reason: 'task-complete' };
-  const cached = ruleCandidate(context);
-  if (cached) {
-    const checked = validateActionProposal(cached, page);
-    if (checked.status === 'proposed') return { status: 'action', action: checked, reason: 'strategy-or-rule', confidence: checked.confidence };
+function legacyCandidate(context, task) {
+  if (!Array.isArray(task?.plan)) return null;
+  const entry = task.plan.find(item => record(item) && !['verified', 'completed', 'skipped'].includes(item.status) && (item.tool || item.action));
+  if (!entry) return null;
+  return entry.action ?? entry;
+}
+
+async function optionalSuggestion(context, plan) {
+  const provider = context.provider;
+  const task = context.task ?? {};
+  if (!provider || task.disableProvider === true) return null;
+  if (!(plan.summary?.unsupported > 0) && !(Array.isArray(plan.summary?.missingFields) && plan.summary.missingFields.length > 0)) return null;
+  let input;
+  try {
+    input = buildPlannerModelInput(context.pageModel ?? {}, context.resumeIndex ?? {}, plan, task);
+  } catch {
+    return null; // 输入过大 / 不合法：直接放弃建议，不影响确定性结果
   }
-  const input = buildActionModelInput(page, context.task || {}, context.resume || {});
   let raw;
-  try { raw = await (context.provider || unavailableProvider).generate(input, { signal: context.signal }); } catch { raw = { status: 'abstain', reason: 'provider-error' }; }
-  if (raw?.status === 'abstain') return { status: 'manual', reason: raw.reason || 'model-abstained' };
-  const checked = validateActionProposal(raw, page);
-  if (checked.status !== 'proposed') return { status: 'manual', reason: checked.reason || 'invalid-model-action' };
-  const { status: _proposalStatus, ...actionForGate } = checked;
-  const gate = validatePlannedAction(actionForGate, { pageModel: page, resume: context.resume, task: context.task });
-  if (!gate.allowed) return gate.requiresUser ? { status: 'manual', action: checked, reason: gate.reason } : { status: 'blocked', action: checked, reason: gate.reason };
-  return { status: checked.tool === 'ask_user' ? 'manual' : 'action', action: checked, reason: checked.reason || 'model', confidence: checked.confidence };
+  try {
+    raw = await provider.generate(input, { signal: context.signal });
+  } catch {
+    return null;
+  }
+  if (!raw || raw.status === 'abstain') return null;
+  const validated = validatePlannerSuggestion(raw, {
+    controlIds: input.page.controls.map(control => control.controlId),
+    entryIds: input.resume.entries.map(entry => entry.entryId)
+  });
+  return validated.status === 'suggestion' ? validated : null;
 }
 
+/**
+ * 决定下一步。
+ * @returns {Promise<{status:'action'|'manual'|'blocked'|'complete'|'suggestion', step?: object, action?: object,
+ *   plan?: object, suggestion?: object, reason?: string, confidence?: number}>}
+ */
+export async function planNextStep(context) {
+  if (!record(context)) throw new TypeError('context required');
+  const page = context.pageModel ?? {};
+  const task = normalizeTask(context.task);
+  context.task = task;
+  if (TERMINAL_STATUSES.has(task.status)) return { status: 'complete', reason: 'task-complete', plan: context.lastPlan ?? null };
+
+  const mode = context.mode ?? 'fill-empty';
+
+  // 1) 过渡期兼容：task.plan 里旧的 tool 形状动作
+  const legacy = legacyCandidate(context, task);
+  if (legacy) {
+    const gate = validatePlannedStep(legacy, { pageModel: page, mode, task, pageFingerprint: task.pageFingerprint });
+    if (gate.allowed) return { status: 'action', step: legacy, action: legacy, plan: context.lastPlan ?? null, reason: 'legacy-plan', confidence: legacy.confidence };
+    if (gate.requiresUser) return { status: 'manual', action: legacy, plan: context.lastPlan ?? null, reason: gate.reason };
+  }
+
+  // 2) 确定性计划（matcher 严格分区），每次基于当前 pageModel 重新规划
+  const plan = planFill({ resumeIndex: context.resumeIndex, pageModel: page, mode, limit: context.limit ?? DEFAULT_LIMIT });
+  context.lastPlan = plan;
+  const executed = new Set(task.executedStepIds);
+  const blockers = [];
+  for (const step of plan.steps) {
+    if (step.status !== 'ready') continue;
+    if (step.stepId && executed.has(step.stepId)) continue;
+    const gate = validatePlannedStep(step, { pageModel: page, mode, task, pageFingerprint: task.pageFingerprint });
+    if (gate.allowed) {
+      return { status: 'action', step, plan, reason: step.kind === 'add-item' ? 'add-item' : 'plan', confidence: step.confidence };
+    }
+    if (gate.requiresUser) blockers.push({ step, reason: gate.reason });
+  }
+
+  if (blockers.length) return { status: 'manual', reason: blockers[0].reason, step: blockers[0].step, plan, blockers };
+  if (plan.summary.conflicts > 0) return { status: 'manual', reason: 'conflicts-need-review', plan };
+  if (plan.summary.unsupported > 0) {
+    const suggestion = await optionalSuggestion(context, plan);
+    if (suggestion) return { status: 'suggestion', suggestion, plan, reason: 'model-suggestion' };
+    return { status: 'manual', reason: 'unsupported-fields', plan };
+  }
+  if (plan.steps.length === 0) return { status: 'complete', reason: 'nothing-to-fill', plan };
+  if (plan.steps.every(step => step.status === 'skipped')) return { status: 'complete', reason: 'all-already-correct', plan };
+  return { status: 'complete', reason: 'plan-exhausted', plan };
+}
+
+function outcomeOK(result) {
+  if (!record(result)) return false;
+  return ['verified', 'done', 'success'].includes(String(result.status)) || result.verified === true;
+}
+
+/**
+ * 执行一步：先（可选）重新 inspect，再规划、守卫、执行、记录。
+ * @returns {Promise<object>} 最新 task 状态（含 decision / pageModel / lastResult）
+ */
 export async function runNextStep(context) {
-  if (!context || typeof context !== 'object') throw new TypeError('context required');
-  const before = context.pageModel || {};
-  const inspected = typeof context.inspect === 'function' ? await context.inspect(context) : null;
-  if (inspected?.pageModel) context.pageModel = inspected.pageModel;
-  const page = context.pageModel || {};
-  if (before.fingerprint && page.fingerprint && before.fingerprint !== page.fingerprint) { context.task = { ...context.task, pageFingerprint: page.fingerprint, status: 'pending', failures: 0 }; }
+  if (!record(context)) throw new TypeError('context required');
+  const before = context.pageModel ?? {};
+
+  // 1) 重新 inspect（若外部提供）
+  if (typeof context.inspect === 'function') {
+    const inspected = await context.inspect(context);
+    const nextPage = inspected?.pageModel ?? inspected;
+    if (record(nextPage) && Array.isArray(nextPage.controls)) context.pageModel = nextPage;
+  }
+  const page = context.pageModel ?? {};
+  let task = normalizeTask(context.task);
+  if (before.fingerprint && page.fingerprint && before.fingerprint !== page.fingerprint) {
+    task.passes += 1;
+    task.pageFingerprint = page.fingerprint;
+  }
+
+  // 2) 规划
   const decision = await planNextStep(context);
-  const task = taskState(context.task);
+  task = normalizeTask(context.task);
   task.lastDecision = decision;
-  task.pageFingerprint = page.fingerprint || task.pageFingerprint;
-  if (decision.status !== 'action') {
-    task.status = decision.status === 'complete' ? 'completed' : decision.status;
-    context.task = task;
+  task.pageFingerprint = page.fingerprint ?? task.pageFingerprint;
+  context.task = task;
+  if (decision.status === 'complete') {
+    task.status = 'completed';
     return { ...task, decision, pageModel: page };
   }
-  const rawAction = decision.action || {}; const { status: _proposalStatus, ...actionInput } = rawAction; const action = normalizePlannedAction(actionInput, page);
-  if (action?.rejected) { task.status = 'blocked'; task.lastReason = action.reason; context.task = task; return { ...task, decision: { status:'blocked', reason: action.reason }, pageModel: page }; }
-  const gate = validatePlannedAction(action, { pageModel: page, resume: context.resume, task });
-  if (!gate.allowed) { task.status = gate.requiresUser ? 'manual' : 'blocked'; task.lastReason = gate.reason; context.task = task; return { ...task, decision: { status: task.status, action, reason: gate.reason }, pageModel: page }; }
+  if (decision.status !== 'action') {
+    task.status = decision.status === 'blocked' ? 'blocked' : 'manual';
+    task.lastReason = decision.reason;
+    return { ...task, decision, pageModel: page };
+  }
+
+  // 3) 守卫（防御纵深：即使 plan 被篡改，执行前再校验一遍）
+  const step = decision.step;
+  const gate = validatePlannedStep(step, { pageModel: page, mode: context.mode ?? 'fill-empty', task, pageFingerprint: task.pageFingerprint });
+  if (!gate.allowed) {
+    task.status = gate.requiresUser ? 'manual' : 'blocked';
+    task.lastReason = gate.reason;
+    context.task = task;
+    return { ...task, decision: { ...decision, status: task.status, reason: gate.reason }, pageModel: page };
+  }
+
+  // 4) 执行 + 读回校验（由外部注入）
   let result;
   try {
-    result = typeof context.execute === 'function' ? await context.execute(action, context) : await executeTool(context.document, action, { pageFingerprint: page.fingerprint });
-    if (typeof context.verify === 'function') result = await context.verify(result, action, context) || result;
-    else if (result && result.status !== 'verified' && context.document) { const v = await verifyAction(context.document, action, result, { pageFingerprint: page.fingerprint }); result = { ...result, status: v.verified ? 'verified' : 'skipped', reason: v.reason }; }
-  } catch (error) { result = { status: 'skipped', reason: 'execution-error', error: String(error?.message || error) }; }
-  const ok = result?.status === 'verified' || result?.status === 'success' || result?.verified === true;
-  task.lastAction = action; task.lastResult = result; task.step += ok ? 1 : 0; task.failures = ok ? 0 : task.failures + 1;
-  task.history = task.history.concat([{ action, result, step: task.step, at: new Date().toISOString() }]).slice(-50);
-  if (ok) { task.status = 'pending'; if (context.recordStrategy) await context.recordStrategy(action, result, context); }
-  else if (task.failures >= (context.maxFailures ?? 3)) { task.status = 'manual'; task.lastReason = result?.reason || 'repeated-failure'; }
-  else task.status = 'pending';
+    result = typeof context.execute === 'function' ? await context.execute(step, context) : { status: 'skipped', reason: 'no-executor' };
+    if (typeof context.verify === 'function') result = (await context.verify(result, step, context)) || result;
+  } catch (error) {
+    result = { status: 'failed', reason: 'execution-error', error: String(error?.message ?? error) };
+  }
+  const ok = outcomeOK(result);
+
+  // 5) 记录状态（task.step 只是成功步骤计数，不是控件下标）
+  if (ok) {
+    const stepId = step?.stepId ?? step?.controlId ?? step?.kind;
+    if (stepId) task.executedStepIds = [...new Set([...task.executedStepIds, stepId])].slice(-500);
+    task.step += 1;
+    task.failures = 0;
+    task.status = 'pending';
+  } else {
+    task.failures += 1;
+    task.lastReason = result?.reason ?? 'step-failed';
+    task.status = task.failures >= (context.maxFailures ?? DEFAULT_MAX_FAILURES) ? 'manual' : 'pending';
+  }
+  task.lastStep = step;
+  task.lastResult = result;
+  task.history = [...task.history, {
+    step: step?.stepId ?? null,
+    kind: step?.kind ?? null,
+    controlId: step?.controlId ?? null,
+    sectionKey: step?.sectionKey ?? null,
+    itemIndex: step?.itemIndex ?? null,
+    status: result?.status ?? null,
+    reason: result?.reason ?? null,
+    at: new Date().toISOString()
+  }].slice(-50);
   context.task = task;
   return { ...task, decision, pageModel: page };
 }
 
-export async function loadStrategiesForContext(context) {
-  if (context.strategies?.length) return context.strategies;
-  const p = context.pageModel || {}; const id = p.pageIdentity || {};
-  try { context.strategies = await findStrategies({ origin:id.origin, route:id.route, pageFingerprint:p.fingerprint, capabilityVersions:p.capabilityVersions }); } catch { context.strategies = []; }
-  return context.strategies;
+/**
+ * 驱动循环：plan → execute → 重新 inspect → 继续，直到完成 / 需要人工 / 达到上限。
+ * background 可以直接复用，也可以自己按 runNextStep 逐步驱动（契约 §6）。
+ */
+export async function runFillLoop(context, { maxSteps } = {}) {
+  if (!record(context)) throw new TypeError('context required');
+  const limit = Number.isInteger(maxSteps) ? maxSteps : (context.maxSteps ?? DEFAULT_MAX_STEPS);
+  const results = [];
+  let state = normalizeTask(context.task);
+  for (let index = 0; index < limit; index += 1) {
+    state = await runNextStep(context);
+    results.push({
+      status: state.status,
+      decision: state.lastDecision?.status ?? null,
+      reason: state.lastDecision?.reason ?? null,
+      step: state.lastStep?.stepId ?? null,
+      kind: state.lastStep?.kind ?? null,
+      resultStatus: state.lastResult?.status ?? null
+    });
+    if (!['pending', 'running'].includes(state.status)) break;
+  }
+  const plan = context.lastPlan ?? null;
+  return {
+    status: state.status,
+    results,
+    task: context.task,
+    plan,
+    summary: plan?.summary ?? null
+  };
 }
 
-export async function recordRuntimeStrategy(context, action, result) {
-  const p = context.pageModel || {}; const id = p.pageIdentity || {}; const existing = context.strategies?.[0];
-  if (existing?.id) return recordStrategyResult(existing.id, result);
-  if (!id.origin || !id.route || !p.fingerprint) return null;
-  return saveStrategy({ scope:{origin:id.origin,route:id.route}, structureFingerprint:p.fingerprint, capabilityVersions:p.capabilityVersions || {}, steps:[action], successCount:1, lastValidatedAt:new Date().toISOString() });
-}
+export default { createRuntimeContext, planNextStep, runNextStep, runFillLoop };
