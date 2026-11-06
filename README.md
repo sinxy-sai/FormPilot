@@ -6,7 +6,7 @@
 
 <img src="docs/assets/formpilot-icon.svg" alt="FormPilot icon" width="112">
 
-<p><a href="#installation">🚀 Get Started</a> · <a href="#usage">▶️ Use</a> · <a href="#tests">🧪 Test</a> · <a href="docs/ARCHITECTURE.md">📚 Documentation</a> · <a href="CONTRIBUTING.md">🤝 Contribute</a></p>
+<p><a href="#installation">🚀 Get Started</a> · <a href="#usage">▶️ Use</a> · <a href="#tests">🧪 Test</a> · <a href="#documentation">📚 Documentation</a> · <a href="CONTRIBUTING.md">🤝 Contribute</a></p>
 
 <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-315BEA?style=flat-square" alt="Apache-2.0 License"></a>
 <a href="https://developer.chrome.com/docs/extensions/develop/"><img src="https://img.shields.io/badge/Manifest-V3-4285F4?style=flat-square&logo=googlechrome&logoColor=white" alt="Manifest V3"></a>
@@ -147,6 +147,8 @@ The optional local AI loop is limited to page understanding and read-only sugges
 ├── CHANGELOG.md
 └── LICENSE
 ```
+
+<a id="documentation" name="documentation"></a>
 
 ## 📚 Documentation
 
