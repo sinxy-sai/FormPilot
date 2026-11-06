@@ -207,6 +207,14 @@
     "message": "不会点击保存/提交按钮；填写前自动备份，冲突字段不覆盖。",
     "description": "Never clicks save/submit; backs up before filling; conflicts are not overwritten."
   },
+  "helpTitle": {
+    "message": "使用说明",
+    "description": "Title of the help sheet"
+  },
+  "safetyShort": {
+    "message": "不自动提交",
+    "description": "Short safety badge shown in the header"
+  },
   "pageFingerprint": {
     "message": "页面指纹",
     "description": "Page fingerprint"
@@ -250,6 +258,10 @@
   "modeLabel": {
     "message": "只填空白（推荐）",
     "description": "Fill blanks only (recommended)"
+  },
+  "modeOverwriteLabel": {
+    "message": "覆盖已有内容",
+    "description": "Switch label shown when overwrite mode is on"
   },
   "modeHint": {
     "message": "页面已有内容且与简历不同时会标记为冲突，不会覆盖。",

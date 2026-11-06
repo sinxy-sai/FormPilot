@@ -207,6 +207,14 @@
     "message": "保存・送信ボタンは押しません。入力前に自動バックアップし、競合は上書きしません。",
     "description": "Never clicks save/submit; backs up before filling; conflicts are not overwritten."
   },
+  "helpTitle": {
+    "message": "使い方",
+    "description": "Title of the help sheet"
+  },
+  "safetyShort": {
+    "message": "自動送信しません",
+    "description": "Short safety badge shown in the header"
+  },
   "pageFingerprint": {
     "message": "ページ指紋",
     "description": "Page fingerprint"
@@ -250,6 +258,10 @@
   "modeLabel": {
     "message": "空欄のみ入力（推奨）",
     "description": "Fill blanks only (recommended)"
+  },
+  "modeOverwriteLabel": {
+    "message": "既存を上書き",
+    "description": "Switch label shown when overwrite mode is on"
   },
   "modeHint": {
     "message": "既存の値が異なる場合は競合として扱い、上書きしません。",

@@ -31,8 +31,11 @@ let resumeFileName = '';
  * hard-coded Chinese copy that is also written into sidepanel.html.
  */
 const SUPPORTED_LOCALES = ['zh-CN', 'en-US', 'ja-JP', 'ko-KR'];
+const PREF_KEY = 'ui.prefs';
 let messageCatalog = {};
 let activeLocale = 'zh-CN';
+let prefs = { locale: null, theme: 'system' };
+let systemThemeQuery = null;
 
 const pickLocale = () => {
   const raw = String(globalThis.chrome?.i18n?.getUILanguage?.() || globalThis.navigator?.language || 'zh-CN').replace(/_/g, '-').toLowerCase();
@@ -42,8 +45,10 @@ const pickLocale = () => {
   return 'en-US';
 };
 
-const loadMessages = async () => {
-  activeLocale = pickLocale();
+const resolveLocale = () => (SUPPORTED_LOCALES.includes(prefs.locale) ? prefs.locale : pickLocale());
+
+const loadMessages = async (locale) => {
+  activeLocale = SUPPORTED_LOCALES.includes(locale) ? locale : pickLocale();
   if (!SUPPORTED_LOCALES.includes(activeLocale)) activeLocale = 'en-US';
   try {
     const url = chrome.runtime.getURL(`locales/${activeLocale}/messages.json`);
@@ -56,6 +61,56 @@ const loadMessages = async () => {
     log.warn('locale-load-failed', { locale: activeLocale, error: String(error?.message || error) });
   }
   document.documentElement.lang = activeLocale;
+};
+
+/* Appearance: `prefs.theme` is one of system | light | dark; the resolved value
+   is written to <html data-theme> so the stylesheet never needs a media query. */
+const resolveTheme = () => {
+  if (prefs.theme === 'light' || prefs.theme === 'dark') return prefs.theme;
+  return systemThemeQuery?.matches ? 'dark' : 'light';
+};
+const applyTheme = () => { document.documentElement.dataset.theme = resolveTheme(); };
+const watchSystemTheme = () => {
+  if (systemThemeQuery || typeof globalThis.matchMedia !== 'function') return;
+  systemThemeQuery = globalThis.matchMedia('(prefers-color-scheme: dark)');
+  systemThemeQuery.addEventListener?.('change', () => { if (prefs.theme === 'system') applyTheme(); });
+};
+
+const persistPrefs = async () => {
+  try { await chrome.storage.local.set({ [PREF_KEY]: prefs }); } catch (error) { log.warn('prefs-persist-failed', { error: String(error?.message || error) }); }
+};
+
+const markSegments = () => {
+  for (const button of document.querySelectorAll('#locale-segmented button')) {
+    const active = button.dataset.locale === activeLocale;
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-checked', String(active));
+  }
+  const themePref = prefs.theme ?? 'system';
+  for (const button of document.querySelectorAll('#theme-segmented button')) {
+    const active = button.dataset.themePref === themePref;
+    button.classList.toggle('is-active', active);
+    button.setAttribute('aria-checked', String(active));
+  }
+};
+
+const setLocale = async (locale) => {
+  if (!SUPPORTED_LOCALES.includes(locale)) return;
+  if (locale === activeLocale) { markSegments(); return; }
+  prefs.locale = locale;
+  await persistPrefs();
+  await loadMessages(locale);
+  applyStaticI18n();
+  markSegments();
+  render();
+};
+
+const setTheme = async (theme) => {
+  if (!['system', 'light', 'dark'].includes(theme)) return;
+  prefs.theme = theme;
+  await persistPrefs();
+  applyTheme();
+  markSegments();
 };
 
 const rawI18n = (key) => {
@@ -384,6 +439,8 @@ const renderReview = () => {
       badge.dataset.tone = '';
     }
   }
+  const saveReminder = $('#save-reminder');
+  if (saveReminder) saveReminder.hidden = !state.summary;
   if (summaryBox) {
     clear(summaryBox);
     const chips = [];
@@ -417,13 +474,13 @@ const renderReview = () => {
           row.reason ? node('span', { class: 'reason', text: reasonLabel(row.reason) }) : null
         ]);
         body.append(node('tr', { class: statusTone }, [
-          node('td', { text: row.kind === 'add-item' ? `${sectionLabel(row.sectionKey) || ''} ${t('addItem', '新增条目')}`.trim() || String(row.stepId) : fieldLabel(row.sectionKey, row.fieldKey) || String(row.stepId) }),
-          node('td', { text: row.pageLabel || '—' }),
-          node('td', { text: row.sourcePath || '—' }),
-          node('td', { text: displayValue(row.currentValue, row.fieldKey) }),
-          node('td', { text: row.kind === 'add-item' ? '—' : displayValue(row.targetValue, row.fieldKey) }),
+          node('td', { dataset: { label: t('tableField', '字段') }, text: row.kind === 'add-item' ? `${sectionLabel(row.sectionKey) || ''} ${t('addItem', '新增条目')}`.trim() || String(row.stepId) : fieldLabel(row.sectionKey, row.fieldKey) || String(row.stepId) }),
+          node('td', { dataset: { label: t('tablePageLabel', '页面标签') }, text: row.pageLabel || '—' }),
+          node('td', { dataset: { label: t('tableSource', '来源路径') }, text: row.sourcePath || '—' }),
+          node('td', { dataset: { label: t('tableCurrent', '当前值') }, text: displayValue(row.currentValue, row.fieldKey) }),
+          node('td', { dataset: { label: t('tableTarget', '目标值') }, text: row.kind === 'add-item' ? '—' : displayValue(row.targetValue, row.fieldKey) }),
           statusCell,
-          node('td', { text: row.confidence === null ? '—' : `${Math.round(row.confidence * 100)}%` })
+          node('td', { dataset: { label: t('tableConfidence', '置信度') }, text: row.confidence === null ? '—' : `${Math.round(row.confidence * 100)}%` })
         ]));
       }
     }
@@ -463,10 +520,10 @@ const renderButtons = () => {
     setText(fill, state.status === 'filling' ? t('fillRunning', '正在填写…') : t('fillStart', '开始填写'));
   }
   if (undo) undo.disabled = !readiness.canUndo;
-  const hint = $('#mode-hint');
-  if (hint) setText(hint, state.mode === FILL_MODE.overwrite
-    ? t('overwriteHint', '覆盖模式会改写页面已有内容，请谨慎使用。')
-    : t('modeHint', '页面已有内容且与简历不同时会标记为冲突，不会覆盖。'));
+  const modeLabel = $('#mode-label');
+  if (modeLabel) setText(modeLabel, state.mode === FILL_MODE.overwrite
+    ? t('modeOverwriteLabel', '覆盖已有内容')
+    : t('modeLabel', '只填空白（推荐）'));
 };
 
 const render = () => {
@@ -658,6 +715,47 @@ const restoreBackup = async () => {
 /* ------------------------------------------------------------------ events */
 
 const bind = () => {
+  // Help and settings are mutually exclusive expanding sheets in the header.
+  const panels = [
+    { toggle: $('#help-toggle'), panel: $('#help-panel') },
+    { toggle: $('#settings-toggle'), panel: $('#settings-panel') }
+  ].filter(entry => entry.toggle && entry.panel);
+  const setPanelOpen = (entry, open) => {
+    entry.panel.hidden = !open;
+    entry.toggle.setAttribute('aria-expanded', String(open));
+  };
+  const closePanels = (except) => {
+    for (const entry of panels) if (entry !== except) setPanelOpen(entry, false);
+  };
+  for (const entry of panels) {
+    entry.toggle.addEventListener('click', () => {
+      const open = entry.panel.hidden;
+      closePanels(entry);
+      setPanelOpen(entry, open);
+    });
+  }
+  document.addEventListener('click', (event) => {
+    for (const entry of panels) {
+      if (entry.panel.hidden) continue;
+      if (entry.panel.contains(event.target) || entry.toggle.contains(event.target)) continue;
+      setPanelOpen(entry, false);
+    }
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    for (const entry of panels) {
+      if (entry.panel.hidden) continue;
+      setPanelOpen(entry, false);
+      entry.toggle.focus();
+    }
+  });
+  for (const button of document.querySelectorAll('#locale-segmented button')) {
+    button.addEventListener('click', () => { setLocale(button.dataset.locale); });
+  }
+  for (const button of document.querySelectorAll('#theme-segmented button')) {
+    button.addEventListener('click', () => { setTheme(button.dataset.themePref); });
+  }
+
   $('#resume-file')?.addEventListener('change', async (event) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -715,8 +813,18 @@ const listenForInvalidation = () => {
 /* -------------------------------------------------------------------- init */
 
 const init = async () => {
-  await loadMessages();
+  watchSystemTheme();
+  try {
+    const storedPrefs = await chrome.storage.local.get([PREF_KEY]);
+    const saved = storedPrefs?.[PREF_KEY];
+    if (saved && typeof saved === 'object') prefs = { ...prefs, ...saved };
+  } catch (error) {
+    log.warn('prefs-read-failed', { error: String(error?.message || error) });
+  }
+  applyTheme();
+  await loadMessages(resolveLocale());
   applyStaticI18n();
+  markSegments();
   bind();
   listenForInvalidation();
   let saved = {};

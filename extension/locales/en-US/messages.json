@@ -207,6 +207,14 @@
     "message": "Never clicks save/submit; backs up before filling; conflicts are not overwritten.",
     "description": "Never clicks save/submit; backs up before filling; conflicts are not overwritten."
   },
+  "helpTitle": {
+    "message": "How it works",
+    "description": "Title of the help sheet"
+  },
+  "safetyShort": {
+    "message": "Never auto-submits",
+    "description": "Short safety badge shown in the header"
+  },
   "pageFingerprint": {
     "message": "Page fingerprint",
     "description": "Page fingerprint"
@@ -250,6 +258,10 @@
   "modeLabel": {
     "message": "Fill blanks only (recommended)",
     "description": "Fill blanks only (recommended)"
+  },
+  "modeOverwriteLabel": {
+    "message": "Overwrite existing",
+    "description": "Switch label shown when overwrite mode is on"
   },
   "modeHint": {
     "message": "Existing values that differ are marked as conflicts and never overwritten.",

@@ -7,109 +7,209 @@
   <link rel="stylesheet" href="sidepanel.css">
 </head>
 <body>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 12h7M10 16h7"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.5"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></symbol>
+    <symbol id="i-check-list" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 5.5l1.6 1.6L8.2 4.5"/><path d="M4 11.5l1.6 1.6L8.2 10.5"/><path d="M4 17.5l1.6 1.6L8.2 16.5"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><path d="M4 7h8M16 7h4M4 12h3M11 12h9M4 17h8M16 17h4"/><circle cx="14" cy="7" r="2"/><circle cx="9" cy="12" r="2"/><circle cx="14" cy="17" r="2"/></symbol>
+    <symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path d="M9.7 9.4a2.4 2.4 0 113.9 1.9c-.9.6-1.6 1.2-1.6 2.3"/><path d="M12 17.1v.3"/></symbol>
+    <symbol id="i-scan" viewBox="0 0 24 24"><path d="M4 8.5V5h3.5M20 8.5V5h-3.5M4 15.5V19h3.5M20 15.5V19h-3.5"/><path d="M4.5 12h15"/></symbol>
+    <symbol id="i-fill" viewBox="0 0 24 24"><path d="M12 3v10"/><path d="M8 9.5l4 4 4-4"/><path d="M4 16.5v2A2.5 2.5 0 006.5 21h11a2.5 2.5 0 002.5-2.5v-2"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 7L4 12l5 5"/><path d="M4.5 12H13a5.5 5.5 0 015.5 5.5V20"/></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24"><rect x="3.5" y="4" width="17" height="4" rx="1.2"/><path d="M5.5 8v10.5A1.5 1.5 0 007 20h10a1.5 1.5 0 001.5-1.5V8"/><path d="M10 12h4"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M4.2 12a7.8 7.8 0 107.8-7.8A7.8 7.8 0 005.6 7"/><path d="M4 3.8v3.6h3.6"/><path d="M12 8v4.2l3 1.8"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7 3v6c0 4.5-3 7.6-7 9-4-1.4-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17"/><path d="M12 3.5c2.6 2.4 2.6 14.6 0 17-2.6-2.4-2.6-14.6 0-17z"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.4v2.2M12 19.4v2.2M2.4 12h2.2M19.4 12h2.2M5.2 5.2l1.6 1.6M17.2 17.2l1.6 1.6M18.8 5.2l-1.6 1.6M6.8 17.2l-1.6 1.6"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.6A8.6 8.6 0 019.4 4a8.6 8.6 0 1010.6 10.6z"/></symbol>
+    <symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 010 17z" fill="currentColor" stroke="none"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4.2l8.4 15H3.6z"/><path d="M12 9.8v4M12 16.4v.6"/></symbol>
+  </svg>
+
   <header class="app-header">
     <div class="brand">
       <img class="brand-icon" src="assets/icon32.png" alt="" width="28" height="28">
       <div class="brand-text">
-        <h1>FormPilot<span class="tagline" data-i18n="tagline">智能简历填充助手</span></h1>
-        <p class="subtitle" data-i18n="subtitle">先读取当前页面，再审核每一个匹配结果。</p>
+        <p class="eyebrow" data-i18n="tagline">智能简历填充助手</p>
+        <h1>FormPilot</h1>
+      </div>
+      <div class="header-actions">
+        <button id="help-toggle" class="icon-button" type="button" aria-expanded="false" aria-controls="help-panel" aria-label="使用说明">
+          <svg class="icon" aria-hidden="true"><use href="#i-help"></use></svg>
+        </button>
+        <button id="settings-toggle" class="icon-button" type="button" aria-expanded="false" aria-controls="settings-panel" aria-label="设置">
+          <svg class="icon" aria-hidden="true"><use href="#i-gear"></use></svg>
+        </button>
       </div>
     </div>
+
+    <div id="help-panel" class="panel" hidden>
+      <p class="panel-title" data-i18n="helpTitle">使用说明</p>
+      <p class="help-line" data-i18n="subtitle">先读取当前页面，再审核每一个匹配结果。</p>
+      <div class="help-group">
+        <p class="help-line"><svg class="icon" aria-hidden="true"><use href="#i-doc"></use></svg><span data-i18n="resumeHint">支持任意语言的 JSON 字段</span></p>
+        <p class="help-line"><svg class="icon" aria-hidden="true"><use href="#i-target"></use></svg><span data-i18n="pageHint">读取网页已有字段和编辑区</span></p>
+        <p class="help-line"><svg class="icon" aria-hidden="true"><use href="#i-check-list"></use></svg><span data-i18n="reviewHint">确认值和来源路径后再填写</span></p>
+      </div>
+      <div class="help-group">
+        <p class="help-line"><svg class="icon" aria-hidden="true"><use href="#i-auto"></use></svg><span data-i18n="modeHint">页面已有内容且与简历不同时会标记为冲突，不会覆盖。</span></p>
+        <p class="help-line"><svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg><span data-i18n="saveReminder">填写完成后请自己检查，并点击页面右下角「保存」。</span></p>
+        <p class="help-line"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><span data-i18n="safetyNote">不会点击保存/提交按钮；填写前自动备份，冲突字段不覆盖。</span></p>
+      </div>
+    </div>
+
+    <div id="settings-panel" class="panel" hidden>
+      <div class="settings-row">
+        <span class="settings-label"><svg class="icon" aria-hidden="true"><use href="#i-globe"></use></svg><span data-i18n="language">语言</span></span>
+        <div class="segmented" id="locale-segmented" role="radiogroup" aria-label="language">
+          <button type="button" role="radio" data-locale="zh-CN">中文</button>
+          <button type="button" role="radio" data-locale="en-US">English</button>
+          <button type="button" role="radio" data-locale="ja-JP">日本語</button>
+          <button type="button" role="radio" data-locale="ko-KR">한국어</button>
+        </div>
+      </div>
+      <div class="settings-row">
+        <span class="settings-label"><svg class="icon" aria-hidden="true"><use href="#i-auto"></use></svg><span data-i18n="theme">主题</span></span>
+        <div class="segmented" id="theme-segmented" role="radiogroup" aria-label="theme">
+          <button type="button" role="radio" data-theme-pref="system"><svg class="icon" aria-hidden="true"><use href="#i-auto"></use></svg><span data-i18n="themeSystem">跟随系统</span></button>
+          <button type="button" role="radio" data-theme-pref="light"><svg class="icon" aria-hidden="true"><use href="#i-sun"></use></svg><span data-i18n="themeLight">浅色</span></button>
+          <button type="button" role="radio" data-theme-pref="dark"><svg class="icon" aria-hidden="true"><use href="#i-moon"></use></svg><span data-i18n="themeDark">深色</span></button>
+        </div>
+      </div>
+    </div>
+
     <p id="global-status" class="status-line" role="status" aria-live="polite">准备就绪。加载简历后开始。</p>
-    <p class="safety-note" data-i18n="safetyNote">不会点击保存/提交按钮；填写前自动备份，冲突字段不覆盖。</p>
+    <p class="safety-chip"><svg class="icon" aria-hidden="true"><use href="#i-shield"></use></svg><span data-i18n="safetyShort">不自动提交</span></p>
   </header>
 
   <main class="cards">
     <section class="card" id="resume-card" aria-labelledby="resume-title">
       <div class="card-head">
-        <div>
-          <h2 id="resume-title" data-i18n="resumeTitle">简历数据</h2>
-          <p class="hint" data-i18n="resumeHint">支持任意语言的 JSON 字段</p>
-        </div>
+        <h2 id="resume-title"><svg class="icon" aria-hidden="true"><use href="#i-doc"></use></svg><span data-i18n="resumeTitle">简历数据</span></h2>
         <span class="badge" id="resume-badge" data-i18n="notLoaded">未加载</span>
       </div>
-      <div class="row">
-        <label class="button file-button" for="resume-file" data-i18n="chooseFile">选择 JSON 文件</label>
-        <input id="resume-file" class="visually-hidden" type="file" accept="application/json,.json">
-        <span class="muted" id="resume-file-name"></span>
+      <div class="card-body">
+        <div class="row">
+          <label class="button file-button" for="resume-file">
+            <svg class="icon" aria-hidden="true"><use href="#i-file"></use></svg>
+            <span data-i18n="chooseFile">选择 JSON 文件</span>
+          </label>
+          <input id="resume-file" class="visually-hidden" type="file" accept="application/json,.json">
+          <span class="muted file-name" id="resume-file-name"></span>
+        </div>
+
+        <label class="field-label" for="resume-json" data-i18n="resumeJsonAria">简历 JSON</label>
+        <textarea id="resume-json" rows="6" spellcheck="false" autocomplete="off" placeholder="在这里粘贴或编辑 JSON" data-i18n-placeholder="jsonPlaceholder"></textarea>
+
+        <div class="row action-row">
+          <button id="resume-apply" class="primary" type="button">
+            <svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg>
+            <span data-i18n="applyJson">应用修改并重新匹配</span>
+          </button>
+          <button id="resume-clear" class="ghost" type="button">
+            <svg class="icon" aria-hidden="true"><use href="#i-x"></use></svg>
+            <span data-i18n="clearResume">清空</span>
+          </button>
+        </div>
+
+        <div class="stats" id="resume-stats" aria-live="polite"></div>
+        <div class="missing" id="resume-missing" hidden></div>
+        <div class="unknown" id="resume-unknown" hidden></div>
       </div>
-      <label class="field-label" for="resume-json" data-i18n="resumeJsonAria">简历 JSON</label>
-      <textarea id="resume-json" rows="6" spellcheck="false" autocomplete="off" placeholder="在这里粘贴或编辑 JSON" data-i18n-placeholder="jsonPlaceholder"></textarea>
-      <div class="row">
-        <button id="resume-apply" class="primary" type="button" data-i18n="applyJson">应用修改并重新匹配</button>
-        <button id="resume-clear" class="ghost" type="button" data-i18n="clearResume">清空</button>
-      </div>
-      <div class="stats" id="resume-stats" aria-live="polite"></div>
-      <div class="missing" id="resume-missing" hidden></div>
-      <div class="unknown" id="resume-unknown" hidden></div>
     </section>
 
     <section class="card" id="page-card" aria-labelledby="page-title">
       <div class="card-head">
-        <div>
-          <h2 id="page-title" data-i18n="pageTitle">当前页面</h2>
-          <p class="hint" data-i18n="pageHint">读取网页已有字段和编辑区</p>
-        </div>
+        <h2 id="page-title"><svg class="icon" aria-hidden="true"><use href="#i-target"></use></svg><span data-i18n="pageTitle">当前页面</span></h2>
         <span class="badge" id="page-badge" data-i18n="pageNotInspected">尚未检查页面</span>
       </div>
-      <button id="page-inspect" class="primary" type="button" data-i18n="inspect">检查页面</button>
-      <dl class="meta">
-        <div class="meta-row"><dt data-i18n="pageFingerprint">页面指纹</dt><dd id="page-fingerprint">—</dd></div>
-        <div class="meta-row"><dt data-i18n="controlsCount">控件数</dt><dd id="page-controls">—</dd></div>
-      </dl>
-      <p class="muted" id="page-stats"></p>
-      <div class="section-list" id="page-sections" aria-live="polite"></div>
-      <div class="row backup-row">
-        <button id="backup-create" type="button" data-i18n="backupCreate">备份当前简历</button>
-        <button id="backup-restore" type="button" data-i18n="backupRestore">恢复上一次备份</button>
+      <div class="card-body">
+        <button id="page-inspect" class="primary wide" type="button">
+          <svg class="icon" aria-hidden="true"><use href="#i-scan"></use></svg>
+          <span data-i18n="inspect">检查页面</span>
+        </button>
+
+        <dl class="meta">
+          <div class="meta-row"><dt data-i18n="pageFingerprint">页面指纹</dt><dd id="page-fingerprint">—</dd></div>
+          <div class="meta-row"><dt data-i18n="controlsCount">控件数</dt><dd id="page-controls">—</dd></div>
+        </dl>
+        <p class="muted" id="page-stats"></p>
+        <div class="section-list" id="page-sections" aria-live="polite"></div>
+
+        <div class="row backup-row">
+          <button id="backup-create" type="button">
+            <svg class="icon" aria-hidden="true"><use href="#i-archive"></use></svg>
+            <span data-i18n="backupCreate">备份当前简历</span>
+          </button>
+          <button id="backup-restore" type="button">
+            <svg class="icon" aria-hidden="true"><use href="#i-history"></use></svg>
+            <span data-i18n="backupRestore">恢复上一次备份</span>
+          </button>
+        </div>
+        <p class="muted" id="backup-status">暂无备份</p>
+        <p class="warning" id="page-invalidated" hidden></p>
       </div>
-      <p class="muted" id="backup-status">暂无备份</p>
-      <p class="warning" id="page-invalidated" hidden></p>
     </section>
 
     <section class="card" id="review-card" aria-labelledby="review-title">
       <div class="card-head">
-        <div>
-          <h2 id="review-title" data-i18n="reviewTitle">匹配结果</h2>
-          <p class="hint" data-i18n="reviewHint">确认值和来源路径后再填写</p>
-        </div>
+        <h2 id="review-title"><svg class="icon" aria-hidden="true"><use href="#i-check-list"></use></svg><span data-i18n="reviewTitle">匹配结果</span></h2>
         <span class="badge" id="review-badge">—</span>
       </div>
-      <div class="mode-row">
-        <label class="switch">
-          <input id="fill-empty" type="checkbox" checked>
-          <span data-i18n="modeLabel">只填空白（推荐）</span>
-        </label>
-        <p class="hint" id="mode-hint" data-i18n="modeHint">页面已有内容且与简历不同时会标记为冲突，不会覆盖。</p>
-      </div>
-      <div class="row action-row">
-        <button id="fill-start" class="primary" type="button" data-i18n="fillStart">开始填写</button>
-        <button id="fill-undo" class="ghost" type="button" data-i18n="fillUndo">撤销本轮</button>
-      </div>
-      <p class="progress" id="fill-progress" hidden></p>
-      <div class="summary" id="summary" hidden></div>
-      <p class="conflict-hint" id="conflict-hint" hidden data-i18n="conflictHint">冲突字段不会写入，请手动确认。</p>
-      <p class="save-reminder" data-i18n="saveReminder">填写完成后请自己检查，并点击页面右下角「保存」。</p>
-      <div class="table-wrap">
-        <table class="match-table" id="match-table">
-          <thead>
-            <tr>
-              <th scope="col" data-i18n="tableField">字段</th>
-              <th scope="col" data-i18n="tablePageLabel">页面标签</th>
-              <th scope="col" data-i18n="tableSource">来源路径</th>
-              <th scope="col" data-i18n="tableCurrent">当前值</th>
-              <th scope="col" data-i18n="tableTarget">目标值</th>
-              <th scope="col" data-i18n="tableStatus">状态</th>
-              <th scope="col" data-i18n="tableConfidence">置信度</th>
-            </tr>
-          </thead>
-          <tbody id="match-rows">
-            <tr><td colspan="7" class="empty" data-i18n="noMatches">加载简历并检查页面后显示匹配结果</td></tr>
-          </tbody>
-        </table>
+      <div class="card-body">
+        <div class="mode-row">
+          <label class="switch">
+            <span class="switch-label" id="mode-label" data-i18n="modeLabel">只填空白（推荐）</span>
+            <input id="fill-empty" type="checkbox" checked>
+          </label>
+        </div>
+
+        <div class="row action-row">
+          <button id="fill-start" class="primary" type="button">
+            <svg class="icon" aria-hidden="true"><use href="#i-fill"></use></svg>
+            <span data-i18n="fillStart">开始填写</span>
+          </button>
+          <button id="fill-undo" class="ghost" type="button">
+            <svg class="icon" aria-hidden="true"><use href="#i-undo"></use></svg>
+            <span data-i18n="fillUndo">撤销本轮</span>
+          </button>
+        </div>
+
+        <p class="progress" id="fill-progress" hidden></p>
+        <div class="summary" id="summary" hidden></div>
+        <p class="conflict-hint" id="conflict-hint" hidden data-i18n="conflictHint">冲突字段不会写入，请手动确认。</p>
+        <p class="save-reminder" id="save-reminder" hidden><svg class="icon" aria-hidden="true"><use href="#i-alert"></use></svg><span data-i18n="saveReminder">填写完成后请自己检查，并点击页面右下角「保存」。</span></p>
+
+        <div class="table-wrap">
+          <table class="match-table" id="match-table">
+            <thead>
+              <tr>
+                <th scope="col" data-i18n="tableField">字段</th>
+                <th scope="col" data-i18n="tablePageLabel">页面标签</th>
+                <th scope="col" data-i18n="tableSource">来源路径</th>
+                <th scope="col" data-i18n="tableCurrent">当前值</th>
+                <th scope="col" data-i18n="tableTarget">目标值</th>
+                <th scope="col" data-i18n="tableStatus">状态</th>
+                <th scope="col" data-i18n="tableConfidence">置信度</th>
+              </tr>
+            </thead>
+            <tbody id="match-rows">
+              <tr><td colspan="7" class="empty" data-i18n="noMatches">加载简历并检查页面后显示匹配结果</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
   </main>
+
+  <footer class="app-footer">
+    <span class="footer-mark">FormPilot</span>
+    <span class="footer-meta">Apache-2.0</span>
+  </footer>
+
   <script type="module" src="src/sidepanel.js"></script>
 </body>
 </html>

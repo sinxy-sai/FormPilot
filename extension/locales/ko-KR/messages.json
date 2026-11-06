@@ -207,6 +207,14 @@
     "message": "저장·제출 버튼을 누르지 않으며, 입력 전 자동 백업하고 충돌은 덮어쓰지 않습니다.",
     "description": "Never clicks save/submit; backs up before filling; conflicts are not overwritten."
   },
+  "helpTitle": {
+    "message": "사용 안내",
+    "description": "Title of the help sheet"
+  },
+  "safetyShort": {
+    "message": "자동 제출 안 함",
+    "description": "Short safety badge shown in the header"
+  },
   "pageFingerprint": {
     "message": "페이지 지문",
     "description": "Page fingerprint"
@@ -250,6 +258,10 @@
   "modeLabel": {
     "message": "빈 칸만 채우기 (권장)",
     "description": "Fill blanks only (recommended)"
+  },
+  "modeOverwriteLabel": {
+    "message": "기존 내용 덮어쓰기",
+    "description": "Switch label shown when overwrite mode is on"
   },
   "modeHint": {
     "message": "기존 값이 다르면 충돌로 표시하고 덮어쓰지 않습니다.",
