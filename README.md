@@ -64,6 +64,8 @@ The browser extension does not submit applications, solve CAPTCHA, bypass authen
 | Verification | Node built-in test runner and syntax checks |
 | Runtime extension model | Reusable control capabilities + validated strategy cache + local AI planning loop |
 
+<a id="installation" name="installation"></a>
+
 ## 🔨 Installation
 
 Build the extension, then load the generated directory as an unpacked extension.
@@ -76,6 +78,8 @@ Build the extension, then load the generated directory as an unpacked extension.
 6. Open the extension's **Side Panel** from the toolbar (or the extension details page) and refresh the test page after source changes.
 
 For local-only development, keep the model setting disabled unless you have explicitly enabled a compatible local model and accepted its storage/download cost. This repository does not ship model weights, and the default configuration does not download them. When the local model is unavailable, FormPilot falls back to constrained rules and manual review; the primary planning path is the local AI runtime.
+
+<a id="usage" name="usage"></a>
 
 ## ▶️ Usage
 
@@ -93,6 +97,8 @@ Safety rules that are enforced in code, not by convention:
 - Matching is scoped by section **and** repeatable item, so education data can never land in the project list. This boundary was calibrated against a real recruiting site's resume editor.
 
 Text inputs, textareas, custom dropdowns (including design-system comboboxes such as `ud__select`-style widgets), month/date text fields, and checkboxes are the reliable first-stage boundary. Unknown select options, read-only pickers, file uploads, and structural toggles like「没有工作经历」remain manual on purpose.
+
+<a id="tests" name="tests"></a>
 
 ## 🧪 Tests
 
