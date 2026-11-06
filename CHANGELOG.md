@@ -1,6 +1,8 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 — 2026-11-06
+
+首个公开发布版本。扩展侧边栏可完成「备份 → 检查 → 规划 → 填写 → 撤销」全链路，默认只填空白、永不点击保存/提交。
 
 ### Fill engine v2 — 针对真实招聘页（字节跳动「编辑简历」）重写
 
@@ -18,7 +20,7 @@
 - 新增 `docs/RESUME-SCHEMA.md`、`docs/ACCEPTANCE.md`、`scripts/export-page-model.js`（只读采集页面结构）、`scripts/build-engine-bundle.mjs` + `scripts/live-check.mjs`（引擎 bundle 与真机只读体检）、`scripts/serve.mjs`（本地 fixture 服务器）。
 - 删除过时的 `extension/test/browser-smoke.mjs` 与 `extension/test/fixture-structure.mjs`（由新的端到端测试取代）。
 
-### 早期未发布改动
+### 早期改动（一并纳入本次发布）
 
 - Added browser regression coverage for a generic text field, a custom combobox, validation failures, dynamic structure changes, refresh invalidation, undo, and the no-submit guarantee.
 - Expanded the local fixture with repeatable sections, validation errors, and structure-change controls.
