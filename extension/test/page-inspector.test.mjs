@@ -538,7 +538,7 @@ test('fixture: examples/bytedance-fixture.html 与真机双胞胎结构一致且
     .replace(/<script[\s\S]*?<\/script>/g, '')
     .replace(/<style[\s\S]*?<\/style>/g, '');
   const doc = createDocument({
-    title: '编辑简历 | 字节跳动招聘 · FormPilot 本地结构测试页',
+    title: '编辑简历 | 招聘站点 · FormPilot 本地结构测试页',
     location: { origin: 'https://jobs.bytedance.com', pathname: '/experienced/resume/edit' }
   });
   doc.body.append(...parseHTMLFragment(body, doc));

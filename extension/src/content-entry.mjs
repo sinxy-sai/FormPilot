@@ -1,11 +1,11 @@
 /**
  * Content-script entry (fill engine v2, task D — message surface).
  *
- * Transport only: it owns the page-side message protocol from docs/specs/
- * 2026-11-05-fill-engine-v2.md §6 and never clicks save/submit/preview/finish
- * buttons. The planner (core/matcher.mjs + core/resume-index.mjs) and the
- * executor (runtime/control-executor.mjs) are owned by other tasks; they are
- * resolved defensively so this entry keeps loading while they land in parallel.
+ * Transport only: it owns the page-side message protocol and never clicks
+ * save/submit/preview/finish buttons. The planner (core/matcher.mjs +
+ * core/resume-index.mjs) and the executor (runtime/control-executor.mjs) are
+ * owned by other tasks; they are resolved defensively so this entry keeps
+ * loading while they land in parallel.
  */
 import { inspectPage } from './runtime/page-inspector.mjs';
 import * as executorModule from './runtime/control-executor.mjs';

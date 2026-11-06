@@ -2,7 +2,7 @@
 //
 // The suite is built on the shared dom-twin (`extension/test/support/dom-twin.mjs`,
 // produced by the page-inspector task) plus real-page-shaped builders that follow
-// docs/recon/bytedance-resume-edit.md:
+// the real recruiting page's resume editor:
 //   - .ud__select 下拉：input[role=combobox] inside .ud__select__selector,
 //     display value in .ud__select__selector__selectItem (input.value stays ""),
 //     options .ud__select__list__item > __content inside .ud__select__dropdown,

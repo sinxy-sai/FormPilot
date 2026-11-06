@@ -13,7 +13,7 @@ import { chromium } from 'playwright';
 
 const root = resolve(import.meta.dirname, '..');
 const live = process.argv.includes('--write');
-const resumePath = process.env.FORMPILOT_RESUME ?? resolve(root, 'examples/bytedance-resume-backup.json');
+const resumePath = process.env.FORMPILOT_RESUME ?? resolve(root, 'examples/resume.json');
 const enginePath = resolve(root, 'dist/live/engine.js');
 const url = 'https://jobs.bytedance.com/experienced/resume/edit';
 

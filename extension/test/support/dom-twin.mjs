@@ -32,7 +32,7 @@
  *     location: { origin?, pathname?, search?, hash?, href? }
  *
  *   createBytedanceTwin() -> TwinPage
- *     按 docs/recon/bytedance-resume-edit.md 复刻真机「编辑简历」页：
+ *     按真实招聘站点「编辑简历」页复刻：
  *     - 11 个模块：[class*="applyFormModuleWrapper"]，标题在
  *       [class*="applyFormModuleWrapper-title"] [class*="applyFormModuleWrapper-text"]
  *     - 字段容器 .ud-formily-item + data-form-field-name / data-form-field-i18n-name
@@ -1462,7 +1462,7 @@ export function installDomGlobals() {
 }
 
 // ---------------------------------------------------------------------------
-// ByteDance「编辑简历」双胞胎页面（真机结构，见 docs/recon/bytedance-resume-edit.md）
+// 「编辑简历」双胞胎页面（真实站点结构）
 // ---------------------------------------------------------------------------
 /**
  * createBytedanceTwin() 复刻真机页面：
@@ -1716,7 +1716,7 @@ function noExperienceLabel(text) {
 
 export function createBytedanceTwin() {
   const document = createDocument({
-    title: '编辑简历 | 字节跳动招聘',
+    title: '编辑简历 | 招聘站点',
     location: { origin: 'https://jobs.bytedance.com', pathname: '/experienced/resume/edit', search: '' }
   });
 

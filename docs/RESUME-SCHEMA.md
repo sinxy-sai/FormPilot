@@ -119,4 +119,4 @@ FormPilot 的输入是**自由格式 JSON**：key 可以用中文、英文、日
 ## 注意
 
 - `examples/resume.json` 是**演示数据**（虚构人物「林知远」）。如果你拿它去填，会覆盖成演示人物信息 —— 现在 FormPilot 在填写前会自动备份页面当前简历，并可一键恢复，但请务必用你自己的数据文件。
-- `examples/bytedance-resume-backup.json` 是从你字节简历页面导出的真实内容，可作为你自己的输入基准。
+- 你自己的真实简历请放在仓库之外，不要提交进版本库；`examples/` 下带个人信息的备份文件已被 `.gitignore` 排除。

@@ -90,7 +90,7 @@ export function udSelectTrigger(element) {
 
 /**
  * Root element that owns the visible label of a custom select.
- * Real ByteDance page: input[role=combobox] lives inside .ud__select__selector,
+ * Real recruiting page: input[role=combobox] lives inside .ud__select__selector,
  * and the display text is in .ud__select__selector__selectItem — never in the
  * input's value, which stays empty.
  */

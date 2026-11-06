@@ -1,8 +1,7 @@
 /**
  * Background service worker (fill engine v2, task D — orchestration).
  *
- * Owns the review→backup→fill loop from docs/specs/2026-11-05-fill-engine-v2.md
- * §6:
+ * Owns the review→backup→fill loop (fill engine v2):
  *   snapshot → inspect → plan → execute steps (re-inspect + re-plan after an
  *   add-item succeeds, max 3 passes) → aggregate { results, plan, summary }.
  *

@@ -59,7 +59,7 @@ const STEP_KINDS = new Set(['fill', 'select', 'check', 'add-item']);
 // Anything that looks like "commit/cancel/delete this form" must never be
 // clicked (invariant 1, recon §3: 底部「保存」.atsx-btn-primary、「取消」, 卡片删除按钮).
 const FORBIDDEN_ACTION_LABEL = /保存|提交|投递|预览|确认|取消|删除|移除|save|submit|apply|preview|confirm|cancel|delete|remove|reset|清空/i;
-// Class prefixes for destructive/committing controls on the real ByteDance page.
+// Class prefixes for destructive/committing controls on real recruiting pages.
 const FORBIDDEN_ACTION_CLASS = /atsx-btn-primary|apply-form-array-card-delete|apply-form-array-card-remove|data-save|data-submit/i;
 
 const eventTargetOf = element => {
@@ -444,7 +444,7 @@ function writeCheckboxValue(element, expected, { allowClick = true } = {}) {
 //
 // Two DOM dialects must work:
 //  - fixture/legacy: trigger [role="combobox"] opens a [role="option"] list;
-//  - real ByteDance page (recon §3): .ud__select__selector (input[role=combobox]
+//  - real recruiting page: .ud__select__selector (input[role=combobox]
 //    inside, readOnly for single select) opens .ud__select__dropdown whose
 //    options are .ud__select__list__item (text in __content), virtualised by
 //    .rc-virtual-list-holder; the popup element stays in the DOM with

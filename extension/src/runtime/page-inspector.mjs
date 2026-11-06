@@ -4,7 +4,7 @@
  * inspectPage(document, { capabilities?, config?, includeScreenshot? })
  *   -> { pageModel, diagnostics }
  *
- * 设计要点（对齐 docs/recon/bytedance-resume-edit.md）：
+ * 设计要点（对齐真实招聘站点的简历编辑页）：
  * 1. 控件：CONTROL_SELECTOR 深查询（含 shadow root），每个真实控件恰好一次。
  *    selectorToken = 'control-token-<下标>'，下标严格对应
  *    queryAllDeep(document, CONTROL_SELECTOR).filter(el => el.type !== 'file')

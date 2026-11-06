@@ -1,7 +1,7 @@
-// 端到端集成测试：在「字节跳动编辑简历页」的 DOM 双胞胎上跑完整填写链路
+// 端到端集成测试：在「招聘站点编辑简历页」的 DOM 双胞胎上跑完整填写链路
 //   inspectPage → buildResumeIndex → planFill → validatePlannedStep → executeStep → 读回校验
 //
-// 断言的是**真机行为**（见 docs/recon/bytedance-resume-edit.md）：
+// 断言的是**真机行为**：
 //   - 分区（11 个模块）与可重复条目（卡片）不能串味
 //   - 自定义下拉的展示值在 .ud__select__selector__selectItem，input.value 恒为空
 //   - 起止时间是两个普通文本输入，结束时间可写「至今」

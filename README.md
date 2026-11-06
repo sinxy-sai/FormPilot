@@ -90,9 +90,9 @@ Safety rules that are enforced in code, not by convention:
 - The final **Save / Submit / Delete** buttons are never clicked — finishing the application stays your job.
 - Every write is read back and verified; a failed field stays explicitly `failed` / `manual` with a reason instead of being silently skipped.
 - A page snapshot is taken automatically before the first write (last 5 kept per page) and can be restored.
-- Matching is scoped by section **and** repeatable item, so education data can never land in the project list. See [docs/recon/bytedance-resume-edit.md](docs/recon/bytedance-resume-edit.md) for the field-by-field contract this was built against.
+- Matching is scoped by section **and** repeatable item, so education data can never land in the project list. This boundary was calibrated against a real recruiting site's resume editor.
 
-Text inputs, textareas, custom dropdowns (including the `ud__select` widgets on ByteDance's resume page), month/date text fields, and checkboxes are the reliable first-stage boundary. Unknown select options, read-only pickers, file uploads, and structural toggles like「没有工作经历」remain manual on purpose.
+Text inputs, textareas, custom dropdowns (including design-system comboboxes such as `ud__select`-style widgets), month/date text fields, and checkboxes are the reliable first-stage boundary. Unknown select options, read-only pickers, file uploads, and structural toggles like「没有工作经历」remain manual on purpose.
 
 ## 🧪 Tests
 
@@ -113,7 +113,7 @@ Open the local fixture for a manual browser check:
 node scripts/serve.mjs 8123    # http://127.0.0.1:8123/examples/bytedance-fixture.html
 ```
 
-在真实招聘网站上验证时，可以先用只读方式导出页面结构，再和 `docs/recon/` 里的勘察结论对照：
+在真实招聘网站上验证时，先用只读方式导出页面结构，核对识别结果后再决定是否真正填写：
 
 - `scripts/export-page-model.js`：在 `DevTools → Console` 里粘贴，导出控件标签/类型/选项/分区结构（输入值默认只保留前 4 个字符）。
 - `scripts/build-engine-bundle.mjs` + `scripts/live-check.mjs`：把引擎打成自包含 bundle，在真实页面里只读跑 `inspect → plan`，核对匹配质量后再决定是否真正填写。
@@ -146,9 +146,6 @@ The optional local AI loop is limited to page understanding and read-only sugges
 
 - [Architecture](docs/ARCHITECTURE.md)
 - [Resume JSON format](docs/RESUME-SCHEMA.md)
-- [Acceptance checklist & recovery guide](docs/ACCEPTANCE.md)
-- [Real-page recon: ByteDance resume editor](docs/recon/bytedance-resume-edit.md)
-- [Fill engine v2 contract](docs/specs/2026-11-05-fill-engine-v2.md)
 - [Security and privacy](SECURITY.md)
 - [Contributing](CONTRIBUTING.md)
 - [Support](SUPPORT.md)
