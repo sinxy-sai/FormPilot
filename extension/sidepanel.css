@@ -1,4 +1,4 @@
-/* FormPilot side panel — soft UI: Apple typographic system + system colours,
+﻿/* FormPilot side panel — soft UI: Apple typographic system + system colours,
    grouped cards, and a neumorphic surface language (dual light/dark shadows).
    Theme comes from <html data-theme="light|dark">; every JS hook is preserved. */
 
@@ -622,6 +622,9 @@ textarea::placeholder { color: var(--label-3); }
 .reason { display: block; margin-top: 2px; font-size: 11px; font-weight: 400; opacity: 0.9; }
 
 /* Narrow panel (default side panel width): one soft card per field. */
+@media (max-width: 470px) {
+  .action-row .ghost { margin-left: auto; }
+}
 @media (max-width: 470px) {
   .table-wrap { max-height: none; overflow: visible; padding: 4px 12px; }
   .match-table thead { display: none; }
