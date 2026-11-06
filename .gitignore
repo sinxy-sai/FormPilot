@@ -6,6 +6,12 @@ coverage/
 .env
 *.log
 
+# Local scratch screenshots and captures. Keep repo-root images out of git;
+# shipped icons live under extension/assets/ and docs/assets/.
+/*.png
+/*.jpg
+/screenshots/
+
 
 # Local captures from authenticated recruiting sites. Never commit these.
 examples/*BOSS*
